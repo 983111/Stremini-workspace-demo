@@ -6,115 +6,154 @@
   <title>Stremini Workspace</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Lora:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Lora:ital,wght@0,500;0,600;1,500;1,600&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg: #f7f5f2;
+      --bg: #f0eeeb;
       --surface: #ffffff;
-      --text: #191714;
-      --muted: #6d655b;
-      --line: #ddd7cc;
-      --badge: #f3f7ff;
-      --badge-text: #1a5ea4;
-      --accent: #d97706;
-      --card-hover: #fff9f2;
+      --text: #1a1816;
+      --muted: #6b6560;
+      --subtle: #9a948e;
+      --line: #dbd6ce;
+      --accent: #c96c1a;
+      --blue: #1a5ea4;
+      --blue-bg: #f0f6ff;
+      --blue-border: #cde0ff;
+      --card-hover-bg: #fefcf9;
+      --card-hover-border: #c8b89e;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: "DM Sans", sans-serif;
-      color: var(--text);
       background: var(--bg);
+      color: var(--text);
       min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
     }
 
+    /* ── TOPBAR ── */
     .topbar {
       background: var(--surface);
       border-bottom: 1px solid var(--line);
-      padding: 14px 32px;
+      padding: 0 32px;
+      height: 52px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       position: sticky;
       top: 0;
-      z-index: 5;
+      z-index: 10;
     }
 
-    .brand h1 {
-      font-family: "Lora", serif;
-      font-size: 34px;
-      letter-spacing: -0.4px;
-      margin-bottom: 2px;
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
 
-    .brand p {
-      font-size: 12px;
-      color: var(--muted);
+    .brand-icon {
+      width: 26px;
+      height: 26px;
+      background: var(--text);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .brand-icon svg {
+      width: 14px;
+      height: 14px;
+      fill: white;
+    }
+
+    .brand-text h1 {
+      font-family: "DM Sans", sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      line-height: 1.2;
+    }
+
+    .brand-text p {
+      font-size: 10px;
+      color: var(--subtle);
       text-transform: uppercase;
-      letter-spacing: 0.14em;
+      letter-spacing: 0.12em;
+      font-weight: 500;
     }
 
     .count-pill {
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      padding: 8px 14px;
-      font-size: 13px;
+      font-size: 11.5px;
       color: var(--muted);
-      background: #fff;
-      font-weight: 600;
+      font-weight: 500;
+      letter-spacing: 0.01em;
     }
 
+    /* ── MAIN ── */
     main {
-      max-width: 1180px;
+      max-width: 1100px;
       margin: 0 auto;
-      padding: 48px 20px 70px;
+      padding: 52px 24px 80px;
     }
 
+    /* ── HERO ── */
     .hero {
       text-align: center;
-      margin-bottom: 44px;
+      margin-bottom: 52px;
     }
 
     .hero h2 {
       font-family: "Lora", serif;
-      font-size: clamp(38px, 6vw, 56px);
-      line-height: 1.05;
-      letter-spacing: -0.5px;
-      margin-bottom: 10px;
+      font-size: clamp(30px, 4.5vw, 46px);
+      font-weight: 600;
+      line-height: 1.08;
+      letter-spacing: -0.3px;
+      margin-bottom: 4px;
+      color: var(--text);
     }
 
-    .hero .accent {
-      color: var(--accent);
-      font-style: italic;
+    .hero .accent-line {
+      font-family: "Lora", serif;
+      font-size: clamp(30px, 4.5vw, 46px);
       font-weight: 500;
+      font-style: italic;
+      color: var(--accent);
       display: block;
+      margin-bottom: 14px;
     }
 
     .hero p {
-      max-width: 760px;
+      max-width: 600px;
       margin: 0 auto;
       color: var(--muted);
-      font-size: 20px;
-      line-height: 1.5;
+      font-size: 13.5px;
+      line-height: 1.6;
+      font-weight: 400;
     }
 
+    /* ── LAYER SECTION ── */
     .layer {
-      margin-bottom: 34px;
+      margin-bottom: 36px;
     }
 
     .layer-header {
       display: flex;
       align-items: center;
-      gap: 14px;
-      margin-bottom: 16px;
+      gap: 0;
+      margin-bottom: 14px;
     }
 
     .layer-number {
-      font-family: "Lora", serif;
-      color: #9a9286;
-      font-size: 22px;
-      min-width: 28px;
+      font-size: 11px;
+      color: var(--subtle);
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      min-width: 22px;
+      padding-right: 10px;
     }
 
     .layer-line {
@@ -124,146 +163,391 @@
     }
 
     .layer-badge {
-      padding: 6px 12px;
-      border: 1px solid #bbd8ff;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 12px;
+      border: 1px solid var(--line);
       border-radius: 999px;
-      background: var(--badge);
-      color: var(--badge-text);
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 0.08em;
+      background: var(--bg);
+      color: var(--muted);
+      font-size: 10.5px;
+      font-weight: 600;
+      letter-spacing: 0.09em;
       text-transform: uppercase;
+      margin: 0 10px;
     }
 
+    .layer-badge-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--subtle);
+      opacity: 0.6;
+    }
+
+    /* ── CARDS ── */
     .cards {
       display: grid;
-      grid-template-columns: repeat(3, minmax(220px, 1fr));
-      gap: 14px;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
     }
 
     .card {
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 8px;
       background: var(--surface);
       border: 1px solid var(--line);
-      border-radius: 14px;
-      padding: 18px;
+      border-radius: 10px;
+      padding: 16px;
       text-decoration: none;
       color: inherit;
-      transition: border-color 0.18s ease, transform 0.18s ease, background 0.18s ease;
-      min-height: 164px;
+      transition: border-color 0.16s ease, background 0.16s ease, transform 0.16s ease, box-shadow 0.16s ease;
+      min-height: 150px;
     }
 
     .card:hover {
-      border-color: #c7b8a2;
-      background: var(--card-hover);
+      border-color: var(--card-hover-border);
+      background: var(--card-hover-bg);
       transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .card-icon {
+      width: 28px;
+      height: 28px;
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      flex-shrink: 0;
+    }
+
+    .card-icon svg {
+      width: 13px;
+      height: 13px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
     }
 
     .chip {
-      align-self: flex-start;
-      padding: 5px 10px;
+      padding: 3px 8px;
       border-radius: 999px;
-      border: 1px solid #dbe9ff;
-      background: #f5f9ff;
-      color: #1b5e9e;
-      font-size: 11px;
+      border: 1px solid var(--blue-border);
+      background: var(--blue-bg);
+      color: var(--blue);
+      font-size: 9.5px;
       font-weight: 700;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.07em;
       text-transform: uppercase;
     }
 
     .card h3 {
-      font-family: "Lora", serif;
-      font-size: 27px;
-      line-height: 1.14;
+      font-family: "DM Sans", sans-serif;
+      font-size: 13.5px;
+      font-weight: 600;
+      line-height: 1.3;
+      color: var(--text);
     }
 
     .card p {
-      font-size: 17px;
-      line-height: 1.42;
+      font-size: 12px;
+      line-height: 1.55;
       color: var(--muted);
       flex: 1;
     }
 
-    .card span {
-      color: #0e5fab;
-      font-weight: 700;
-      font-size: 18px;
+    .card-link {
+      color: var(--blue);
+      font-size: 11.5px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      margin-top: 2px;
     }
 
-    @media (max-width: 980px) {
+    .card-link svg {
+      width: 11px;
+      height: 11px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    @media (max-width: 900px) {
       .cards { grid-template-columns: 1fr 1fr; }
     }
 
-    @media (max-width: 640px) {
-      .topbar { padding: 12px 14px; }
-      .brand h1 { font-size: 20px; }
-      .hero p { font-size: 15px; }
+    @media (max-width: 580px) {
+      .topbar { padding: 0 16px; }
+      main { padding: 36px 14px 60px; }
       .cards { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
+
   <header class="topbar">
     <div class="brand">
-      <h1>Stremini Workspace</h1>
-      <p>Unified Agent Console</p>
+      <div class="brand-icon">
+        <svg viewBox="0 0 16 16"><path d="M3 3h4v4H3zM9 3h4v4H9zM3 9h4v4H3zM9 9h4v4H9z"/></svg>
+      </div>
+      <div class="brand-text">
+        <h1>Stremini Workspace</h1>
+        <p>Unified Agent Console</p>
+      </div>
     </div>
-    <div class="count-pill">15 Agents · 5 Layers</div>
+    <div class="count-pill">10 Agents · 4 Layers</div>
   </header>
 
   <main>
     <section class="hero">
-      <h2>Choose a layer.<span class="accent">Deploy a specialist.</span></h2>
+      <h2>Choose a layer.</h2>
+      <span class="accent-line">Deploy a specialist.</span>
       <p>Five layers of intelligence — from data and research to build, governance, and operations. Every agent is available as a direct card entry point.</p>
     </section>
 
+    <!-- Layer 01 -->
     <section class="layer">
-      <div class="layer-header"><div class="layer-number">01</div><div class="layer-line"></div><div class="layer-badge">Intelligence</div><div class="layer-line"></div></div>
+      <div class="layer-header">
+        <div class="layer-number">01</div>
+        <div class="layer-line"></div>
+        <div class="layer-badge"><div class="layer-badge-dot"></div>Intelligence</div>
+        <div class="layer-line"></div>
+      </div>
       <div class="cards">
-        <a class="card" href="Research.html"><div class="chip">Research</div><h3>Research & Math Agent</h3><p>Generate structured research papers, solve advanced math, and produce rigorous technical analysis.</p><span>Open agent →</span></a>
-        <a class="card" href="Data.html"><div class="chip">Analytics</div><h3>Data & Decision Intelligence</h3><p>Analyze CSV/JSON business data with retention, conversion, anomaly, and risk-focused insights.</p><span>Open agent →</span></a>
-        <a class="card" href="knowledge.html"><div class="chip">Knowledge</div><h3>Knowledge Graph Agent</h3><p>Connect notes, research, and ideas to discover relationships and hidden opportunities.</p><span>Open agent →</span></a>
+        <a class="card" href="Research.html">
+          <div class="card-top">
+            <div class="card-icon">
+              <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            </div>
+            <div class="chip">Research</div>
+          </div>
+          <h3>Research &amp; Math Agent</h3>
+          <p>Generate structured research papers, solve advanced math, and produce rigorous technical analysis.</p>
+          <div class="card-link">Open agent <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+        </a>
+        <a class="card" href="Data.html">
+          <div class="card-top">
+            <div class="card-icon">
+              <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+            </div>
+            <div class="chip">Analytics</div>
+          </div>
+          <h3>Data &amp; Decision Intelligence</h3>
+          <p>Analyze CSV/JSON business data with retention, conversion, anomaly, and risk-focused insights.</p>
+          <div class="card-link">Open agent <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+        </a>
+        <a class="card" href="knowledge.html">
+          <div class="card-top">
+            <div class="card-icon">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="19" r="2"/><line x1="12" y1="7" x2="5" y2="17"/><line x1="12" y1="7" x2="19" y2="17"/><line x1="5" y1="19" x2="19" y2="19"/></svg>
+            </div>
+            <div class="chip">Knowledge</div>
+          </div>
+          <h3>Knowledge Graph Agent</h3>
+          <p>Connect notes, research, and ideas to discover relationships and hidden opportunities.</p>
+          <div class="card-link">Open agent <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+        </a>
       </div>
     </section>
 
+    <!-- Layer 02 -->
     <section class="layer">
-      <div class="layer-header"><div class="layer-number">02</div><div class="layer-line"></div><div class="layer-badge">Foundation</div><div class="layer-line"></div></div>
+      <div class="layer-header">
+        <div class="layer-number">02</div>
+        <div class="layer-line"></div>
+        <div class="layer-badge"><div class="layer-badge-dot"></div>Foundation</div>
+        <div class="layer-line"></div>
+      </div>
       <div class="cards">
-        <a class="card" href="dataset-builder.html"><div class="chip">Data Ops</div><h3>Dataset Builder Agent</h3><p>Create labeled, quality-scored datasets with guided workflow, exports, and generation controls.</p><span>Open agent →</span></a>
-        <a class="card" href="compeititve.html"><div class="chip">Strategy</div><h3>Competitive Intelligence Agent</h3><p>Track competitor positioning, extract market signals, and identify strategic whitespace.</p><span>Open agent →</span></a>
-        <a class="card" href="conept.html"><div class="chip">Learning</div><h3>Concept Explainer Agent</h3><p>Turn complex topics into clear explanations, examples, and teaching-oriented breakdowns.</p><span>Open agent →</span></a>
+        <a class="card" href="dataset-builder.html">
+          <div class="card-top">
+            <div class="card-icon">
+              <svg viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+            </div>
+            <div class="chip">Data Ops</div>
+          </div>
+          <h3>Dataset Builder Agent</h3>
+          <p>Create labeled, quality-scored datasets with guided workflow, exports, and generation controls.</p>
+          <div class="card-link">Open agent <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+        </a>
+        <a class="card" href="compeititve.html">
+          <div class="card-top">
+            <div class="card-icon">
+              <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            </div>
+            <div class="chip">Strategy</div>
+          </div>
+          <h3>Competitive Intelligence Agent</h3>
+          <p>Track competitor positioning, extract market signals, and identify strategic whitespace.</p>
+          <div class="card-link">Open agent <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+        </a>
+        <a class="card" href="conept.html">
+          <div class="card-top">
+            <div class="card-icon">
+              <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+            </div>
+            <div class="chip">Learning</div>
+          </div>
+          <h3>Concept Explainer Agent</h3>
+          <p>Turn complex topics into clear explanations, examples, and teaching-oriented breakdowns.</p>
+          <div class="card-link">Open agent <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+        </a>
       </div>
     </section>
 
+    <!-- Layer 03 -->
     <section class="layer">
-      <div class="layer-header"><div class="layer-number">03</div><div class="layer-line"></div><div class="layer-badge">Creation</div><div class="layer-line"></div></div>
+      <div class="layer-header">
+        <div class="layer-number">03</div>
+        <div class="layer-line"></div>
+        <div class="layer-badge"><div class="layer-badge-dot"></div>Creation</div>
+        <div class="layer-line"></div>
+      </div>
       <div class="cards">
-        <a class="card" href="Architect.html"><div class="chip">Architecture</div><h3>System Architect Agent</h3><p>Design robust system blueprints with scalable components, interfaces, and technical tradeoffs.</p><span>Open agent →</span></a>
-        <a class="card" href="Code-agent.html"><div class="chip">Engineering</div><h3>Code Agent</h3><p>Generate, refactor, and ship production-ready code with testing and implementation guidance.</p><span>Open agent →</span></a>
-        <a class="card" href="product.html"><div class="chip">Product</div><h3>Product Builder Agent</h3><p>Plan user-centric product strategies, define features, and convert ideas into executable plans.</p><span>Open agent →</span></a>
+        <a class="card" href="Architect.html">
+          <div class="card-top">
+            <div class="card-icon">
+              <svg viewBox="0 0 24 24"><rect x="2" y="3" width="7" height="7"/><rect x="15" y="3" width="7" height="7"/><rect x="2" y="14" width="7" height="7"/><rect x="15" y="14" width="7" height="7"/></svg>
+            </div>
+            <div class="chip">Architecture</div>
+          </div>
+          <h3>System Architect Agent</h3>
+          <p>Design robust system blueprints with scalable components, interfaces, and technical tradeoffs.</p>
+          <div class="card-link">Open agent <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+        </a>
+        <a class="card" href="Code-agent.html">
+          <div class="card-top">
+            <div class="card-icon">
+              <svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            </div>
+            <div class="chip">Engineering</div>
+          </div>
+          <h3>Code Agent</h3>
+          <p>Generate, refactor, and ship production-ready code with testing and implementation guidance.</p>
+          <div class="card-link">Open agent <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+        </a>
+        <a class="card" href="product.html">
+          <div class="card-top">
+            <div class="card-icon">
+              <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+            </div>
+            <div class="chip">Product</div>
+          </div>
+          <h3>Product Builder Agent</h3>
+          <p>Plan user-centric product strategies, define features, and convert ideas into executable plans.</p>
+          <div class="card-link">Open agent <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+        </a>
       </div>
     </section>
 
+    <!-- Layer 04 -->
     <section class="layer">
-      <div class="layer-header"><div class="layer-number">04</div><div class="layer-line"></div><div class="layer-badge">Governance</div><div class="layer-line"></div></div>
+      <div class="layer-header">
+        <div class="layer-number">04</div>
+        <div class="layer-line"></div>
+        <div class="layer-badge"><div class="layer-badge-dot"></div>Governance</div>
+        <div class="layer-line"></div>
+      </div>
       <div class="cards">
-        <a class="card" href="automation.html"><div class="chip">Automation</div><h3>Automation Builder Agent</h3><p>Build end-to-end workflows across systems and orchestrate repetitive business operations.</p><span>Open agent →</span></a>
-        <a class="card" href="model-evaluator.html"><div class="chip">Evaluation</div><h3>Model Evaluator Agent</h3><p>Assess model quality, benchmark outputs, and surface reliability and performance gaps.</p><span>Open agent →</span></a>
-        <a class="card" href="Startup-Legal-Compliance-Agent.html"><div class="chip">Compliance</div><h3>Startup Legal & Compliance Agent</h3><p>Support policy and regulatory readiness with practical guardrails for growing organizations.</p><span>Open agent →</span></a>
+        <a class="card" href="automation.html">
+          <div class="card-top">
+            <div class="card-icon">
+              <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10"/><polyline points="12 6 12 12 16 14"/><path d="M22 2l-5 5M17 2h5v5"/></svg>
+            </div>
+            <div class="chip">Automation</div>
+          </div>
+          <h3>Automation Builder Agent</h3>
+          <p>Build end-to-end workflows across systems and orchestrate repetitive business operations.</p>
+          <div class="card-link">Open agent <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+        </a>
+        <a class="card" href="model-evaluator.html">
+          <div class="card-top">
+            <div class="card-icon">
+              <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </div>
+            <div class="chip">Evaluation</div>
+          </div>
+          <h3>Model Evaluator Agent</h3>
+          <p>Assess model quality, benchmark outputs, and surface reliability and performance gaps.</p>
+          <div class="card-link">Open agent <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+        </a>
+        <a class="card" href="Startup-Legal-Compliance-Agent.html">
+          <div class="card-top">
+            <div class="card-icon">
+              <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <div class="chip">Compliance</div>
+          </div>
+          <h3>Startup Legal &amp; Compliance Agent</h3>
+          <p>Support policy and regulatory readiness with practical guardrails for growing organizations.</p>
+          <div class="card-link">Open agent <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+        </a>
       </div>
     </section>
 
+    <!-- Layer 05 -->
     <section class="layer">
-      <div class="layer-header"><div class="layer-number">05</div><div class="layer-line"></div><div class="layer-badge">Operations</div><div class="layer-line"></div></div>
+      <div class="layer-header">
+        <div class="layer-number">05</div>
+        <div class="layer-line"></div>
+        <div class="layer-badge"><div class="layer-badge-dot"></div>Operations</div>
+        <div class="layer-line"></div>
+      </div>
       <div class="cards">
-        <a class="card" href="Growth.html"><div class="chip">Growth</div><h3>Growth Intelligence Agent</h3><p>Find growth opportunities, optimize funnels, and prioritize high-impact GTM experiments.</p><span>Open agent →</span></a>
-        <a class="card" href="FinAgent.html"><div class="chip">Finance</div><h3>Financial Agent</h3><p>Model budgets and runway, track financial health, and support scenario-based decisions.</p><span>Open agent →</span></a>
-        <a class="card" href="Personal-os.html"><div class="chip">Productivity</div><h3>Personal OS Agent</h3><p>Manage execution rhythms, goals, and planning systems to run your day-to-day effectively.</p><span>Open agent →</span></a>
+        <a class="card" href="Growth.html">
+          <div class="card-top">
+            <div class="card-icon">
+              <svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+            </div>
+            <div class="chip">Growth</div>
+          </div>
+          <h3>Growth Intelligence Agent</h3>
+          <p>Find growth opportunities, optimize funnels, and prioritize high-impact GTM experiments.</p>
+          <div class="card-link">Open agent <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+        </a>
+        <a class="card" href="FinAgent.html">
+          <div class="card-top">
+            <div class="card-icon">
+              <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            </div>
+            <div class="chip">Finance</div>
+          </div>
+          <h3>Financial Agent</h3>
+          <p>Model budgets and runway, track financial health, and support scenario-based decisions.</p>
+          <div class="card-link">Open agent <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+        </a>
+        <a class="card" href="Personal-os.html">
+          <div class="card-top">
+            <div class="card-icon">
+              <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            </div>
+            <div class="chip">Productivity</div>
+          </div>
+          <h3>Personal OS Agent</h3>
+          <p>Manage execution rhythms, goals, and planning systems to run your day-to-day effectively.</p>
+          <div class="card-link">Open agent <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+        </a>
       </div>
     </section>
+
   </main>
 </body>
 </html>
