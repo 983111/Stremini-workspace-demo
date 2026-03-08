@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Stremini — Dataset Builder Agent</title>
+<title>Stremini — Workspace (5 Layers · 15 Agents)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <style>
@@ -104,6 +104,22 @@ input[type="text"]::placeholder,textarea::placeholder{color:var(--text-muted);}
 .welcome h2{font-family:'Lora',serif;font-size:22px;font-weight:500;color:var(--text-primary);margin-bottom:7px;letter-spacing:-.4px;}
 .welcome p{font-size:14px;color:var(--text-secondary);line-height:1.65;max-width:420px;margin-bottom:22px;}
 .welcome-hints{display:flex;flex-direction:column;gap:6px;width:100%;max-width:440px;}
+
+/* Workspace directory */
+.layer-list{display:flex;flex-direction:column;gap:10px;}
+.layer-card{padding:10px;border:1px solid var(--border);border-radius:var(--r-xs);background:var(--surface-2);}
+.layer-name{font-size:11px;font-weight:700;letter-spacing:.45px;text-transform:uppercase;color:var(--text-secondary);margin-bottom:6px;}
+.agent-links{display:flex;flex-wrap:wrap;gap:5px;}
+.agent-link{display:inline-flex;align-items:center;padding:4px 8px;border-radius:999px;border:1px solid var(--border);background:var(--surface);font-size:11px;color:var(--text-primary);text-decoration:none;transition:all .15s;}
+.agent-link:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-light);}
+.workspace-overview{width:100%;max-width:760px;display:grid;grid-template-columns:1fr;gap:10px;}
+.workspace-layer{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);padding:12px 14px;box-shadow:var(--shadow-sm);text-align:left;}
+.workspace-layer h3{font-size:13px;font-weight:700;color:var(--text-primary);margin-bottom:7px;}
+.workspace-layer ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px;}
+.workspace-layer li{font-size:12.5px;color:var(--text-secondary);}
+.workspace-layer a{color:inherit;text-decoration:none;border-bottom:1px dashed var(--border);}
+.workspace-layer a:hover{color:var(--accent);border-bottom-color:var(--accent);}
+
 .hint-card{display:flex;align-items:flex-start;gap:11px;padding:12px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);text-align:left;cursor:pointer;transition:all .15s;box-shadow:var(--shadow-sm);}
 .hint-card:hover{border-color:var(--accent);background:#fffbf5;transform:translateY(-1px);box-shadow:var(--shadow-md);}
 .hint-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
@@ -299,8 +315,55 @@ input[type="text"]::placeholder,textarea::placeholder{color:var(--text-muted);}
       </div>
       <span class="logo-name">Stremini</span>
     </div>
-    <div class="logo-tag">Dataset Builder Agent</div>
+    <div class="logo-tag">Workspace Portal · 5 Layers · 15 Agents</div>
     <div id="statusBadge" class="status-badge idle"><div class="status-dot"></div><span>Ready</span></div>
+  </div>
+
+
+  <div class="sidebar-section">
+    <div class="section-title">5 Layers · 15 Agents</div>
+    <div class="layer-list">
+      <div class="layer-card">
+        <div class="layer-name">Data Foundation</div>
+        <div class="agent-links">
+          <a class="agent-link" href="index.html">Dataset Builder</a>
+          <a class="agent-link" href="Data.html">Data Intelligence</a>
+          <a class="agent-link" href="knowledge.html">Knowledge Graph</a>
+        </div>
+      </div>
+      <div class="layer-card">
+        <div class="layer-name">Research & Insight</div>
+        <div class="agent-links">
+          <a class="agent-link" href="Research.html">Research & Math</a>
+          <a class="agent-link" href="conept.html">Concept Explainer</a>
+          <a class="agent-link" href="compeititve.html">Competitive Intel</a>
+        </div>
+      </div>
+      <div class="layer-card">
+        <div class="layer-name">Architecture & Build</div>
+        <div class="agent-links">
+          <a class="agent-link" href="Architect.html">Architect</a>
+          <a class="agent-link" href="Code-agent.html">Code Agent</a>
+          <a class="agent-link" href="product.html">Product Builder</a>
+          <a class="agent-link" href="automation.html">Automation Builder</a>
+        </div>
+      </div>
+      <div class="layer-card">
+        <div class="layer-name">Evaluation & Governance</div>
+        <div class="agent-links">
+          <a class="agent-link" href="model-evaluator.html">Model Evaluator</a>
+          <a class="agent-link" href="Startup-Legal-Compliance-Agent.html">Legal & Compliance</a>
+        </div>
+      </div>
+      <div class="layer-card">
+        <div class="layer-name">Business Operating</div>
+        <div class="agent-links">
+          <a class="agent-link" href="Growth.html">Growth Intelligence</a>
+          <a class="agent-link" href="FinAgent.html">Financial Agent</a>
+          <a class="agent-link" href="Personal-os.html">Personal OS</a>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="sidebar-section">
@@ -384,20 +447,48 @@ input[type="text"]::placeholder,textarea::placeholder{color:var(--text-muted);}
         <div class="welcome-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/><path d="M3 12c0 1.66 4 3 9 3s9-1.34 9-3"/></svg>
         </div>
-        <h2>Dataset Builder Agent</h2>
-        <p>End-to-end AI pipeline — collect, clean, label, deduplicate, augment, and export ML-ready datasets with beautiful structured output.</p>
-        <div class="welcome-hints">
-          <div class="hint-card" onclick="setHint('Build a phishing email detection dataset with 5,000 spam and 5,000 normal samples, labeled and quality-scored.')">
-            <div class="hint-icon">🎣</div><div><strong>Phishing Detection Dataset</strong><small>Spam vs. normal email samples, labeled and scored</small></div>
+        <h2>Stremini Workspace</h2>
+        <p>Now organized into <strong>5 layers and 15 specialized agents</strong>. Open any agent from the sidebar directory and use this page for Dataset Builder workflows.</p>
+        <div class="workspace-overview">
+          <div class="workspace-layer">
+            <h3>1) Data Foundation (3)</h3>
+            <ul>
+              <li><a href="index.html">Dataset Builder Agent</a></li>
+              <li><a href="Data.html">Data Intelligence</a></li>
+              <li><a href="knowledge.html">Knowledge Graph</a></li>
+            </ul>
           </div>
-          <div class="hint-card" onclick="setHint('Generate a synthetic dataset of 2,000 coding problems with difficulty labels: easy, medium, hard.')">
-            <div class="hint-icon">💻</div><div><strong>Coding Problems Dataset</strong><small>Synthetic generation with difficulty classification</small></div>
+          <div class="workspace-layer">
+            <h3>2) Research & Insight (3)</h3>
+            <ul>
+              <li><a href="Research.html">Research & Math</a></li>
+              <li><a href="conept.html">Concept Explainer</a></li>
+              <li><a href="compeititve.html">Competitive Intel</a></li>
+            </ul>
           </div>
-          <div class="hint-card" onclick="setHint('Build a medical text classification dataset. Run quality filtering, deduplicate, and generate a README card.')">
-            <div class="hint-icon">🏥</div><div><strong>Medical NLP Dataset</strong><small>Quality-scored, deduplicated clinical text samples</small></div>
+          <div class="workspace-layer">
+            <h3>3) Architecture & Build (4)</h3>
+            <ul>
+              <li><a href="Architect.html">Architect Agent</a></li>
+              <li><a href="Code-agent.html">Code Agent</a></li>
+              <li><a href="product.html">Product Builder</a></li>
+              <li><a href="automation.html">Automation Builder</a></li>
+            </ul>
           </div>
-          <div class="hint-card" onclick="setHint('Create a sentiment analysis dataset from product reviews. Augment with paraphrases and export to HuggingFace format.')">
-            <div class="hint-icon">💬</div><div><strong>Sentiment Analysis Dataset</strong><small>Reviews labeled by sentiment, augmented and exported</small></div>
+          <div class="workspace-layer">
+            <h3>4) Evaluation & Governance (2)</h3>
+            <ul>
+              <li><a href="model-evaluator.html">AI Model Evaluator (separate)</a></li>
+              <li><a href="Startup-Legal-Compliance-Agent.html">Startup Legal & Compliance</a></li>
+            </ul>
+          </div>
+          <div class="workspace-layer">
+            <h3>5) Business Operating (3)</h3>
+            <ul>
+              <li><a href="Growth.html">Growth Intelligence</a></li>
+              <li><a href="FinAgent.html">Financial Agent</a></li>
+              <li><a href="Personal-os.html">Personal OS</a></li>
+            </ul>
           </div>
         </div>
       </div>
