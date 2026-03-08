@@ -4,16 +4,36 @@ Stremini Workspace is a comprehensive, AI‑native ecosystem designed to empower
 
 ## 🚀 Project Overview
 
-The project is structured as a unified workspace (`index.html`) that serves as a portal to various high‑intelligence agents. Each agent is a specialized tool optimized for a specific domain of business or technical operations.
+The project is structured as a collection of specialized agent interfaces (HTML apps), each optimized for a specific domain of business or technical operations.
 
-## The Four Layers of Intelligence
+## The Five Layers of Intelligence (15 Agents)
 
-The workspace is organized into four strategic layers:
+The workspace is organized into five strategic layers with **15 total agents**:
 
-- **Intelligence Layer:** Deep research, data analysis, and competitive monitoring.
-- **Product Layer:** Architecture design, product building, and workflow automation.
-- **Growth Layer:** Market intelligence, GTM strategy, and financial modeling.
-- **Operational Layer:** Legal compliance and personal OS management.
+1. **Data Foundation Layer**
+   - Dataset Builder Agent (`index.html`)
+   - Data Intelligence (`Data.html`)
+   - Knowledge Graph (`knowledge.html`)
+
+2. **Research & Insight Layer**
+   - Research & Math (`Research.html`)
+   - Concept Explainer (`conept.html`)
+   - Competitive Intel (`compeititve.html`)
+
+3. **Architecture & Build Layer**
+   - Architect Agent (`Architect.html`)
+   - Code Agent (`Code-agent.html`)
+   - Product Builder (`product.html`)
+   - Automation Builder (`automation.html`)
+
+4. **Evaluation & Governance Layer**
+   - **AI Model Evaluator** (`model-evaluator.html`) — maintained as a separate evaluator agent (not part of Architect)
+   - Startup Legal & Compliance (`Startup-Legal-Compliance-Agent.html`)
+
+5. **Business Operating Layer**
+   - Growth Intelligence (`Growth.html`)
+   - Financial Agent (`FinAgent.html`)
+   - Personal OS (`Personal-os.html`)
 
 ## 🤖 Specialized Agents
 
@@ -21,9 +41,9 @@ The workspace is organized into four strategic layers:
 - **Architect Agent** (`Architect.html`): Designs high‑level system architectures and provides implementation roadmaps.
 - **Code Agent** (`Code-agent.html`): Performs code implementation, debugging, security reviews, and logic explanations.
 - **Product Builder** (`product.html`): Generates PRDs, database schemas, frontend components, and deployment strategies.
-- **AI Model Evaluator** (`model-evaluator.html`): Benchmarks AI models, detects hallucinations, and compares model performance.
 
-### 2. Business & Strategy Agents
+### 2. Evaluation, Business & Strategy Agents
+- **AI Model Evaluator** (`model-evaluator.html`): Benchmarks AI models, detects hallucinations, and compares model performance with a dedicated evaluation workflow.
 - **Competitive Intel** (`compeititve.html`): Monitors competitors in real‑time, analyzes market threats, and identifies opportunities.
 - **Growth Intelligence** (`Growth.html`): Builds GTM plans, viral loops, and ad strategies while monitoring funnel conversion.
 - **Financial Agent** (`FinAgent.html`): Conducts financial modeling, burn‑rate analysis, and runway forecasting.
@@ -59,11 +79,12 @@ The workspace is organized into four strategic layers:
 
 ```plaintext
 Plaintext
-├── index.html           # Main Workspace Portal
+├── index.html           # Dataset Builder Agent
 ├── Architect.html       # System Design Agent
 ├── Code-agent.html      # Programming Assistant
 ├── Data.html            # Data Analysis Engine
 ├── Research.html        # Academic/Math Researcher
+├── conept.html          # Concept Explainer Agent
 ├── FinAgent.html        # Financial Modeler
 ├── Growth.html          # Marketing & GTM Agent
 ├── automation.html      # Workflow Builder
@@ -79,4 +100,4 @@ Plaintext
 
 - **Deployment:** The workspace is built as a static frontend that interacts with Cloudflare Worker backends. Simply host the HTML files on any static hosting provider.
 - **API Configuration:** Update the `BACKEND` constants in the `<script>` sections of the HTML files to point to your specific AI service endpoints.
-- **Usage:** Open `index.html` to navigate the layers and launch the specific agent needed for your task.
+- **Usage:** Open the specific HTML file for the agent you want (for example `model-evaluator.html` for model quality checks).

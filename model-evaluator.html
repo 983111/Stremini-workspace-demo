@@ -147,16 +147,26 @@ html,body{height:100%;background:var(--bg);font-family:'DM Sans',sans-serif;colo
 
 .result-bd{
   padding:24px 28px;
-  font-family:'DM Mono','Courier New',monospace;
-  font-size:12.5px;
-  line-height:1.9;
+  font-size:13px;
+  line-height:1.8;
   color:#1a1814;
   max-height:620px;
   overflow-y:auto;
-  white-space:pre-wrap;
   word-break:break-word;
   background:#fafaf9;
 }
+.result-plain{font-family:'DM Mono','Courier New',monospace;white-space:pre-wrap;}
+.result-rich{display:flex;flex-direction:column;gap:14px;font-family:'DM Sans',sans-serif;}
+.result-section{background:var(--surface);border:1px solid var(--border2);border-radius:8px;overflow:hidden;}
+.result-section-title{padding:8px 12px;background:var(--surface2);font-size:10.5px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:var(--txt2);}
+.result-section-body{padding:12px 14px;color:var(--txt2);line-height:1.75;}
+.result-section-body ul{padding-left:18px;display:flex;flex-direction:column;gap:4px;}
+.result-section-body li{margin:0;}
+.result-section-body p{margin:0 0 8px;}
+.result-section-body p:last-child{margin-bottom:0;}
+.result-kv{display:grid;grid-template-columns:150px 1fr;gap:6px 12px;margin-top:4px;}
+.result-kv kbd{font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.35px;background:none;padding:0;}
+.result-kv span{font-size:13px;color:var(--txt);}
 
 /* Score badges inline */
 .score-highlight{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;font-family:'DM Sans',sans-serif}
@@ -583,6 +593,85 @@ function addRecent(text, m) {
 function esc(s) {
   return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
 }
+
+function formatInline(text) {
+  return esc(text)
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/`([^`]+)`/g, '<code>$1</code>');
+}
+
+function toTitleCaseHeading(text) {
+  return text
+    .replace(/^#+\s*/, "")
+    .replace(/[:：]\s*$/, "")
+    .trim();
+}
+
+function prettyEvaluatorContent(raw) {
+  const lines = String(raw || "").split(/\r?\n/);
+  const sections = [];
+  let current = { title: "Summary", lines: [] };
+
+  const flush = () => {
+    if (!current.lines.length) return;
+    sections.push(current);
+    current = { title: "", lines: [] };
+  };
+
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (!trimmed) {
+      current.lines.push("");
+      continue;
+    }
+
+    if (/^(#{1,3}\s+.+|[A-Z][A-Za-z0-9\s\-\/]{2,}:)$/.test(trimmed)) {
+      flush();
+      current.title = toTitleCaseHeading(trimmed);
+      continue;
+    }
+
+    current.lines.push(line);
+  }
+  flush();
+
+  if (!sections.length) {
+    return `<div class="result-plain">${esc(raw)}</div>`;
+  }
+
+  const html = sections.map(section => {
+    const kv = [];
+    const bullets = [];
+    const paragraphs = [];
+
+    section.lines.forEach(line => {
+      const trimmed = line.trim();
+      if (!trimmed) return;
+      if (/^[-•*]\s+/.test(trimmed)) {
+        bullets.push(trimmed.replace(/^[-•*]\s+/, ""));
+        return;
+      }
+      const m = trimmed.match(/^([A-Za-z][A-Za-z0-9\s\-\/]{1,30}):\s+(.+)$/);
+      if (m) {
+        kv.push({k:m[1],v:m[2]});
+      } else {
+        paragraphs.push(trimmed);
+      }
+    });
+
+    const title = section.title || "Details";
+    return `<div class="result-section">
+      <div class="result-section-title">${formatInline(title)}</div>
+      <div class="result-section-body">
+        ${paragraphs.map(p => `<p>${formatInline(p)}</p>`).join("")}
+        ${kv.length ? `<div class="result-kv">${kv.map(({k,v}) => `<kbd>${formatInline(k)}</kbd><span>${formatInline(v)}</span>`).join("")}</div>` : ""}
+        ${bullets.length ? `<ul>${bullets.map(b => `<li>${formatInline(b)}</li>`).join("")}</ul>` : ""}
+      </div>
+    </div>`;
+  }).join("");
+
+  return `<div class="result-rich">${html}</div>`;
+}
 function scrollBottom() {
   const ws = document.getElementById("workspace");
   ws.scrollTop = ws.scrollHeight;
@@ -644,7 +733,7 @@ function renderResult(content, status) {
         Copy
       </button>
     </div>
-    <div class="result-bd" id="${pid}">${esc(content)}</div>`;
+    <div class="result-bd" id="${pid}">${prettyEvaluatorContent(content)}</div>`;
 
   // Download
   const dlWrap = document.createElement("div");
