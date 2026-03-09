@@ -24,12 +24,12 @@
   --amber2:#b45309;
   --amber-bg:#fffbf5;
   --amber-border:#fde68a;
-  /* Automation accent: electric indigo */
-  --accent:#4f46e5;
-  --accent2:#3730a3;
-  --accent-bg:#eef2ff;
-  --accent-border:#c7d2fe;
-  --accent-light:#818cf8;
+  /* Accent: black */
+  --accent:#111111;
+  --accent2:#000000;
+  --accent-bg:#f5f5f4;
+  --accent-border:#d4d0c8;
+  --accent-light:#555555;
   /* Status colors */
   --green:#059669;
   --green-bg:#d1fae5;
@@ -195,7 +195,7 @@ a:hover{text-decoration:underline}
 /* ── INPUT PANEL ──────────────────────────────────── */
 .input-panel{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow-md);margin-bottom:24px}
 
-.ip-header{padding:14px 18px;background:linear-gradient(to right,var(--accent-bg),#f8f9ff);border-bottom:1px solid var(--accent-border);display:flex;align-items:center;justify-content:space-between}
+.ip-header{padding:14px 18px;background:linear-gradient(to right,var(--accent-bg),#f5f5f4);border-bottom:1px solid var(--accent-border);display:flex;align-items:center;justify-content:space-between}
 .ip-title{font-size:13px;font-weight:600;color:var(--accent2);display:flex;align-items:center;gap:7px}
 .ip-mode-pills{display:flex;gap:5px}
 .ip-mode-pill{
@@ -217,7 +217,7 @@ a:hover{text-decoration:underline}
 .ip-select:focus{border-color:var(--accent)}
 
 .ip-ta-wrap{background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r2);overflow:hidden;transition:border-color .15s,box-shadow .15s}
-.ip-ta-wrap:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px rgba(79,70,229,.08)}
+.ip-ta-wrap:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,0,0,.06)}
 .ip-ta{
   width:100%;border:none;background:transparent;padding:12px 14px;
   font-family:'DM Sans',sans-serif;font-size:13.5px;color:var(--txt);
@@ -230,9 +230,9 @@ a:hover{text-decoration:underline}
   display:flex;align-items:center;gap:6px;padding:8px 18px;
   background:var(--accent);color:#fff;border:none;border-radius:var(--r2);
   font-size:12.5px;font-weight:600;cursor:pointer;transition:all .14s;
-  box-shadow:0 1px 3px rgba(79,70,229,.3);
+  box-shadow:0 1px 3px rgba(0,0,0,.2);
 }
-.ip-send:hover{background:var(--accent2);transform:translateY(-1px);box-shadow:0 3px 10px rgba(79,70,229,.35)}
+.ip-send:hover{background:#333;transform:translateY(-1px);box-shadow:0 3px 10px rgba(0,0,0,.25)}
 .ip-send:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none}
 
 /* ── OUTPUT PANEL ──────────────────────────────────── */
@@ -240,7 +240,7 @@ a:hover{text-decoration:underline}
 .op-header{
   display:flex;align-items:center;justify-content:space-between;
   padding:12px 18px;
-  background:linear-gradient(to right,var(--accent-bg),#f8f9ff);
+  background:linear-gradient(to right,var(--accent-bg),#f5f5f4);
   border-bottom:1.5px solid var(--accent-border);
 }
 .op-head-left{display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600;color:var(--accent2)}
@@ -336,7 +336,7 @@ a:hover{text-decoration:underline}
 .error-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
 .ea-btn{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:var(--r2);font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all .14s}
 .ea-primary{background:var(--accent);color:#fff}
-.ea-primary:hover{background:var(--accent2)}
+.ea-primary:hover{background:#333}
 .ea-ghost{background:var(--surface2);color:var(--txt2);border:1.5px solid var(--border)}
 .ea-ghost:hover{border-color:var(--muted);color:var(--txt)}
 
@@ -367,7 +367,7 @@ a:hover{text-decoration:underline}
 .modal-note code{font-family:'DM Mono',monospace;font-size:11px;background:var(--surface2);padding:1px 4px;border-radius:3px}
 .modal-actions{display:flex;gap:8px;margin-top:20px}
 .btn-primary{flex:1;padding:10px;background:var(--accent);color:#fff;border:none;border-radius:var(--r2);font-size:13.5px;font-weight:600;cursor:pointer;transition:background .14s}
-.btn-primary:hover{background:var(--accent2)}
+.btn-primary:hover{background:#333}
 .btn-ghost-m{padding:10px 17px;background:transparent;color:var(--txt2);border:1.5px solid var(--border);border-radius:var(--r2);font-size:13px;font-weight:500;cursor:pointer;transition:all .14s}
 .btn-ghost-m:hover{border-color:var(--muted);color:var(--txt)}
 
@@ -436,7 +436,6 @@ a:hover{text-decoration:underline}
       <div class="pill pill-accent" id="statusPill" style="display:none">
         <span class="pill-dot"></span><span id="statusTxt">Building…</span>
       </div>
-
     </div>
   </header>
 
@@ -474,7 +473,7 @@ const MODES = {
   build: {
     icon: "⚡", name: "Build Workflow",
     desc: "Design a complete automation end-to-end",
-    badge: "bb-build", color: "#4f46e5",
+    badge: "bb-build", color: "#111111",
     placeholder: "e.g. When a new GitHub issue is labelled 'bug', create a Linear ticket, notify Slack #bugs, and assign it to the on-call engineer based on current PagerDuty schedule…",
     hint: "Describe what should trigger the automation and what it should do"
   },
@@ -547,7 +546,6 @@ const ST = {
   history: JSON.parse(localStorage.getItem("sa_auto_history") || "[]"),
   builtCount: parseInt(localStorage.getItem("sa_auto_built") || "0"),
   chainsCount: parseInt(localStorage.getItem("sa_auto_chains") || "0"),
-  // active
   currentQuery: null,
   currentResult: null,
 };
@@ -639,11 +637,11 @@ function buildHistoryList() {
   if (ST.history.length === 0) { sec.style.display = "none"; return; }
   sec.style.display = "block";
   const el = $("historyList"); el.innerHTML = "";
-  const modeColors = { build:"#4f46e5", explain:"#1d4ed8", debug:"#991b1b", optimize:"#059669", chain:"#b45309", integrate:"#c2410c" };
-  [...ST.history].reverse().slice(0,8).forEach((h, i) => {
+  const modeColors = { build:"#111", explain:"#1d4ed8", debug:"#991b1b", optimize:"#059669", chain:"#b45309", integrate:"#c2410c" };
+  [...ST.history].reverse().slice(0,8).forEach((h) => {
     const div = document.createElement("div"); div.className = "hist-item";
     div.innerHTML = `
-      <span class="hist-mode-dot" style="background:${modeColors[h.mode]||'#4f46e5'}"></span>
+      <span class="hist-mode-dot" style="background:${modeColors[h.mode]||'#111'}"></span>
       <span class="hist-label">${esc(h.label)}</span>
       <span class="hist-time">${h.time}</span>`;
     div.onclick = () => restoreHistory(h);
@@ -739,10 +737,7 @@ function showBuilder(modeId, prefillQuery) {
   wrap.appendChild(h);
 
   const meta = document.createElement("div"); meta.className = "b-meta";
-  meta.innerHTML = `
-    <span>${m.desc}</span>
-    <span style="color:var(--accent-border)">·</span>
-    <span>MBZUAI K2-Think · temp 0.8</span>`;
+  meta.innerHTML = `<span>${m.desc}</span>`;
   wrap.appendChild(meta);
 
   // Input panel
@@ -832,7 +827,6 @@ function showBuilder(modeId, prefillQuery) {
 
   pg.appendChild(wrap);
 
-  // Focus textarea
   setTimeout(() => ta.focus(), 50);
 }
 
@@ -846,7 +840,6 @@ function loadTemplate(id) {
   activateModeItem(t.mode);
   persist();
   showBuilder(t.mode, TEMPLATE_QUERIES[id] || "");
-  // Auto-trigger after a tick so the UI is ready
   setTimeout(triggerBuild, 80);
 }
 
@@ -857,7 +850,6 @@ function restoreHistory(h) {
   ST.mode = h.mode;
   activateModeItem(h.mode);
   showBuilder(h.mode, h.query);
-  // Restore cached result if present
   if (ST.cache[h.cacheKey]) {
     setTimeout(() => renderOutput(h.mode, ST.cache[h.cacheKey], h.query), 50);
   }
@@ -878,7 +870,7 @@ async function triggerBuild() {
   if (!query) { ta.focus(); return; }
 
   if (!ST.workerUrl) {
-    renderErrorBox(out, "Worker not configured", "Click Setup and enter your Worker URL.", null, "setup");
+    renderErrorBox(out, "Worker not configured", "No Worker URL set.", null, "setup");
     return;
   }
 
@@ -888,7 +880,6 @@ async function triggerBuild() {
   const runtime    = $("runtimeSel")?.value || "cloudflare-workers";
   const trigger    = $("triggerSel")?.value || "webhook";
 
-  // Check cache
   const cKey = mode + "|" + query + "|" + complexity + "|" + runtime;
   if (ST.cache[cKey]) {
     renderOutput(mode, ST.cache[cKey], query);
@@ -902,7 +893,7 @@ async function triggerBuild() {
       <div class="spinner"></div>
       <div>
         <div class="loading-text">AI is designing your automation…</div>
-        <div class="loading-sub">K2-Think is thinking through the full workflow architecture. This takes a few seconds — result is cached locally.</div>
+        <div class="loading-sub">Thinking through the full workflow architecture. This takes a few seconds — result is cached locally.</div>
       </div>
     </div>`;
   scrollTop();
@@ -925,11 +916,9 @@ async function triggerBuild() {
     const raw = data.content || data.solution || "";
     if (!raw) throw new Error("Worker returned empty content");
 
-    if (myGen !== _buildGen) return; // stale
+    if (myGen !== _buildGen) return;
 
-    // Cache it
     ST.cache[cKey] = { raw, status: data.status, mode };
-    // Add to history
     const histEntry = {
       mode, query,
       label: query.length > 50 ? query.slice(0, 50) + "…" : query,
@@ -967,12 +956,10 @@ function renderOutput(mode, cached, query) {
   const m = MODES[mode];
   const raw = cached.raw || "";
 
-  // Flow visualizer (only for build + chain modes)
   if (mode === "build" || mode === "chain") {
     out.appendChild(buildFlowViz(raw, mode));
   }
 
-  // Output panel
   const panel = document.createElement("div"); panel.className = "output-panel";
 
   const head = document.createElement("div"); head.className = "op-header";
@@ -1009,13 +996,12 @@ function renderOutput(mode, cached, query) {
   panel.appendChild(body);
   out.appendChild(panel);
 
-  // Highlight code
   out.querySelectorAll("pre code").forEach(el => { try { hljs.highlightElement(el); } catch(e){} });
   scrollTop();
 }
 
 // ══════════════════════════════════════════════════════════════════════
-//  FLOW VISUALIZER — parse workflow steps from raw text
+//  FLOW VISUALIZER
 // ══════════════════════════════════════════════════════════════════════
 function buildFlowViz(raw, mode) {
   const viz = document.createElement("div"); viz.className = "flow-viz";
@@ -1023,13 +1009,11 @@ function buildFlowViz(raw, mode) {
 
   const nodes = document.createElement("div"); nodes.className = "flow-nodes";
 
-  // Extract steps from raw text
   const steps = [];
   const trigMatch = raw.match(/(?:trigger[:\s]+|triggered by[:\s]+)([^\n]{3,50})/i);
   if (trigMatch) steps.push({ icon:"⚡", label: trigMatch[1].slice(0,22).trim(), type:"trigger", cls:"fn-trigger" });
   else steps.push({ icon:"⚡", label:"Trigger", type:"trigger", cls:"fn-trigger" });
 
-  // Find STEP N: lines
   const stepRe = /STEP\s+\d+:\s+([^\n]{3,40})/gi;
   let sm; let count = 0;
   while ((sm = stepRe.exec(raw)) !== null && count < 5) {
@@ -1045,7 +1029,6 @@ function buildFlowViz(raw, mode) {
     count++;
   }
 
-  // Agent nodes for chain mode
   if (mode === "chain") {
     const agentRe = /AGENT\s+\d+:\s+([^\n]{3,40})/gi;
     let am; count = 0;
@@ -1086,9 +1069,9 @@ function renderErrorBox(container, title, msg, retryFn, forceKind) {
   const kind = forceKind || classifyError(msg);
   const diagRows = {
     cors: [
-      { dot:"red",   text:"<strong>CORS blocked</strong> — the Worker rejected this page's origin. The <code>src/index.js</code> includes <code>\"null\"</code> for local file access." },
-      { dot:"amber", text:"<strong>To fix:</strong> redeploy the updated Worker with <code>wrangler deploy</code>, then reload." },
-      { dot:"green", text:"<strong>Workaround:</strong> open via <code>npx serve .</code> so origin becomes <code>http://localhost:5500</code>." },
+      { dot:"red",   text:"<strong>CORS blocked</strong> — the Worker rejected this origin. Make sure you've deployed the latest <code>index.js</code>." },
+      { dot:"amber", text:"<strong>To fix:</strong> redeploy with <code>wrangler deploy</code> so the updated CORS headers take effect." },
+      { dot:"green", text:"<strong>Workaround:</strong> serve via <code>npx serve .</code> so origin becomes <code>http://localhost:3000</code>." },
     ],
     setup: [
       { dot:"red",   text:"<strong>No Worker URL set.</strong> The automation builder needs a Cloudflare Worker." },
@@ -1107,7 +1090,7 @@ function renderErrorBox(container, title, msg, retryFn, forceKind) {
     ],
     generic: [
       { dot:"red",   text:`<strong>Error:</strong> ${esc(msg)}` },
-      { dot:"amber", text:"Check the Worker is deployed and the URL in Setup is correct." },
+      { dot:"amber", text:"Check the Worker is deployed and responding correctly." },
       { dot:"green", text:"Open DevTools (F12) → Console and Network tabs for details." },
     ],
   };
@@ -1127,7 +1110,6 @@ function renderErrorBox(container, title, msg, retryFn, forceKind) {
       <div class="error-diagnosis"><div class="ed-label">What to do</div>${rows}</div>
       <div class="error-actions">
         ${retryHtml}
-        
         <button class="ea-btn ea-ghost" onclick="showHome()">← Back</button>
       </div>
     </div>`;
@@ -1138,10 +1120,9 @@ function renderErrorBox(container, title, msg, retryFn, forceKind) {
 }
 
 // ══════════════════════════════════════════════════════════════════════
-//  CONTENT PARSER  (same pattern as academy)
+//  CONTENT PARSER
 // ══════════════════════════════════════════════════════════════════════
 function parseContent(raw) {
-  // Strip leading metadata headers
   let proseRaw = raw.trim();
   proseRaw = proseRaw.replace(
     /^(AUTOMATION WORKFLOW|AUTOMATION EXPLANATION|AUTOMATION DEBUG REPORT|AUTOMATION OPTIMIZATION|AGENT CHAIN DESIGN|API INTEGRATION GUIDE|WORKFLOW|Name|Trigger|Runtime|Complexity|Generated|Topic|Stage)[^\n]*\n?/gim,
@@ -1308,7 +1289,7 @@ function buildCodeBlock(lang, code) {
   w.appendChild(pre); return w;
 }
 
-// ── Raw content store (avoids HTML attribute injection) ───────────────
+// ── Raw content store ───────────────
 const _rawStore = new WeakMap();
 function copyFromStore(btn) {
   const text = _rawStore.get(btn) || "";
