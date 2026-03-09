@@ -117,6 +117,62 @@
       background: var(--green); border-radius: 50%;
       animation: pulse 2s ease-in-out infinite;
     }
+
+    .academy-banner-wrap {
+      padding: 14px 40px;
+      background: linear-gradient(90deg, #fff9f3 0%, #fff 45%, #f2f7ff 100%);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .academy-banner {
+      max-width: 1080px;
+      margin: 0 auto;
+      border: 1px solid #f0dcc8;
+      border-radius: 18px;
+      padding: 18px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 10px 30px rgba(14, 13, 12, 0.06);
+    }
+
+    .academy-copy h2 {
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(26px, 2.9vw, 34px);
+      line-height: 1;
+      margin-bottom: 6px;
+      letter-spacing: -0.02em;
+    }
+
+    .academy-copy p {
+      font-size: 13.5px;
+      color: var(--text-2);
+      max-width: 720px;
+      line-height: 1.5;
+    }
+
+    .academy-link {
+      flex-shrink: 0;
+      text-decoration: none;
+      color: white;
+      background: linear-gradient(135deg, #0e0d0c 0%, #34302c 100%);
+      border-radius: 999px;
+      border: 1px solid #2e2a26;
+      padding: 11px 18px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      transition: transform .2s ease, box-shadow .2s ease;
+      box-shadow: 0 6px 18px rgba(14, 13, 12, 0.18);
+    }
+
+    .academy-link:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 22px rgba(14, 13, 12, 0.2);
+    }
     @keyframes pulse {
       0%, 100% { opacity: 1; transform: scale(1); }
       50% { opacity: 0.4; transform: scale(0.7); }
@@ -487,6 +543,8 @@
     }
     @media (max-width: 620px) {
       .topbar { padding: 0 18px; }
+      .academy-banner-wrap { padding: 14px 18px; }
+      .academy-banner { flex-direction: column; align-items: flex-start; }
       .hero-inner { padding: 52px 20px 48px; }
       main { padding: 40px 18px 70px; }
       .cards { grid-template-columns: 1fr; }
@@ -515,6 +573,16 @@
     <div class="count-pill">15 Agents · 5 Layers</div>
   </div>
 </header>
+
+<section class="academy-banner-wrap">
+  <div class="academy-banner">
+    <div class="academy-copy">
+      <h2>✨ StreminiAI Academy</h2>
+      <p>Learn AI, ML, Deep Learning, and the mathematics behind intelligent systems — then turn your own ideas into real projects with guided hands-on tracks.</p>
+    </div>
+    <a class="academy-link" href="academy.html">Enter Academy</a>
+  </div>
+</section>
 
 <!-- ── HERO ── -->
 <div class="hero-wrap">
