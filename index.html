@@ -6,27 +6,30 @@
   <title>Stremini Workspace</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Lora:ital,wght@0,500;0,600;1,500;1,600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,500;1,600&family=Figtree:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg: #f0eeeb;
+      --bg: #ffffff;
       --surface: #ffffff;
-      --text: #1a1816;
-      --muted: #6b6560;
-      --subtle: #9a948e;
-      --line: #dbd6ce;
-      --accent: #c96c1a;
+      --surface-alt: #f8f8f8;
+      --text: #111111;
+      --muted: #555555;
+      --subtle: #999999;
+      --line: #e8e8e8;
+      --accent: #d4621a;
       --blue: #1a5ea4;
       --blue-bg: #f0f6ff;
       --blue-border: #cde0ff;
-      --card-hover-bg: #fefcf9;
-      --card-hover-border: #c8b89e;
+      --card-hover-bg: #fafafa;
+      --card-hover-border: #c0c0c0;
+      --shadow-sm: 0 1px 4px rgba(0,0,0,0.06);
+      --shadow-md: 0 4px 20px rgba(0,0,0,0.08);
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      font-family: "DM Sans", sans-serif;
+      font-family: "Figtree", sans-serif;
       background: var(--bg);
       color: var(--text);
       min-height: 100vh;
@@ -37,8 +40,8 @@
     .topbar {
       background: var(--surface);
       border-bottom: 1px solid var(--line);
-      padding: 0 32px;
-      height: 52px;
+      padding: 0 36px;
+      height: 56px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -50,14 +53,14 @@
     .brand {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 11px;
     }
 
     .brand-icon {
-      width: 26px;
-      height: 26px;
+      width: 28px;
+      height: 28px;
       background: var(--text);
-      border-radius: 6px;
+      border-radius: 7px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -71,89 +74,95 @@
     }
 
     .brand-text h1 {
-      font-family: "DM Sans", sans-serif;
-      font-size: 13px;
-      font-weight: 600;
+      font-family: "Figtree", sans-serif;
+      font-size: 13.5px;
+      font-weight: 700;
       letter-spacing: 0.01em;
       line-height: 1.2;
+      color: var(--text);
     }
 
     .brand-text p {
       font-size: 10px;
       color: var(--subtle);
       text-transform: uppercase;
-      letter-spacing: 0.12em;
+      letter-spacing: 0.14em;
       font-weight: 500;
     }
 
     .count-pill {
       font-size: 11.5px;
-      color: var(--muted);
+      color: var(--subtle);
       font-weight: 500;
-      letter-spacing: 0.01em;
+      letter-spacing: 0.03em;
+      padding: 5px 12px;
+      background: var(--surface-alt);
+      border: 1px solid var(--line);
+      border-radius: 999px;
     }
 
     /* ── MAIN ── */
     main {
-      max-width: 1100px;
+      max-width: 1080px;
       margin: 0 auto;
-      padding: 52px 24px 80px;
+      padding: 64px 28px 96px;
     }
 
     /* ── HERO ── */
     .hero {
       text-align: center;
-      margin-bottom: 52px;
+      margin-bottom: 64px;
     }
 
     .hero h2 {
-      font-family: "Lora", serif;
-      font-size: clamp(30px, 4.5vw, 46px);
-      font-weight: 600;
-      line-height: 1.08;
-      letter-spacing: -0.3px;
-      margin-bottom: 4px;
+      font-family: "Playfair Display", serif;
+      font-size: clamp(32px, 4.5vw, 50px);
+      font-weight: 700;
+      line-height: 1.06;
+      letter-spacing: -0.5px;
+      margin-bottom: 2px;
       color: var(--text);
     }
 
     .hero .accent-line {
-      font-family: "Lora", serif;
-      font-size: clamp(30px, 4.5vw, 46px);
+      font-family: "Playfair Display", serif;
+      font-size: clamp(32px, 4.5vw, 50px);
       font-weight: 500;
       font-style: italic;
       color: var(--accent);
       display: block;
-      margin-bottom: 14px;
+      margin-bottom: 20px;
+      line-height: 1.1;
     }
 
     .hero p {
-      max-width: 600px;
+      max-width: 520px;
       margin: 0 auto;
       color: var(--muted);
-      font-size: 13.5px;
-      line-height: 1.6;
+      font-size: 14px;
+      line-height: 1.65;
       font-weight: 400;
     }
 
     /* ── LAYER SECTION ── */
     .layer {
-      margin-bottom: 36px;
+      margin-bottom: 40px;
     }
 
     .layer-header {
       display: flex;
       align-items: center;
-      gap: 0;
-      margin-bottom: 14px;
+      margin-bottom: 16px;
     }
 
     .layer-number {
       font-size: 11px;
       color: var(--subtle);
-      font-weight: 600;
-      letter-spacing: 0.06em;
+      font-weight: 700;
+      letter-spacing: 0.08em;
       min-width: 22px;
-      padding-right: 10px;
+      padding-right: 12px;
+      font-family: "Figtree", sans-serif;
     }
 
     .layer-line {
@@ -165,17 +174,19 @@
     .layer-badge {
       display: flex;
       align-items: center;
-      gap: 5px;
-      padding: 4px 12px;
+      gap: 6px;
+      padding: 5px 13px;
       border: 1px solid var(--line);
       border-radius: 999px;
-      background: var(--bg);
+      background: var(--surface);
       color: var(--muted);
       font-size: 10.5px;
-      font-weight: 600;
-      letter-spacing: 0.09em;
+      font-weight: 700;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
-      margin: 0 10px;
+      margin: 0 12px;
+      font-family: "Figtree", sans-serif;
+      box-shadow: var(--shadow-sm);
     }
 
     .layer-badge-dot {
@@ -183,14 +194,14 @@
       height: 5px;
       border-radius: 50%;
       background: var(--subtle);
-      opacity: 0.6;
+      opacity: 0.5;
     }
 
     /* ── CARDS ── */
     .cards {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
+      gap: 12px;
     }
 
     .card {
@@ -199,19 +210,20 @@
       gap: 8px;
       background: var(--surface);
       border: 1px solid var(--line);
-      border-radius: 10px;
-      padding: 16px;
+      border-radius: 12px;
+      padding: 18px;
       text-decoration: none;
       color: inherit;
-      transition: border-color 0.16s ease, background 0.16s ease, transform 0.16s ease, box-shadow 0.16s ease;
-      min-height: 150px;
+      transition: border-color 0.18s ease, background 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+      min-height: 158px;
+      box-shadow: var(--shadow-sm);
     }
 
     .card:hover {
       border-color: var(--card-hover-border);
       background: var(--card-hover-bg);
-      transform: translateY(-1px);
-      box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
     }
 
     .card-top {
@@ -221,11 +233,11 @@
     }
 
     .card-icon {
-      width: 28px;
-      height: 28px;
-      background: var(--bg);
+      width: 30px;
+      height: 30px;
+      background: var(--surface-alt);
       border: 1px solid var(--line);
-      border-radius: 7px;
+      border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -244,30 +256,33 @@
     }
 
     .chip {
-      padding: 3px 8px;
+      padding: 3px 9px;
       border-radius: 999px;
       border: 1px solid var(--blue-border);
       background: var(--blue-bg);
       color: var(--blue);
       font-size: 9.5px;
       font-weight: 700;
-      letter-spacing: 0.07em;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
+      font-family: "Figtree", sans-serif;
     }
 
     .card h3 {
-      font-family: "DM Sans", sans-serif;
+      font-family: "Figtree", sans-serif;
       font-size: 13.5px;
       font-weight: 600;
       line-height: 1.3;
       color: var(--text);
+      letter-spacing: -0.1px;
     }
 
     .card p {
       font-size: 12px;
-      line-height: 1.55;
+      line-height: 1.6;
       color: var(--muted);
       flex: 1;
+      font-weight: 400;
     }
 
     .card-link {
@@ -276,8 +291,9 @@
       font-weight: 600;
       display: flex;
       align-items: center;
-      gap: 3px;
+      gap: 4px;
       margin-top: 2px;
+      font-family: "Figtree", sans-serif;
     }
 
     .card-link svg {
@@ -288,15 +304,33 @@
       stroke-width: 2;
       stroke-linecap: round;
       stroke-linejoin: round;
+      transition: transform 0.16s ease;
     }
+
+    .card:hover .card-link svg {
+      transform: translateX(2px);
+    }
+
+    /* ── FADE IN ANIMATION ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero { animation: fadeUp 0.5s ease both; }
+    .layer:nth-child(1) { animation: fadeUp 0.5s 0.05s ease both; }
+    .layer:nth-child(2) { animation: fadeUp 0.5s 0.10s ease both; }
+    .layer:nth-child(3) { animation: fadeUp 0.5s 0.15s ease both; }
+    .layer:nth-child(4) { animation: fadeUp 0.5s 0.20s ease both; }
+    .layer:nth-child(5) { animation: fadeUp 0.5s 0.25s ease both; }
 
     @media (max-width: 900px) {
       .cards { grid-template-columns: 1fr 1fr; }
     }
 
     @media (max-width: 580px) {
-      .topbar { padding: 0 16px; }
-      main { padding: 36px 14px 60px; }
+      .topbar { padding: 0 18px; }
+      main { padding: 40px 16px 64px; }
       .cards { grid-template-columns: 1fr; }
     }
   </style>
@@ -313,17 +347,17 @@
         <p>Unified Agent Console</p>
       </div>
     </div>
-    <div class="count-pill">10 Agents · 4 Layers</div>
+    <div class="count-pill">15 Agents · 5 Layers</div>
   </header>
 
   <main>
     <section class="hero">
       <h2>Choose a layer.</h2>
       <span class="accent-line">Deploy a specialist.</span>
-      <p>Five layers of intelligence — from data and research to build, governance, and operations. Every agent is available as a direct card entry point.</p>
+      <p>Five layers of intelligence — from deep research and code generation to strategy, governance, and full automation. Every agent purpose-built for its domain.</p>
     </section>
 
-    <!-- Layer 01 -->
+    <!-- Layer 01 — Intelligence -->
     <section class="layer">
       <div class="layer-header">
         <div class="layer-number">01</div>
@@ -340,7 +374,7 @@
             <div class="chip">Research</div>
           </div>
           <h3>Research &amp; Math Agent</h3>
-          <p>Generate structured research papers, solve advanced math, and produce rigorous technical analysis.</p>
+          <p>Generate structured research papers, solve advanced math problems, and organise technical analysis with rigorous, cited outputs.</p>
           <div class="card-link">Open agent <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
         </a>
         <a class="card" href="Data.html">
@@ -351,7 +385,7 @@
             <div class="chip">Analytics</div>
           </div>
           <h3>Data &amp; Decision Intelligence</h3>
-          <p>Analyze CSV/JSON business data with retention, conversion, anomaly, and risk-focused insights.</p>
+          <p>Interpret CSV and JSON business data with retention, conversion, and anomaly analysis. Surface insights, risk flags, and experiment priorities.</p>
           <div class="card-link">Open agent <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
         </a>
         <a class="card" href="knowledge.html">
@@ -362,13 +396,13 @@
             <div class="chip">Knowledge</div>
           </div>
           <h3>Knowledge Graph Agent</h3>
-          <p>Connect notes, research, and ideas to discover relationships and hidden opportunities.</p>
+          <p>Capture notes, research, and ideas. Detect semantic patterns, build connections, and surface insights you haven't thought of yet.</p>
           <div class="card-link">Open agent <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
         </a>
       </div>
     </section>
 
-    <!-- Layer 02 -->
+    <!-- Layer 02 — Foundation -->
     <section class="layer">
       <div class="layer-header">
         <div class="layer-number">02</div>
@@ -385,10 +419,10 @@
             <div class="chip">Data Ops</div>
           </div>
           <h3>Dataset Builder Agent</h3>
-          <p>Create labeled, quality-scored datasets with guided workflow, exports, and generation controls.</p>
+          <p>Create labeled, quality-scored datasets with guided workflow, exports, and generation controls for training and evaluation.</p>
           <div class="card-link">Open agent <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
         </a>
-        <a class="card" href="compeititve.html">
+        <a class="card" href="competitive.html">
           <div class="card-top">
             <div class="card-icon">
               <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
@@ -396,10 +430,10 @@
             <div class="chip">Strategy</div>
           </div>
           <h3>Competitive Intelligence Agent</h3>
-          <p>Track competitor positioning, extract market signals, and identify strategic whitespace.</p>
+          <p>Track competitor positioning, extract market signals, and identify strategic whitespace across your sector.</p>
           <div class="card-link">Open agent <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
         </a>
-        <a class="card" href="conept.html">
+        <a class="card" href="concept.html">
           <div class="card-top">
             <div class="card-icon">
               <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
@@ -407,13 +441,13 @@
             <div class="chip">Learning</div>
           </div>
           <h3>Concept Explainer Agent</h3>
-          <p>Turn complex topics into clear explanations, examples, and teaching-oriented breakdowns.</p>
+          <p>Turn complex topics into clear explanations, examples, and teaching-oriented breakdowns for any audience.</p>
           <div class="card-link">Open agent <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
         </a>
       </div>
     </section>
 
-    <!-- Layer 03 -->
+    <!-- Layer 03 — Creation -->
     <section class="layer">
       <div class="layer-header">
         <div class="layer-number">03</div>
@@ -429,8 +463,8 @@
             </div>
             <div class="chip">Architecture</div>
           </div>
-          <h3>System Architect Agent</h3>
-          <p>Design robust system blueprints with scalable components, interfaces, and technical tradeoffs.</p>
+          <h3>AI Systems Architect</h3>
+          <p>Design production AI systems with RAG, vector DB selection, model trade-off analysis, orchestration design, and scaling-aware cloud planning.</p>
           <div class="card-link">Open agent <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
         </a>
         <a class="card" href="Code-agent.html">
@@ -441,7 +475,7 @@
             <div class="chip">Engineering</div>
           </div>
           <h3>Code Agent</h3>
-          <p>Generate, refactor, and ship production-ready code with testing and implementation guidance.</p>
+          <p>Design architecture, generate production-grade code, debug, review, and audit for security and scalability — all in one place.</p>
           <div class="card-link">Open agent <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
         </a>
         <a class="card" href="product.html">
@@ -452,13 +486,13 @@
             <div class="chip">Product</div>
           </div>
           <h3>Product Builder Agent</h3>
-          <p>Plan user-centric product strategies, define features, and convert ideas into executable plans.</p>
+          <p>Describe any product idea and get a complete MVP — PRD, database schema, frontend components, and deployment guide, instantly generated.</p>
           <div class="card-link">Open agent <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
         </a>
       </div>
     </section>
 
-    <!-- Layer 04 -->
+    <!-- Layer 04 — Governance -->
     <section class="layer">
       <div class="layer-header">
         <div class="layer-number">04</div>
@@ -475,7 +509,7 @@
             <div class="chip">Automation</div>
           </div>
           <h3>Automation Builder Agent</h3>
-          <p>Build end-to-end workflows across systems and orchestrate repetitive business operations.</p>
+          <p>Build end-to-end workflows across systems and orchestrate repetitive business operations at scale.</p>
           <div class="card-link">Open agent <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
         </a>
         <a class="card" href="model-evaluator.html">
@@ -486,7 +520,7 @@
             <div class="chip">Evaluation</div>
           </div>
           <h3>Model Evaluator Agent</h3>
-          <p>Assess model quality, benchmark outputs, and surface reliability and performance gaps.</p>
+          <p>Assess model quality, benchmark outputs, and surface reliability and performance gaps across your AI stack.</p>
           <div class="card-link">Open agent <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
         </a>
         <a class="card" href="Startup-Legal-Compliance-Agent.html">
@@ -497,13 +531,13 @@
             <div class="chip">Compliance</div>
           </div>
           <h3>Startup Legal &amp; Compliance Agent</h3>
-          <p>Support policy and regulatory readiness with practical guardrails for growing organizations.</p>
+          <p>Support policy and regulatory readiness with practical guardrails and legal frameworks for growing organisations.</p>
           <div class="card-link">Open agent <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
         </a>
       </div>
     </section>
 
-    <!-- Layer 05 -->
+    <!-- Layer 05 — Operations -->
     <section class="layer">
       <div class="layer-header">
         <div class="layer-number">05</div>
@@ -520,7 +554,7 @@
             <div class="chip">Growth</div>
           </div>
           <h3>Growth Intelligence Agent</h3>
-          <p>Find growth opportunities, optimize funnels, and prioritize high-impact GTM experiments.</p>
+          <p>Find growth opportunities, optimise funnels, and prioritise high-impact GTM experiments across your pipeline.</p>
           <div class="card-link">Open agent <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
         </a>
         <a class="card" href="FinAgent.html">
@@ -531,7 +565,7 @@
             <div class="chip">Finance</div>
           </div>
           <h3>Financial Agent</h3>
-          <p>Model budgets and runway, track financial health, and support scenario-based decisions.</p>
+          <p>Model budgets and runway, track financial health, and support scenario-based decisions with live projections.</p>
           <div class="card-link">Open agent <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
         </a>
         <a class="card" href="Personal-os.html">
@@ -542,7 +576,7 @@
             <div class="chip">Productivity</div>
           </div>
           <h3>Personal OS Agent</h3>
-          <p>Manage execution rhythms, goals, and planning systems to run your day-to-day effectively.</p>
+          <p>Manage execution rhythms, goals, and planning systems to run your day-to-day operations effectively.</p>
           <div class="card-link">Open agent <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
         </a>
       </div>
