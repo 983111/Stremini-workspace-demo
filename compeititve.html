@@ -366,6 +366,10 @@ html,body{height:100%;background:var(--bg);font-family:'DM Sans',sans-serif;colo
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
             Monitor
           </button>
+          <button class="mode-btn" id="btnAsk" onclick="setMode('ask')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            Ask Anything
+          </button>
           <button class="mode-btn" id="btnReport" onclick="setMode('report')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
             Strategy Report
@@ -559,9 +563,16 @@ const modeConfig = {
   monitor: {
     pillClass:"monitor", pillTxt:"Monitor Mode",
     note:"Monitor — live competitor updates",
-    placeholder:"Which company or signal should I monitor? (e.g. 'What's new at OpenAI this week?')",
+    placeholder:"Which company, market signal, or strategic move should I monitor?",
     btnId:"btnMonitor", btnClass:"on-monitor",
     statusLabel:"Scanning signals…", doneLabel:"Intelligence gathered",
+  },
+  ask: {
+    pillClass:"monitor", pillTxt:"Ask Mode",
+    note:"Ask — query any competitor, market, segment, or strategy question",
+    placeholder:"Ask any competitive question (company, market, pricing, GTM, trend, geography)…",
+    btnId:"btnAsk", btnClass:"on-monitor",
+    statusLabel:"Researching your query…", doneLabel:"Answer ready",
   },
   report: {
     pillClass:"report", pillTxt:"Strategy Report",
@@ -677,6 +688,9 @@ function buildWelcome() {
     <div class="hint-grid">
       <div class="hint h-monitor" onclick="hintClick('monitor','What are the latest product updates and announcements from Perplexity AI, Anthropic, and Google DeepMind this week?')">
         <span class="hint-em">👁️</span><div><strong>Monitor signals</strong><small>Latest updates across all watched companies</small></div>
+      </div>
+      <div class="hint h-ask" onclick="hintClick('ask','Compare AI coding assistants for enterprise security and compliance needs in 2026')">
+        <span class="hint-em">❓</span><div><strong>Ask any query</strong><small>Not limited to watched or top companies</small></div>
       </div>
       <div class="hint h-report" onclick="hintClick('report','Generate a full weekly competitive strategy report for Perplexity AI, Anthropic, OpenAI, and Google DeepMind')">
         <span class="hint-em">📋</span><div><strong>Weekly strategy report</strong><small>Full brief with threats, opportunities, recommendations</small></div>
@@ -1110,7 +1124,8 @@ async function handleSend() {
     query,
     mode: m,
     history: chatHistory.slice(-10),
-    companies: watchedCompanies.map(c => c.name),
+    companies: m === "ask" ? [] : watchedCompanies.map(c => c.name),
+    response_format: "structured_json",
   };
 
   let data;

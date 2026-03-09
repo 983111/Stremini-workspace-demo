@@ -48,6 +48,7 @@ html,body{height:100%;background:var(--bg);font-family:'DM Sans',sans-serif;colo
 .mode-btn.on-explore{border-color:var(--teal);color:var(--teal);background:var(--teal-bg)}
 .mode-btn.on-gaps{border-color:var(--amber);color:var(--amber);background:var(--amber-bg)}
 .mode-btn.on-synthesize{border-color:var(--indigo);color:var(--indigo);background:var(--indigo-bg)}
+.mode-btn.on-teach{border-color:var(--emerald);color:var(--emerald);background:var(--emerald-bg)}
 .mode-btn.synthesize-full{grid-column:1/-1}
 .sb-sec{padding:16px 20px;border-bottom:1px solid var(--border2)}
 .sb-sec:last-child{border-bottom:none}
@@ -87,6 +88,7 @@ html,body{height:100%;background:var(--bg);font-family:'DM Sans',sans-serif;colo
 .mode-pill.explore{color:var(--teal);border-color:var(--teal-border);background:var(--teal-bg)}
 .mode-pill.gaps{color:var(--amber);border-color:#fde68a;background:var(--amber-bg)}
 .mode-pill.synthesize{color:var(--indigo);border-color:var(--indigo-border);background:var(--indigo-bg)}
+.mode-pill.teach{color:var(--emerald);border-color:var(--emerald-border);background:var(--emerald-bg)}
 .ghost-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;background:transparent;border:1.5px solid var(--border);border-radius:var(--r2);font-family:'DM Sans',sans-serif;font-size:12.5px;font-weight:500;color:var(--txt2);cursor:pointer;transition:all .15s;outline:none}
 .ghost-btn:hover{background:var(--surface);border-color:var(--muted)}
 
@@ -152,6 +154,7 @@ html,body{height:100%;background:var(--bg);font-family:'DM Sans',sans-serif;colo
 .card-explore{background:var(--teal-bg);color:var(--teal);border:1px solid var(--teal-border)}
 .card-gaps{background:var(--amber-bg);color:#92400e;border:1px solid #fde68a}
 .card-synthesize{background:var(--indigo-bg);color:var(--indigo);border:1px solid var(--indigo-border)}
+.card-teach{background:var(--emerald-bg);color:var(--emerald);border:1px solid var(--emerald-border)}
 .card-err{background:var(--red-bg);color:var(--red);border:1px solid #fecaca}
 
 /* ── Knowledge Output Block ── */
@@ -163,6 +166,7 @@ html,body{height:100%;background:var(--bg);font-family:'DM Sans',sans-serif;colo
 .kg-hd-left.explore{color:var(--teal)}
 .kg-hd-left.gaps{color:var(--amber)}
 .kg-hd-left.synthesize{color:var(--indigo)}
+.kg-hd-left.teach{color:var(--emerald)}
 .copy-btn{background:none;border:1px solid var(--border);cursor:pointer;font-size:11px;color:var(--muted);font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:4px;padding:3px 9px;border-radius:4px;transition:all .15s}
 .copy-btn:hover{background:var(--border);color:var(--txt)}
 .copy-btn.copied{background:var(--green-bg);color:var(--green);border-color:var(--green-border)}
@@ -304,6 +308,10 @@ html,body{height:100%;background:var(--bg);font-family:'DM Sans',sans-serif;colo
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
           Synthesize &amp; Generate Ideas
         </button>
+        <button class="mode-btn synthesize-full" id="btnTeach" onclick="setMode('teach')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-6"/><path d="M2 12h6"/><path d="M12 2v6"/><path d="M12 16v6"/><circle cx="12" cy="12" r="3"/></svg>
+          User Knowledge
+        </button>
       </div>
     </div>
 
@@ -392,6 +400,8 @@ let insightCount = 0;
 let outputStore  = {};
 let knownTopics  = new Set();
 let thinkingRow  = null;
+const USER_KNOWLEDGE_KEY = "sa_user_knowledge";
+let userKnowledgeStore = JSON.parse(localStorage.getItem(USER_KNOWLEDGE_KEY) || "[]");
 
 // ─────────────────────────────────────────
 // DOM refs
@@ -461,6 +471,15 @@ const modeConfig = {
     cardClass:"card-synthesize",
     icon:`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`,
   },
+  teach: {
+    pillClass:"teach", pillTxt:"User Knowledge Mode",
+    note:"User Knowledge — store profile, preferences, and facts",
+    placeholder:"Share user knowledge (goals, constraints, preferences, facts) to store locally…",
+    btnId:"btnTeach", btnClass:"on-teach",
+    statusLabel:"Storing user knowledge…", doneLabel:"User knowledge stored",
+    cardClass:"card-teach",
+    icon:`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 12h-6"/><path d="M2 12h6"/><path d="M12 2v6"/><path d="M12 16v6"/><circle cx="12" cy="12" r="3"/></svg>`,
+  },
 };
 
 // ─────────────────────────────────────────
@@ -472,10 +491,10 @@ function setMode(m) {
 
   Object.values(modeConfig).forEach(c => {
     const btn = document.getElementById(c.btnId);
-    if (btn) btn.className = "mode-btn" + (c.btnId === "btnSynthesize" ? " synthesize-full" : "");
+    if (btn) btn.className = "mode-btn" + (["btnSynthesize","btnTeach"].includes(c.btnId) ? " synthesize-full" : "");
   });
   const activeBtn = document.getElementById(cfg.btnId);
-  if (activeBtn) activeBtn.className = "mode-btn" + (m === "synthesize" ? " synthesize-full" : "") + " " + cfg.btnClass;
+  if (activeBtn) activeBtn.className = "mode-btn" + (["synthesize","teach"].includes(m) ? " synthesize-full" : "") + " " + cfg.btnClass;
 
   const pill = document.getElementById("modePill");
   if (pill) pill.className = "mode-pill " + cfg.pillClass;
@@ -588,6 +607,8 @@ function buildWelcome() {
   return div;
 }
 msgsEl.appendChild(buildWelcome());
+userKnowledgeStore.forEach(item => knownTopics.add("user-profile"));
+if (userKnowledgeStore.length) { nodeCount += userKnowledgeStore.length; updateStats(); updateTopicTags(); }
 
 // ─────────────────────────────────────────
 // Message rows
@@ -653,6 +674,7 @@ function makeCardHtml(type, text) {
     explore:`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>`,
     gaps:`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>`,
     synthesize:`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`,
+    teach:`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 12h-6"/><path d="M2 12h6"/><path d="M12 2v6"/><path d="M12 16v6"/><circle cx="12" cy="12" r="3"/></svg>`,
     err:`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>`,
   };
   const cls = type === "err" ? "card-err" : `card-${type}`;
@@ -667,13 +689,14 @@ function renderKGOutput(data, mode) {
   wrap.className = "kg-block";
 
   // Header
-  const modeLabels = { add:"Node Added", connect:"Connections Built", explore:"Graph Explored", gaps:"Gaps Identified", synthesize:"Synthesis & Ideas" };
+  const modeLabels = { add:"Node Added", connect:"Connections Built", explore:"Graph Explored", gaps:"Gaps Identified", synthesize:"Synthesis & Ideas", teach:"User Knowledge Stored" };
   const modeIcons  = {
     add:`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>`,
     connect:`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>`,
     explore:`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>`,
     gaps:`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 00-3.42 0z"/></svg>`,
     synthesize:`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`,
+    teach:`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 12h-6"/><path d="M2 12h6"/><path d="M12 2v6"/><path d="M12 16v6"/><circle cx="12" cy="12" r="3"/></svg>`,
   };
   const hd = document.createElement("div");
   hd.className = "kg-hd";
@@ -888,6 +911,34 @@ function downloadJSON(btn) {
   a.click();
 }
 
+function persistUserKnowledge() {
+  localStorage.setItem(USER_KNOWLEDGE_KEY, JSON.stringify(userKnowledgeStore.slice(-100)));
+}
+
+function buildUserKnowledgeGraph(query) {
+  const entry = { id: `uk_${Date.now()}`, text: query, added_at: new Date().toISOString(), mode: "teach" };
+  userKnowledgeStore.push(entry);
+  persistUserKnowledge();
+
+  const tags = Array.from(new Set((query.match(/#[a-zA-Z0-9_-]+/g) || []).map(t => t.slice(1))));
+  const facts = query.split(/[\n\.]/).map(v => v.trim()).filter(Boolean).slice(0, 4);
+
+  return {
+    summary: "Stored user knowledge locally and linked it into graph context.",
+    stats: [
+      { label: "Knowledge Entries", value: userKnowledgeStore.length },
+      { label: "Extracted Facts", value: facts.length },
+      { label: "Tags", value: tags.length }
+    ],
+    nodes: [
+      { title: `User Memory #${userKnowledgeStore.length}`, type: "fact", description: query.slice(0, 220), tags, domain: "user-profile" },
+      ...facts.map((fact, i) => ({ title: `Fact ${i+1}`, type: "concept", description: fact, domain: "user-profile" }))
+    ],
+    edges: facts.map((_, i) => ({ from: `User Memory #${userKnowledgeStore.length}`, to: `Fact ${i+1}`, relation: "contains", strength: "strong" })),
+    insights: [{ type: "synthesis", text: "Saved for prompts that rely on user-specific context." }]
+  };
+}
+
 // ─────────────────────────────────────────
 // Send
 // ─────────────────────────────────────────
@@ -913,18 +964,23 @@ async function handleSend() {
     query,
     mode: m,
     history: chatHistory.slice(-10),
+    userKnowledge: userKnowledgeStore.slice(-20),
+    response_format: "structured_json",
   };
 
   let data;
-  try {
-    const res = await fetch(BACKEND, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(requestBody),
-    });
-    if (!res.ok) throw new Error(`HTTP ${res.status}: ${await res.text()}`);
-    data = await res.json();
-  } catch (err) {
+  if (m === "teach") {
+    data = { status: "USER_KNOWLEDGE", graph: buildUserKnowledgeGraph(query) };
+  } else {
+    try {
+      const res = await fetch(BACKEND, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(requestBody),
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}: ${await res.text()}`);
+      data = await res.json();
+    } catch (err) {
     hideThinking();
     const slot = addAgentRow();
     slot.innerHTML = makeCardHtml("err", "Network error: " + err.message);
@@ -932,6 +988,7 @@ async function handleSend() {
     running = false;
     sendBtn.disabled = false;
     return;
+    }
   }
 
   hideThinking();
@@ -942,6 +999,7 @@ async function handleSend() {
     EXPLORATION:   "explore",
     GAPS_FOUND:    "gaps",
     SYNTHESIS:     "synthesize",
+    USER_KNOWLEDGE: "teach",
   };
 
   const resultMode = statusModeMap[data.status] || m;
@@ -1007,6 +1065,8 @@ async function handleSend() {
 function clearChat() {
   while (msgsEl.firstChild) msgsEl.removeChild(msgsEl.firstChild);
   msgsEl.appendChild(buildWelcome());
+userKnowledgeStore.forEach(item => knownTopics.add("user-profile"));
+if (userKnowledgeStore.length) { nodeCount += userKnowledgeStore.length; updateStats(); updateTopicTags(); }
   chatHistory  = [];
   outputStore  = {};
   nodeCount = edgeCount = insightCount = 0;
