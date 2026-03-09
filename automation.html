@@ -436,12 +436,7 @@ a:hover{text-decoration:underline}
       <div class="pill pill-accent" id="statusPill" style="display:none">
         <span class="pill-dot"></span><span id="statusTxt">Building…</span>
       </div>
-      <button class="ghost-btn" onclick="openSetup()">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-          <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/>
-        </svg>
-        Setup
-      </button>
+
     </div>
   </header>
 
@@ -546,7 +541,7 @@ const TEMPLATE_QUERIES = {
 //  PERSISTENT STATE
 // ══════════════════════════════════════════════════════════════════════
 const ST = {
-  workerUrl: localStorage.getItem("sa_auto_url") || "https://stremini-automation.vishwajeetadkine705.workers.dev",
+  workerUrl: "https://automation-builder.vishwajeetadkine705.workers.dev",
   mode: localStorage.getItem("sa_auto_mode") || "build",
   cache: JSON.parse(localStorage.getItem("sa_auto_cache") || "{}"),
   history: JSON.parse(localStorage.getItem("sa_auto_history") || "[]"),
@@ -1097,8 +1092,8 @@ function renderErrorBox(container, title, msg, retryFn, forceKind) {
     ],
     setup: [
       { dot:"red",   text:"<strong>No Worker URL set.</strong> The automation builder needs a Cloudflare Worker." },
-      { dot:"amber", text:"Click <strong>Setup</strong> in the top-right and paste your deployed Worker URL." },
-      { dot:"green", text:"Default URL is <code>stremini-automation.vishwajeetadkine705.workers.dev</code> — add it in Setup if missing." },
+      { dot:"amber", text:"Using managed endpoint <code>automation-builder.vishwajeetadkine705.workers.dev</code>." },
+      { dot:"green", text:"Endpoint is preconfigured and requires no user setup." },
     ],
     auth: [
       { dot:"red",   text:"<strong>Authentication failed.</strong> Worker returned 401 or 403." },
@@ -1132,7 +1127,7 @@ function renderErrorBox(container, title, msg, retryFn, forceKind) {
       <div class="error-diagnosis"><div class="ed-label">What to do</div>${rows}</div>
       <div class="error-actions">
         ${retryHtml}
-        <button class="ea-btn ea-ghost" onclick="openSetup()">⚙ Setup</button>
+        
         <button class="ea-btn ea-ghost" onclick="showHome()">← Back</button>
       </div>
     </div>`;
@@ -1328,13 +1323,11 @@ function copyFromStore(btn) {
 // ══════════════════════════════════════════════════════════════════════
 //  SETUP MODAL
 // ══════════════════════════════════════════════════════════════════════
-function openSetup() { $("workerUrlInput").value = ST.workerUrl; $("setupModal").style.display = "flex"; }
-function closeSetup() { $("setupModal").style.display = "none"; }
+function openSetup() { ST.workerUrl = "https://automation-builder.vishwajeetadkine705.workers.dev"; }
+function closeSetup() { const m=$("setupModal"); if (m) m.style.display = "none"; }
 function saveSetup() {
-  const url = $("workerUrlInput").value.trim();
-  if (!url) { alert("Please enter your Worker URL."); return; }
-  ST.workerUrl = url;
-  localStorage.setItem("sa_auto_url", url);
+  ST.workerUrl = "https://automation-builder.vishwajeetadkine705.workers.dev";
+  localStorage.setItem("sa_auto_url", ST.workerUrl);
   closeSetup();
 }
 </script>
