@@ -1281,10 +1281,14 @@ function buildOutputDOM(rawContent, resultMode) {
       dlBtn.className = "dl-btn dl-dark";
       dlBtn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download all (.txt)`;
       dlBtn.addEventListener("click", () => {
+        const url = URL.createObjectURL(new Blob([rawContent], { type:"text/plain" }));
         const a = document.createElement("a");
-        a.href = URL.createObjectURL(new Blob([rawContent], { type:"text/plain" }));
+        a.href = url;
         a.download = `stremini-implement-${Date.now()}.txt`;
-        a.click(); URL.revokeObjectURL(a.href);
+        a.style.display = "none";
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 1000);
       });
 
       const dlZip = document.createElement("button");
@@ -1297,10 +1301,14 @@ function buildOutputDOM(rawContent, resultMode) {
           const zip = new JSZip();
           parsed.files.forEach(f => zip.file(f.filepath, f.code));
           const blob = await zip.generateAsync({ type:"blob", compression:"DEFLATE", compressionOptions:{ level:6 } });
+          const url = URL.createObjectURL(blob);
           const a = document.createElement("a");
-          a.href = URL.createObjectURL(blob);
+          a.href = url;
           a.download = `stremini-${Date.now()}.zip`;
-          a.click(); URL.revokeObjectURL(a.href);
+          a.style.display = "none";
+          document.body.appendChild(a);
+          a.click();
+          setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 1000);
         } catch(e) {
           console.error("ZIP error:", e);
         }
@@ -1327,20 +1335,22 @@ function buildOutputDOM(rawContent, resultMode) {
   dlTxt.className = "dl-btn dl-dark";
   dlTxt.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download .txt`;
   dlTxt.addEventListener("click", () => {
+    const url = URL.createObjectURL(new Blob([outputStore[uid] || ""], { type:"text/plain" }));
     const a = document.createElement("a");
-    a.href = URL.createObjectURL(new Blob([outputStore[uid] || ""], { type:"text/plain" }));
-    a.download = `stremini-${resultMode}-${Date.now()}.txt`;
-    a.click(); URL.revokeObjectURL(a.href);
+    a.href = url; a.download = `stremini-${resultMode}-${Date.now()}.txt`;
+    a.style.display = "none"; document.body.appendChild(a); a.click();
+    setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 1000);
   });
   const dlMd = document.createElement("button");
   dlMd.className = "dl-btn dl-blue";
   dlMd.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> Download .md`;
   dlMd.addEventListener("click", () => {
     const raw = outputStore[uid] || "";
+    const url = URL.createObjectURL(new Blob([`# Stremini — ${resultMode}\n\n${raw}`], { type:"text/markdown" }));
     const a = document.createElement("a");
-    a.href = URL.createObjectURL(new Blob([`# Stremini — ${resultMode}\n\n${raw}`], { type:"text/markdown" }));
-    a.download = `stremini-${resultMode}-${Date.now()}.md`;
-    a.click(); URL.revokeObjectURL(a.href);
+    a.href = url; a.download = `stremini-${resultMode}-${Date.now()}.md`;
+    a.style.display = "none"; document.body.appendChild(a); a.click();
+    setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 1000);
   });
   dlRow.appendChild(dlTxt);
   dlRow.appendChild(dlMd);
