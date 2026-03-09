@@ -797,47 +797,18 @@ function fallbackCopy(text) {
 
 /**
  * Apply inline markdown to a text string.
- *
- * Uses a single-pass tokenizer so patterns can't interfere with each other.
- * Order: code spans first (protected from further parsing), then ***b+i***,
- * **bold**, *italic*, ~~strike~~, then plain text.
+ * Handles: **bold**, *italic*, `code`, and escapes HTML.
  */
-function inlineMd(rawText) {
-  // Tokenize: extract backtick spans first so their content is never re-parsed
-  const CODE_RE = /`([^`]+)`/g;
-  const parts = [];
-  let last = 0, m;
-  while ((m = CODE_RE.exec(rawText)) !== null) {
-    if (m.index > last) parts.push({ t: "text", v: rawText.slice(last, m.index) });
-    parts.push({ t: "code", v: m[1] });
-    last = CODE_RE.lastIndex;
-  }
-  if (last < rawText.length) parts.push({ t: "text", v: rawText.slice(last) });
-
-  return parts.map(p => {
-    if (p.t === "code") {
-      return `<code>${esc(p.v)}</code>`;
-    }
-    // For text tokens: escape HTML, then apply emphasis patterns
-    let s = esc(p.v);
-
-    // ***bold + italic*** (must come before ** and *)
-    s = s.replace(/\*{3}(.+?)\*{3}/g, "<strong><em>$1</em></strong>");
-
-    // **bold** — lazy, allows spaces and punctuation inside
-    s = s.replace(/\*{2}(.+?)\*{2}/g, "<strong>$1</strong>");
-
-    // *italic* — must not be adjacent to another * (avoids mangling residual **)
-    // Use word-boundary-aware pattern: * not preceded or followed by *
-    s = s.replace(/(?<![*\s])\*(?![*\s])(.+?)(?<![*\s])\*(?![*])/g, "<em>$1</em>");
-    // Also catch *word* at line start or after space
-    s = s.replace(/(^| )\*([^*\s][^*]*?[^*\s])\*( |$|[.,;:!?])/g, "$1<em>$2</em>$3");
-
-    // ~~strikethrough~~
-    s = s.replace(/~~(.+?)~~/g, "<del>$1</del>");
-
-    return s;
-  }).join("");
+function inlineMd(text) {
+  // Escape HTML first, then apply inline tokens
+  let s = esc(text);
+  // **bold**
+  s = s.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+  // *italic* (but not **)
+  s = s.replace(/(?<!\*)\*([^*]+)\*(?!\*)/g, "<em>$1</em>");
+  // `inline code`
+  s = s.replace(/`([^`]+)`/g, "<code>$1</code>");
+  return s;
 }
 
 /**
