@@ -7,6 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -270,9 +271,8 @@ html,body{height:100%;background:var(--bg);font-family:'DM Sans',sans-serif;colo
 }
 
 /* Bold / italic inline */
-.prose strong{font-weight:600;color:var(--txt)}
-.prose em{font-style:italic;color:var(--txt)}
-.prose del{text-decoration:line-through;color:var(--muted)}
+.prose strong{font-weight:600}
+.prose em{font-style:italic}
 
 /* ► Arrow items (AI uses these in debug/review) */
 .prose .arrow-item{
@@ -430,6 +430,8 @@ html,body{height:100%;background:var(--bg);font-family:'DM Sans',sans-serif;colo
 .dl-dark:hover{background:#2d2a26;transform:translateY(-1px);box-shadow:var(--shadow-sm)}
 .dl-blue{background:#0369a1;color:#fff}
 .dl-blue:hover{background:#075985;transform:translateY(-1px)}
+.dl-zip{background:#059669;color:#fff}
+.dl-zip:hover{background:#047857;transform:translateY(-1px);box-shadow:var(--shadow-sm)}
 
 /* ────────────────── INPUT BAR ────────────────── */
 .input-bar{
@@ -817,15 +819,9 @@ function inlineMd(text) {
  */
 function isAISectionHead(line) {
   const t = line.trim();
-  // Must start with an uppercase letter — never *, #, digits, etc.
-  if (!/^[A-Z]/.test(t)) return false;
-  if (t.length < 4 || t.length > 72) return false;
-  // Must contain NO lowercase letters (distinguishes "CRITICAL ISSUES" from a sentence)
-  if (/[a-z]/.test(t)) return false;
-  // Must have at least one space (rules out lone acronyms)
-  if (!t.includes(" ")) return false;
-  // Only uppercase letters, digits, spaces, and light punctuation
-  if (!/^[A-Z0-9\s&\/\-\.,:'#()]+$/.test(t)) return false;
+  if (t.length < 3 || t.length > 70) return false;
+  if (!/^[A-Z][A-Z0-9\s&\/\-\.,:']+$/.test(t)) return false;
+  if (!t.includes(" ") && t.length < 6) return false;
   return true;
 }
 
@@ -1280,6 +1276,7 @@ function buildOutputDOM(rawContent, resultMode) {
       // Download
       const dlRow = document.createElement("div");
       dlRow.className = "dl-row";
+
       const dlBtn = document.createElement("button");
       dlBtn.className = "dl-btn dl-dark";
       dlBtn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download all (.txt)`;
@@ -1289,7 +1286,30 @@ function buildOutputDOM(rawContent, resultMode) {
         a.download = `stremini-implement-${Date.now()}.txt`;
         a.click(); URL.revokeObjectURL(a.href);
       });
+
+      const dlZip = document.createElement("button");
+      dlZip.className = "dl-btn dl-zip";
+      dlZip.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download .zip`;
+      dlZip.addEventListener("click", async () => {
+        dlZip.disabled = true;
+        dlZip.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Zipping…`;
+        try {
+          const zip = new JSZip();
+          parsed.files.forEach(f => zip.file(f.filepath, f.code));
+          const blob = await zip.generateAsync({ type:"blob", compression:"DEFLATE", compressionOptions:{ level:6 } });
+          const a = document.createElement("a");
+          a.href = URL.createObjectURL(blob);
+          a.download = `stremini-${Date.now()}.zip`;
+          a.click(); URL.revokeObjectURL(a.href);
+        } catch(e) {
+          console.error("ZIP error:", e);
+        }
+        dlZip.disabled = false;
+        dlZip.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download .zip`;
+      });
+
       dlRow.appendChild(dlBtn);
+      dlRow.appendChild(dlZip);
       wrap.appendChild(dlRow);
 
       return wrap;
