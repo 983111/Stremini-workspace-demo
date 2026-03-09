@@ -8,6 +8,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -797,20 +798,31 @@ function fallbackCopy(text) {
    ██████████████████████████████████████████████
 ═══════════════════════════════════════════════ */
 
+/* ═══════════════════════════════════════════════
+   MARKED CONFIG — inline-only, no extra wrapping
+═══════════════════════════════════════════════ */
+marked.use({
+  gfm: true,
+  breaks: false,
+  pedantic: false,
+  mangle: false,
+  headerIds: false,
+});
+
 /**
- * Apply inline markdown to a text string.
- * Handles: **bold**, *italic*, `code`, and escapes HTML.
+ * Parse inline markdown in a text string.
+ * Delegates to marked.parseInline() — handles **bold**, *italic*,
+ * `code`, ~~strike~~, [links](url), and all edge-cases correctly.
+ * Falls back to HTML-escaped plain text if marked isn't ready.
  */
 function inlineMd(text) {
-  // Escape HTML first, then apply inline tokens
-  let s = esc(text);
-  // **bold**
-  s = s.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
-  // *italic* (but not **)
-  s = s.replace(/(?<!\*)\*([^*]+)\*(?!\*)/g, "<em>$1</em>");
-  // `inline code`
-  s = s.replace(/`([^`]+)`/g, "<code>$1</code>");
-  return s;
+  try {
+    // marked.parseInline returns HTML with inline elements only — no <p> wrapper
+    return marked.parseInline(text, { breaks: false });
+  } catch(e) {
+    // Fallback: just escape HTML
+    return esc(text);
+  }
 }
 
 /**
@@ -1291,15 +1303,27 @@ function buildOutputDOM(rawContent, resultMode) {
         setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 1000);
       });
 
+      const zipIcon = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>`;
       const dlZip = document.createElement("button");
       dlZip.className = "dl-btn dl-zip";
-      dlZip.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download .zip`;
+      dlZip.innerHTML = zipIcon + " Download .zip";
       dlZip.addEventListener("click", async () => {
+        if (typeof JSZip === "undefined") {
+          dlZip.textContent = "✗ JSZip not loaded";
+          dlZip.style.background = "#b91c1c";
+          setTimeout(() => {
+            dlZip.innerHTML = zipIcon + " Download .zip";
+            dlZip.style.background = "";
+          }, 3000);
+          return;
+        }
         dlZip.disabled = true;
         dlZip.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Zipping…`;
         try {
           const zip = new JSZip();
-          parsed.files.forEach(f => zip.file(f.filepath, f.code));
+          const filesToZip = parsed.files.filter(f => f.code && f.filepath);
+          if (filesToZip.length === 0) throw new Error("No files with content found");
+          filesToZip.forEach(f => zip.file(f.filepath, f.code));
           const blob = await zip.generateAsync({ type:"blob", compression:"DEFLATE", compressionOptions:{ level:6 } });
           const url = URL.createObjectURL(blob);
           const a = document.createElement("a");
@@ -1308,12 +1332,17 @@ function buildOutputDOM(rawContent, resultMode) {
           a.style.display = "none";
           document.body.appendChild(a);
           a.click();
-          setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 1000);
+          setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 2000);
+          dlZip.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg> Downloaded!`;
+          setTimeout(() => { dlZip.innerHTML = zipIcon + " Download .zip"; dlZip.disabled = false; }, 2500);
+          return;
         } catch(e) {
           console.error("ZIP error:", e);
+          dlZip.style.background = "#b91c1c";
+          dlZip.textContent = "✗ " + (e.message || "Zip failed");
+          setTimeout(() => { dlZip.innerHTML = zipIcon + " Download .zip"; dlZip.style.background = ""; }, 3000);
         }
         dlZip.disabled = false;
-        dlZip.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download .zip`;
       });
 
       dlRow.appendChild(dlBtn);
