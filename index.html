@@ -1,540 +1,334 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Stremini Workspace</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <style>
-    :root {
-      --bg: #f4f7fb;
-      --surface: #ffffff;
-      --surface-muted: #f8fbff;
-      --text: #0f172a;
-      --muted: #475569;
-      --line: #dbe4ee;
-      --primary: #2563eb;
-      --primary-dark: #1d4ed8;
-      --accent: #0ea5e9;
-      --ring: rgba(37, 99, 235, 0.18);
-      --radius: 18px;
-      --shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
-      --shadow-soft: 0 2px 10px rgba(15, 23, 42, 0.06);
-    }
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Stremini Workspace</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f5f2;--surface:#fff;--surface2:#f2f0ec;
+  --border:#e4e0d8;--border2:#ece9e2;
+  --txt:#1a1814;--txt2:#6b6459;--muted:#9e9589;
+  --amber:#d97706;--amber-bg:#fffbf5;--amber-border:#fde68a;
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+  --l1:#0369a1; --l1-bg:#f0f9ff; --l1-border:#bae6fd;
+  --l2:#4f46e5; --l2-bg:#eef2ff; --l2-border:#c7d2fe;
+  --l3:#059669; --l3-bg:#d1fae5; --l3-border:#6ee7b7;
+  --l4:#d97706; --l4-bg:#fffbf5; --l4-border:#fde68a;
 
-    body {
-      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: radial-gradient(circle at top left, #f8fbff 0%, var(--bg) 48%), var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-    }
+  --sh:0 1px 3px rgba(0,0,0,.07),0 1px 2px rgba(0,0,0,.04);
+  --sh-lg:0 12px 32px rgba(0,0,0,.12),0 4px 12px rgba(0,0,0,.06);
+  --r:12px;
+}
 
-    .container {
-      width: min(1200px, calc(100% - 2rem));
-      margin: 0 auto;
-    }
+/* ── full-page shell ── */
+html,body{height:100%;background:var(--bg);font-family:'DM Sans',sans-serif;color:var(--txt);-webkit-font-smoothing:antialiased}
+.shell{display:flex;flex-direction:column;min-height:100vh}
 
-    .topbar {
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      border-bottom: 1px solid var(--line);
-      background: rgba(244, 247, 251, 0.85);
-      backdrop-filter: blur(10px);
-    }
+/* ── topbar ── */
+.topbar{
+  position:sticky;top:0;z-index:20;flex-shrink:0;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 36px;height:58px;
+  background:rgba(247,245,242,.97);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+}
+.brand{display:flex;align-items:center;gap:11px}
+.lm{width:34px;height:34px;border-radius:9px;background:var(--txt);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:var(--sh)}
+.lm svg{width:17px;height:17px}
+.bt .n{font-family:'Lora',serif;font-size:17px;font-weight:600;letter-spacing:-.3px;line-height:1.2}
+.bt .s{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;margin-top:1px}
+.ac{font-size:12px;color:var(--txt2);padding:5px 13px;border:1px solid var(--border);border-radius:20px;background:var(--surface);font-weight:500}
 
-    .topbar-inner {
-      min-height: 72px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-    }
+/* ── main grows to fill ── */
+.main{flex:1;max-width:1200px;width:100%;margin:0 auto;padding:52px 36px 72px}
 
-    .brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.75rem;
-      font-weight: 700;
-      font-size: 1.1rem;
-      text-decoration: none;
-      color: var(--text);
-    }
+/* ── hero ── */
+.hero{text-align:center;margin-bottom:58px}
+.hero h1{font-family:'Lora',serif;font-size:42px;font-weight:500;letter-spacing:-.8px;margin-bottom:13px;line-height:1.2}
+.hero h1 em{font-style:italic;color:var(--amber)}
+.hero p{font-size:15px;color:var(--txt2);line-height:1.75;max-width:520px;margin:0 auto}
 
-    .brand-mark {
-      width: 34px;
-      aspect-ratio: 1;
-      border-radius: 10px;
-      display: grid;
-      place-items: center;
-      font-weight: 800;
-      color: #fff;
-      background: linear-gradient(145deg, var(--accent), var(--primary));
-      box-shadow: var(--shadow-soft);
-    }
+/* ── layers ── */
+.layers{display:flex;flex-direction:column;gap:50px}
+.layer{display:flex;flex-direction:column;gap:18px}
 
-    .status-row {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.55rem;
-      color: var(--muted);
-      font-size: 0.92rem;
-      font-weight: 500;
-    }
+/* layer header row */
+.lh{display:flex;align-items:center;gap:14px}
+.lnum{
+  width:28px;height:28px;border-radius:7px;font-family:'Lora',serif;
+  font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.lrule{flex:1;height:1px;background:var(--border)}
+.lbadge{
+  display:inline-flex;align-items:center;gap:6px;padding:4px 13px;
+  border-radius:20px;font-size:11px;font-weight:600;letter-spacing:.5px;
+  text-transform:uppercase;flex-shrink:0;
+}
+.l1 .lnum{background:var(--l1-bg);color:var(--l1)} .l1 .lbadge{background:var(--l1-bg);color:var(--l1);border:1px solid var(--l1-border)}
+.l2 .lnum{background:var(--l2-bg);color:var(--l2)} .l2 .lbadge{background:var(--l2-bg);color:var(--l2);border:1px solid var(--l2-border)}
+.l3 .lnum{background:var(--l3-bg);color:var(--l3)} .l3 .lbadge{background:var(--l3-bg);color:var(--l3);border:1px solid var(--l3-border)}
+.l4 .lnum{background:var(--l4-bg);color:var(--l4)} .l4 .lbadge{background:var(--l4-bg);color:var(--l4);border:1px solid var(--l4-border)}
 
-    .status-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: #22c55e;
-      box-shadow: 0 0 0 5px rgba(34, 197, 94, 0.16);
-    }
+/* ── card grid ── */
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
 
-    .hero {
-      padding: 4.5rem 0 3rem;
-      display: grid;
-      grid-template-columns: 1.15fr 0.85fr;
-      gap: 1.5rem;
-      align-items: stretch;
-    }
+/* card */
+.card{
+  display:flex;flex-direction:column;gap:11px;
+  background:var(--surface);border:1.5px solid var(--border);
+  border-radius:var(--r);padding:22px 20px;
+  text-decoration:none;color:inherit;
+  box-shadow:var(--sh);
+  transition:transform .18s,box-shadow .18s,border-color .18s,background .18s;
+}
+.card:hover{transform:translateY(-4px);box-shadow:var(--sh-lg)}
+.l1 .card:hover{border-color:var(--l1);background:var(--l1-bg)}
+.l2 .card:hover{border-color:var(--l2);background:var(--l2-bg)}
+.l3 .card:hover{border-color:var(--l3);background:var(--l3-bg)}
+.l4 .card:hover{border-color:var(--l4);background:var(--l4-bg)}
 
-    .hero-copy {
-      padding: 2.2rem;
-      border: 1px solid var(--line);
-      border-radius: calc(var(--radius) + 6px);
-      background: linear-gradient(160deg, #ffffff, #f6faff);
-      box-shadow: var(--shadow);
-    }
+.ct{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.ci{width:40px;height:40px;border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.ci svg{width:19px;height:19px;fill:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round}
+.l1 .ci{background:var(--l1-bg)} .l1 .ci svg{stroke:var(--l1)}
+.l2 .ci{background:var(--l2-bg)} .l2 .ci svg{stroke:var(--l2)}
+.l3 .ci{background:var(--l3-bg)} .l3 .ci svg{stroke:var(--l3)}
+.l4 .ci{background:var(--l4-bg)} .l4 .ci svg{stroke:var(--l4)}
 
-    .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      border: 1px solid #bfdbfe;
-      border-radius: 999px;
-      padding: 0.4rem 0.8rem;
-      color: #1e40af;
-      background: #eff6ff;
-      font-size: 0.78rem;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      margin-bottom: 1rem;
-    }
+.chip{padding:3px 9px;border-radius:10px;font-size:10px;font-weight:600;letter-spacing:.3px;text-transform:uppercase;flex-shrink:0;margin-top:3px}
+.l1 .chip{background:var(--l1-bg);color:var(--l1);border:1px solid var(--l1-border)}
+.l2 .chip{background:var(--l2-bg);color:var(--l2);border:1px solid var(--l2-border)}
+.l3 .chip{background:var(--l3-bg);color:var(--l3);border:1px solid var(--l3-border)}
+.l4 .chip{background:var(--l4-bg);color:var(--l4);border:1px solid var(--l4-border)}
 
-    h1 {
-      font-size: clamp(2rem, 4.8vw, 3.5rem);
-      line-height: 1.05;
-      letter-spacing: -0.03em;
-      margin-bottom: 1rem;
-    }
+.cn{font-family:'Lora',serif;font-size:16.5px;font-weight:600;letter-spacing:-.25px;line-height:1.3;color:var(--txt)}
+.cd{font-size:13px;line-height:1.68;color:var(--txt2);flex:1;min-height:52px}
 
-    .hero-copy p {
-      color: var(--muted);
-      font-size: 1.02rem;
-      line-height: 1.6;
-      max-width: 60ch;
-      margin-bottom: 1.4rem;
-    }
+.cta{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;margin-top:4px;transition:gap .15s}
+.card:hover .cta{gap:10px}
+.l1 .cta{color:var(--l1)} .l2 .cta{color:var(--l2)} .l3 .cta{color:var(--l3)} .l4 .cta{color:var(--l4)}
+.cta svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;transition:transform .15s}
+.card:hover .cta svg{transform:translateX(3px)}
 
-    .hero-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.65rem;
-      margin-bottom: 1.3rem;
-    }
+/* ── footer ── */
+.footer{flex-shrink:0;text-align:center;padding:22px 24px;font-size:12px;color:var(--muted);border-top:1px solid var(--border)}
 
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      text-decoration: none;
-      border-radius: 12px;
-      padding: 0.7rem 1rem;
-      font-size: 0.95rem;
-      font-weight: 600;
-      border: 1px solid transparent;
-      transition: 160ms ease;
-    }
-
-    .btn-primary {
-      color: #fff;
-      background: linear-gradient(145deg, var(--primary), var(--primary-dark));
-      box-shadow: 0 10px 18px rgba(37, 99, 235, 0.25);
-    }
-
-    .btn-primary:hover { transform: translateY(-1px); }
-
-    .btn-ghost {
-      border-color: var(--line);
-      color: var(--text);
-      background: #fff;
-    }
-
-    .hero-stats {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 0.7rem;
-    }
-
-    .stat {
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      background: var(--surface);
-      padding: 0.8rem;
-    }
-
-    .stat strong {
-      display: block;
-      font-size: 1.2rem;
-      line-height: 1.2;
-      margin-bottom: 0.2rem;
-    }
-
-    .stat span {
-      color: var(--muted);
-      font-size: 0.83rem;
-      font-weight: 500;
-    }
-
-    .hero-side {
-      border: 1px solid var(--line);
-      border-radius: calc(var(--radius) + 6px);
-      background: var(--surface);
-      box-shadow: var(--shadow);
-      overflow: hidden;
-      display: grid;
-      grid-template-rows: auto 1fr;
-    }
-
-    .academy {
-      padding: 1.25rem;
-      border-bottom: 1px solid var(--line);
-      background: linear-gradient(155deg, #eff6ff, #f8fbff 55%, #ffffff);
-    }
-
-    .academy h2 {
-      font-size: 1.15rem;
-      margin-bottom: 0.4rem;
-    }
-
-    .academy p {
-      color: var(--muted);
-      font-size: 0.92rem;
-      line-height: 1.45;
-      margin-bottom: 0.8rem;
-    }
-
-    .quick-links {
-      padding: 1rem;
-      display: grid;
-      gap: 0.6rem;
-      align-content: start;
-      background: var(--surface-muted);
-    }
-
-    .quick-link {
-      text-decoration: none;
-      color: var(--text);
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      padding: 0.75rem 0.8rem;
-      background: #fff;
-      font-size: 0.9rem;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .section-head {
-      margin: 0 0 1rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: end;
-      gap: 1rem;
-    }
-
-    .section-head h3 {
-      font-size: 1.35rem;
-      letter-spacing: -0.02em;
-    }
-
-    .section-head p {
-      color: var(--muted);
-      font-size: 0.92rem;
-    }
-
-    .layer-grid {
-      display: grid;
-      gap: 1rem;
-      padding-bottom: 3.5rem;
-    }
-
-    .layer {
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      background: var(--surface);
-      box-shadow: var(--shadow-soft);
-      padding: 1rem;
-    }
-
-    .layer-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 0.9rem;
-    }
-
-    .layer-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.9rem;
-      font-weight: 700;
-      color: #1e3a8a;
-      background: #eff6ff;
-      border: 1px solid #bfdbfe;
-      border-radius: 999px;
-      padding: 0.4rem 0.75rem;
-    }
-
-    .layer-top small {
-      color: #64748b;
-      font-weight: 600;
-      font-size: 0.83rem;
-    }
-
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 0.75rem;
-    }
-
-    .card {
-      text-decoration: none;
-      color: inherit;
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      padding: 0.9rem;
-      background: #fff;
-      display: flex;
-      flex-direction: column;
-      gap: 0.7rem;
-      transition: 170ms ease;
-      min-height: 172px;
-    }
-
-    .card:hover {
-      border-color: #bfdbfe;
-      box-shadow: 0 0 0 4px var(--ring);
-      transform: translateY(-1px);
-    }
-
-    .chip {
-      align-self: flex-start;
-      border-radius: 999px;
-      background: #f1f5f9;
-      color: #1e293b;
-      font-size: 0.73rem;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      padding: 0.28rem 0.6rem;
-    }
-
-    .card h4 {
-      font-size: 1.02rem;
-      letter-spacing: -0.01em;
-    }
-
-    .card p {
-      color: var(--muted);
-      line-height: 1.45;
-      font-size: 0.86rem;
-      flex: 1;
-    }
-
-    .open {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      color: var(--primary-dark);
-      font-size: 0.85rem;
-      font-weight: 700;
-    }
-
-    footer {
-      border-top: 1px solid var(--line);
-      color: #64748b;
-      font-size: 0.88rem;
-      padding: 1.1rem 0 1.5rem;
-      display: flex;
-      justify-content: space-between;
-      gap: 0.8rem;
-      flex-wrap: wrap;
-    }
-
-    @media (max-width: 1024px) {
-      .hero {
-        grid-template-columns: 1fr;
-        padding-top: 3rem;
-      }
-
-      .cards {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-    }
-
-    @media (max-width: 700px) {
-      .topbar-inner,
-      .section-head,
-      .layer-top {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      .hero-copy,
-      .academy,
-      .quick-links,
-      .layer {
-        padding: 1rem;
-      }
-
-      .hero-stats,
-      .cards {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
+/* ── responsive ── */
+@media(max-width:980px){.grid{grid-template-columns:repeat(2,1fr)}.main{padding:36px 22px 56px}.hero h1{font-size:34px}}
+@media(max-width:580px){.grid{grid-template-columns:1fr}.topbar{padding:0 18px}.hero h1{font-size:28px}.main{padding:28px 14px 48px}}
+</style>
 </head>
 <body>
-  <header class="topbar">
-    <div class="container topbar-inner">
-      <a class="brand" href="index.html">
-        <span class="brand-mark">S</span>
-        <span>Stremini Workspace</span>
-      </a>
-      <div class="status-row">
-        <span class="status-dot"></span>
-        <span>All systems active · 15 agents · 5 layers</span>
+<div class="shell">
+
+<!-- topbar -->
+<header class="topbar">
+  <div class="brand">
+    <div class="lm"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+    <div class="bt"><div class="n">Stremini Workspace</div><div class="s">Unified Agent Console</div></div>
+  </div>
+  <div class="ac">10 Agents · 4 Layers</div>
+</header>
+
+<!-- main -->
+<main class="main">
+  <section class="hero">
+    <h1>Choose a layer.<br/><em>Deploy a specialist.</em></h1>
+    <p>Four layers of intelligence — from deep research and code generation to strategy and full automation. Every agent purpose-built for its domain.</p>
+  </section>
+
+  <div class="layers">
+
+    <!-- 01 INTELLIGENCE -->
+    <div class="layer l1">
+      <div class="lh">
+        <div class="lnum">01</div><div class="lrule"></div>
+        <div class="lbadge">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+          Intelligence
+        </div>
+        <div class="lrule"></div>
+      </div>
+      <div class="grid">
+
+        <a class="card" href="Research.html">
+          <div class="ct">
+            <div class="ci"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
+            <div class="chip">Research</div>
+          </div>
+          <div class="cn">Research &amp; Math Agent</div>
+          <div class="cd">Generate structured research papers, solve advanced math problems, and organize technical analysis with rigorous, cited outputs.</div>
+          <div class="cta">Open agent <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+        </a>
+
+        <a class="card" href="Data.html">
+          <div class="ct">
+            <div class="ci"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
+            <div class="chip">Analytics</div>
+          </div>
+          <div class="cn">Data &amp; Decision Intelligence</div>
+          <div class="cd">Interpret CSV and JSON business data with retention, conversion, and anomaly analysis. Surface insights, risk flags, and experiment priorities.</div>
+          <div class="cta">Open agent <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+        </a>
+
+        <a class="card" href="knowledge.html">
+          <div class="ct">
+            <div class="ci"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><circle cx="3" cy="6" r="2"/><circle cx="21" cy="6" r="2"/><circle cx="3" cy="18" r="2"/><circle cx="21" cy="18" r="2"/><line x1="5" y1="6" x2="10" y2="11"/><line x1="19" y1="6" x2="14" y2="11"/><line x1="5" y1="18" x2="10" y2="13"/><line x1="19" y1="18" x2="14" y2="13"/></svg></div>
+            <div class="chip">Knowledge</div>
+          </div>
+          <div class="cn">Knowledge Graph Agent</div>
+          <div class="cd">Capture notes, research, and ideas. Detect semantic patterns, build connections, and surface insights you haven't thought of yet.</div>
+          <div class="cta">Open agent <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+        </a>
+
       </div>
     </div>
-  </header>
 
-  <main class="container">
-    <section class="hero">
-      <article class="hero-copy">
-        <span class="eyebrow">Unified AI command center</span>
-        <h1>Redesigned workspace for faster, clearer execution.</h1>
-        <p>Navigate every Stremini AI capability through a modern home layout built for speed and focus. Discover agents by layer, launch the right specialist instantly, and move from insight to action without friction.</p>
-        <div class="hero-actions">
-          <a class="btn btn-primary" href="#layers">Explore all layers</a>
-          <a class="btn btn-ghost" href="academy.html">Open StreminiAI Academy</a>
+    <!-- 02 CREATION -->
+    <div class="layer l2">
+      <div class="lh">
+        <div class="lnum">02</div><div class="lrule"></div>
+        <div class="lbadge">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          Creation
         </div>
-        <div class="hero-stats">
-          <div class="stat"><strong>15</strong><span>specialist agents</span></div>
-          <div class="stat"><strong>5</strong><span>capability layers</span></div>
-          <div class="stat"><strong>1</strong><span>unified workspace</span></div>
-        </div>
-      </article>
-
-      <aside class="hero-side">
-        <div class="academy">
-          <h2>StreminiAI Academy</h2>
-          <p>Learn every layer with guided paths, practical workflows, and build-ready playbooks.</p>
-          <a class="btn btn-primary" href="academy.html">Enter Academy</a>
-        </div>
-        <div class="quick-links">
-          <a class="quick-link" href="Research.html"><span>Research &amp; Math</span><span>↗</span></a>
-          <a class="quick-link" href="Code-agent.html"><span>Code Agent</span><span>↗</span></a>
-          <a class="quick-link" href="automation.html"><span>Automation Builder</span><span>↗</span></a>
-          <a class="quick-link" href="Growth.html"><span>Growth Intelligence</span><span>↗</span></a>
-        </div>
-      </aside>
-    </section>
-
-    <section id="layers" class="layer-grid">
-      <div class="section-head">
-        <div>
-          <h3>Browse by capability layer</h3>
-          <p>Every layer groups focused agents for a clean and scalable workflow.</p>
-        </div>
+        <div class="lrule"></div>
       </div>
+      <div class="grid">
 
-      <article class="layer">
-        <div class="layer-top">
-          <span class="layer-badge">Layer 01 · Intelligence</span>
-          <small>Research and analytical insight</small>
-        </div>
-        <div class="cards">
-          <a class="card" href="Research.html"><span class="chip">Research</span><h4>Research &amp; Math</h4><p>Create structured research, solve advanced math, and generate clear analytical outputs.</p><span class="open">Open agent →</span></a>
-          <a class="card" href="Data.html"><span class="chip">Analytics</span><h4>Data &amp; Decision</h4><p>Interpret business datasets, surface retention trends, and detect meaningful anomalies.</p><span class="open">Open agent →</span></a>
-          <a class="card" href="knowledge.html"><span class="chip">Knowledge</span><h4>Knowledge Graph</h4><p>Capture ideas, map semantic relationships, and uncover hidden cross-domain links.</p><span class="open">Open agent →</span></a>
-        </div>
-      </article>
+        <a class="card" href="Code-agent.html">
+          <div class="ct">
+            <div class="ci"><svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
+            <div class="chip">Engineering</div>
+          </div>
+          <div class="cn">Code Agent</div>
+          <div class="cd">Design architecture, generate production-grade code, debug, review, and audit for security and scalability — all in one place.</div>
+          <div class="cta">Open agent <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+        </a>
 
-      <article class="layer">
-        <div class="layer-top">
-          <span class="layer-badge">Layer 02 · Foundation</span>
-          <small>Core learning and strategic context</small>
-        </div>
-        <div class="cards">
-          <a class="card" href="dataset-builder.html"><span class="chip">Data Ops</span><h4>Dataset Builder</h4><p>Build quality labeled datasets, validate structure, and prepare exports for model work.</p><span class="open">Open agent →</span></a>
-          <a class="card" href="compeititve.html"><span class="chip">Strategy</span><h4>Competitive Intel</h4><p>Track competitors, decode positioning, and identify whitespace opportunities.</p><span class="open">Open agent →</span></a>
-          <a class="card" href="conept.html"><span class="chip">Learning</span><h4>Concept Explainer</h4><p>Transform difficult concepts into practical explanations tailored for any audience.</p><span class="open">Open agent →</span></a>
-        </div>
-      </article>
+        <a class="card" href="Architect.html">
+          <div class="ct">
+            <div class="ci"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
+            <div class="chip">AI Systems</div>
+          </div>
+          <div class="cn">AI Systems Architect</div>
+          <div class="cd">Design production AI systems with RAG, vector DB selection, model trade-off analysis, orchestration design, and scaling-aware cloud planning.</div>
+          <div class="cta">Open agent <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+        </a>
 
-      <article class="layer">
-        <div class="layer-top">
-          <span class="layer-badge">Layer 03 · Build</span>
-          <small>Product and systems execution</small>
-        </div>
-        <div class="cards">
-          <a class="card" href="Code-agent.html"><span class="chip">Code</span><h4>Code Agent</h4><p>Generate, refactor, and improve production-quality code with architecture awareness.</p><span class="open">Open agent →</span></a>
-          <a class="card" href="product.html"><span class="chip">Product</span><h4>Product Strategist</h4><p>Shape roadmaps, prioritize opportunities, and convert goals into detailed plans.</p><span class="open">Open agent →</span></a>
-          <a class="card" href="Architect.html"><span class="chip">Architect</span><h4>System Architect</h4><p>Design scalable platforms, robust integrations, and resilient infrastructure patterns.</p><span class="open">Open agent →</span></a>
-        </div>
-      </article>
+        <a class="card" href="product.html">
+          <div class="ct">
+            <div class="ci"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+            <div class="chip">Product</div>
+          </div>
+          <div class="cn">Product Builder Agent</div>
+          <div class="cd">Describe any product idea and get a complete MVP — PRD, database schema, frontend components, and deployment guide, instantly generated.</div>
+          <div class="cta">Open agent <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+        </a>
 
-      <article class="layer">
-        <div class="layer-top">
-          <span class="layer-badge">Layer 04 · Governance</span>
-          <small>Reliability, policy, and quality controls</small>
-        </div>
-        <div class="cards">
-          <a class="card" href="automation.html"><span class="chip">Automation</span><h4>Automation Builder</h4><p>Create cross-system workflows and remove repetitive operational work.</p><span class="open">Open agent →</span></a>
-          <a class="card" href="model-evaluator.html"><span class="chip">Evaluation</span><h4>Model Evaluator</h4><p>Benchmark model quality, consistency, and performance before deployment.</p><span class="open">Open agent →</span></a>
-          <a class="card" href="Startup-Legal-Compliance-Agent.html"><span class="chip">Compliance</span><h4>Legal &amp; Compliance</h4><p>Strengthen policy readiness and keep startup operations aligned with legal guardrails.</p><span class="open">Open agent →</span></a>
-        </div>
-      </article>
+      </div>
+    </div>
 
-      <article class="layer">
-        <div class="layer-top">
-          <span class="layer-badge">Layer 05 · Operations</span>
-          <small>Growth, finance, and personal execution</small>
+    <!-- 03 STRATEGY -->
+    <div class="layer l3">
+      <div class="lh">
+        <div class="lnum">03</div><div class="lrule"></div>
+        <div class="lbadge">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          Strategy
         </div>
-        <div class="cards">
-          <a class="card" href="Growth.html"><span class="chip">Growth</span><h4>Growth Intelligence</h4><p>Discover scalable opportunities, optimize funnels, and prioritize GTM experiments.</p><span class="open">Open agent →</span></a>
-          <a class="card" href="FinAgent.html"><span class="chip">Finance</span><h4>Financial Agent</h4><p>Model runway, budgets, and scenarios to support stronger operating decisions.</p><span class="open">Open agent →</span></a>
-          <a class="card" href="Personal-os.html"><span class="chip">Productivity</span><h4>Personal OS</h4><p>Plan goals and daily execution with a structured rhythm for focused progress.</p><span class="open">Open agent →</span></a>
-        </div>
-      </article>
-    </section>
+        <div class="lrule"></div>
+      </div>
+      <div class="grid">
 
-    <footer>
-      <span>Contact · stremini1@github.com</span>
-      <span>Privacy · Legal · Notice</span>
-    </footer>
-  </main>
+        <a class="card" href="FinAgent.html">
+          <div class="ct">
+            <div class="ci"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
+            <div class="chip">Finance</div>
+          </div>
+          <div class="cn">Finance Agent</div>
+          <div class="cd">Build financial models, evaluate business metrics, and receive concise analysis tailored for business and investment decisions.</div>
+          <div class="cta">Open agent <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+        </a>
+
+        <a class="card" href="Growth.html">
+          <div class="ct">
+            <div class="ci"><svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div>
+            <div class="chip">Growth</div>
+          </div>
+          <div class="cn">Growth &amp; Marketing Intelligence</div>
+          <div class="cd">Build GTM strategy with ICP modeling, SEO planning, funnel diagnostics, and structured SWOT, TAM/SAM/SOM, and KPI outputs.</div>
+          <div class="cta">Open agent <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+        </a>
+
+        <a class="card" href="compeititve.html">
+          <div class="ct">
+            <div class="ci"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></div>
+            <div class="chip">Competitive</div>
+          </div>
+          <div class="cn">Competitive Intelligence Agent</div>
+          <div class="cd">Track competitors in real time — product launches, pricing shifts, hiring signals, and tech moves — turned into actionable strategy.</div>
+          <div class="cta">Open agent <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+        </a>
+
+      </div>
+    </div>
+
+    <!-- 04 EXECUTION -->
+    <div class="layer l4">
+      <div class="lh">
+        <div class="lnum">04</div><div class="lrule"></div>
+        <div class="lbadge">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          Execution
+        </div>
+        <div class="lrule"></div>
+      </div>
+      <div class="grid">
+
+        <a class="card" href="Personal-os.html">
+          <div class="ct">
+            <div class="ci"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.58-7 8-7s8 3 8 7"/></svg></div>
+            <div class="chip">ARIA</div>
+          </div>
+          <div class="cn">ARIA Personal OS</div>
+          <div class="cd">Your strategic second brain for planning, habits, reflection, and long-term personal operating system decisions.</div>
+          <div class="cta">Open agent <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+        </a>
+
+        <a class="card" href="Startup-Legal-Compliance-Agent.html">
+          <div class="ct">
+            <div class="ci"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+            <div class="chip">Startup &amp; Legal</div>
+          </div>
+          <div class="cn">Startup &amp; Legal Compliance</div>
+          <div class="cd">Navigate startup setup, policy readiness, compliance checkpoints, and legal process guidance — all in one workspace.</div>
+          <div class="cta">Open agent <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+        </a>
+
+        <a class="card" href="automation.html">
+          <div class="ct">
+            <div class="ci"><svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+            <div class="chip">Automation</div>
+          </div>
+          <div class="cn">Automation Builder Agent</div>
+          <div class="cd">Design trigger-action workflows, multi-agent chains, and API integrations — generated live by AI, production-ready for Cloudflare Workers.</div>
+          <div class="cta">Open agent <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+        </a>
+
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<footer class="footer">
+  Stremini Workspace &mdash; Professional multi-agent console &mdash; 4 layers · 10 agents
+</footer>
+
+</div>
 </body>
 </html>
