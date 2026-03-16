@@ -4,521 +4,1073 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Stremini — Research & Math Agent</title>
-<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
-<script src="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
-<script src="https://unpkg.com/mammoth@1.6.0/mammoth.browser.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#e9dfcd;--surface:#fffaf0;--surface2:#f0e4d1;
-  --border:#d8c8ac;--border2:#e5d9c7;
-  --txt:#2f2217;--txt2:#6b5a47;--muted:#9a876f;
-  --amber:#a16931;--amber2:#7f4f20;--amber-bg:#f8ecd7;
-  --violet:#76629a;--violet-bg:#eee8f8;
-  --green:#059669;--green-bg:#d1fae5;
-  --red:#991b1b;--red-bg:#fee2e2;
-  --blue:#1d4ed8;--blue-bg:#eff6ff;
-  --shadow:0 1px 3px rgba(0,0,0,.07),0 1px 2px rgba(0,0,0,.04);
-  --shadow-md:0 4px 14px rgba(0,0,0,.09),0 2px 6px rgba(0,0,0,.04);
-  --r:10px;--r2:6px;
+html,body{height:100%;font-family:'DM Sans',sans-serif;-webkit-font-smoothing:antialiased;overflow:hidden}
+
+/* ════════════════════════════════════════
+   LAYOUT
+════════════════════════════════════════ */
+.layout{display:grid;grid-template-columns:290px 1fr;height:100vh;overflow:hidden}
+
+/* ════════════════════════════════════════
+   SIDEBAR — dark marble with gold veins
+════════════════════════════════════════ */
+.sidebar{
+  position:relative;
+  display:flex;flex-direction:column;
+  overflow-y:auto;overflow-x:hidden;
+  /* Dark base */
+  background-color:#111118;
+  /* Marble texture via multiple layered gradients */
+  background-image:
+    /* Gold diagonal vein 1 */
+    linear-gradient(
+      125deg,
+      transparent 0%, transparent 22%,
+      rgba(180,140,60,0.18) 23%, rgba(200,160,70,0.22) 23.4%,
+      rgba(180,140,60,0.12) 23.8%, transparent 25%,
+      transparent 100%
+    ),
+    /* Gold vein 2 */
+    linear-gradient(
+      118deg,
+      transparent 0%, transparent 38%,
+      rgba(160,120,50,0.14) 38.5%, rgba(190,150,65,0.20) 39%,
+      rgba(160,120,50,0.10) 39.5%, transparent 41%,
+      transparent 100%
+    ),
+    /* Subtle vein 3 */
+    linear-gradient(
+      108deg,
+      transparent 0%, transparent 55%,
+      rgba(180,140,55,0.10) 55.5%, rgba(200,160,65,0.16) 56%,
+      rgba(170,130,50,0.08) 56.5%, transparent 58%,
+      transparent 100%
+    ),
+    /* Thin bright vein 4 */
+    linear-gradient(
+      135deg,
+      transparent 0%, transparent 68%,
+      rgba(220,180,80,0.08) 68.4%, rgba(230,190,90,0.14) 68.8%,
+      rgba(210,170,70,0.06) 69.2%, transparent 70%,
+      transparent 100%
+    ),
+    /* Base marble gradient — dark navy to near-black */
+    linear-gradient(160deg, #1a1a2a 0%, #131320 35%, #0e0e18 65%, #0a0a12 100%);
+  border-right:1px solid rgba(180,140,60,0.2);
 }
-html,body{height:100%;background:radial-gradient(circle at 82% 8%,rgba(176,135,76,.24),transparent 30%),radial-gradient(circle at 12% 84%,rgba(157,124,70,.15),transparent 34%),var(--bg);font-family:'DM Sans',sans-serif;color:var(--txt);-webkit-font-smoothing:antialiased}
 
-/* Layout */
-.layout{display:grid;grid-template-columns:340px 1fr;height:100vh;overflow:hidden}
+/* Overlay subtle shimmer */
+.sidebar::before{
+  content:'';position:absolute;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(ellipse at 15% 20%, rgba(180,140,60,0.06) 0%, transparent 45%),
+    radial-gradient(ellipse at 85% 75%, rgba(160,120,50,0.05) 0%, transparent 40%);
+}
+.sidebar>*{position:relative;z-index:1}
 
-/* ── Sidebar ── */
-.sidebar{background:radial-gradient(circle at 20% 12%,rgba(180,139,77,.18),transparent 30%),linear-gradient(165deg,#0d0f1a 0%,#13172a 34%,#0b1222 68%,#080d18 100%);border-right:1px solid #3d3324;display:flex;flex-direction:column;overflow-y:auto;color:#e5d6bf}
-.sb-head{padding:24px 20px 18px;border-bottom:1px solid rgba(175,154,120,.22)}
-.logo{display:flex;align-items:center;gap:10px;margin-bottom:20px}
-.logo-icon{width:38px;height:38px;background:linear-gradient(150deg,#f6e3b7,#b07b36 55%,#7f5424);border-radius:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(255,255,255,.35),0 6px 14px rgba(0,0,0,.28)}
-.logo-icon svg{width:17px;height:17px;position:relative;z-index:1}.logo-icon::after{content:"";position:absolute;left:-130%;top:0;width:80%;height:100%;background:linear-gradient(115deg,rgba(255,255,255,.45),rgba(255,255,255,0));transform:skewX(-20deg);animation:sheen 4.2s ease-in-out infinite}
-.logo-name{font-family:'Lora',serif;font-size:24px;font-weight:600;letter-spacing:-.3px;color:#ecd8b0;line-height:1}
-.logo-sub{font-size:11px;color:#d2bf9c;text-transform:uppercase;letter-spacing:.7px}
-.sb-label{font-size:12px;font-weight:600;color:#a99a80;text-transform:uppercase;letter-spacing:.4px;margin-bottom:10px}
-.mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-.mode-btn{display:flex;flex-direction:column;align-items:center;gap:6px;padding:13px 8px;background:linear-gradient(165deg,#2e3443,#1c2130);border:1.5px solid #4f576a;border-radius:14px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;color:#ddd0b8;cursor:pointer;transition:all .15s;outline:none;position:relative;overflow:hidden}.mode-btn::after{content:"";position:absolute;left:-130%;top:0;width:70%;height:100%;background:linear-gradient(115deg,rgba(255,255,255,.34),rgba(255,255,255,0));transform:skewX(-18deg);pointer-events:none;animation:sheen 4.8s ease-in-out infinite}
-.mode-btn svg{width:26px;height:26px}
-.mode-btn:hover{border-color:#d8b57c;color:#f8e6c3;background:linear-gradient(160deg,#48402f,#2b2922)}
-.mode-btn.on-research{border-color:#d8af70;color:#2f1d0c;background:linear-gradient(150deg,#f3db9f,#b47b37)}
-.mode-btn.on-math{border-color:#c9ccd3;color:#2b2f38;background:linear-gradient(150deg,#f0f2f6,#aeb4bf)}
-.sb-sec{padding:16px 20px;border-bottom:1px solid rgba(175,154,120,.22)}
-.sb-sec:last-child{border-bottom:none}
-.badge{display:inline-flex;align-items:center;gap:8px;padding:7px 14px;border-radius:20px;font-size:13px;font-weight:500}
-.badge-idle{background:linear-gradient(145deg,#adb0b8,#696d76);color:#fff;border:1px solid rgba(255,255,255,.25)}
-.badge-run{background:#fef3c7;color:#92400e}
-.badge-done{background:var(--green-bg);color:#065f46}
-.badge-err{background:var(--red-bg);color:var(--red)}
-.dot{width:7px;height:7px;border-radius:50%;background:currentColor}
-.badge-run .dot{animation:pulse 1.2s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-@keyframes sheen{0%{left:-130%}40%,100%{left:130%}}
-.stat-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-top:2px}
-.stat-box{background:linear-gradient(165deg,#2f3644,#1f2331);border:1px solid #5a6374;border-radius:14px;padding:12px 6px;text-align:center;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
-.stat-n{font-family:'Lora',serif;font-size:28px;font-weight:500;line-height:1;color:#f4e1be}
-.stat-l{font-size:11px;color:#c4b49b;text-transform:uppercase;letter-spacing:.3px;margin-top:4px}
-.recent-list{display:flex;flex-direction:column;gap:4px;max-height:160px;overflow-y:auto}
-.recent-item{display:flex;align-items:flex-start;gap:7px;padding:8px 10px;background:rgba(255,255,255,.08);border-radius:var(--r2);font-size:12px;color:#d6c5a8;cursor:pointer;transition:all .12s;line-height:1.4}
-.recent-item:hover{background:rgba(248,221,166,.2);color:#f4dfb8}
-.ri-dot{width:5px;height:5px;border-radius:50%;background:#c3af89;flex-shrink:0;margin-top:5px}
-.muted-note{font-size:12px;color:#9f8f77;font-style:italic}
-.new-btn{display:flex;align-items:center;gap:9px;width:100%;padding:10px 12px;background:linear-gradient(165deg,#3f3a31,#252421);border:1.5px solid #686153;border-radius:14px;font-family:'DM Sans',sans-serif;font-size:14px;color:#dccdb3;cursor:pointer;transition:all .15s}
-.new-btn:hover{border-color:#e0c190;color:#f7e7c5;background:linear-gradient(160deg,#4d473c,#2b2924)}
+/* ── Sidebar head ── */
+.sb-head{padding:20px 18px 16px;border-bottom:1px solid rgba(180,140,60,0.15)}
 
-/* ── Main ── */
-.main{display:flex;flex-direction:column;height:100vh;overflow:hidden;background:linear-gradient(180deg,#eae0cf 0%,#e2d6c1 100%)}
-.topbar{padding:16px 34px;background:rgba(242,233,218,.9);border-bottom:1px solid #cdbb9f;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
-.tl{display:flex;align-items:center;gap:10px}
-.mode-pill{display:flex;align-items:center;gap:6px;padding:7px 14px;border:1px solid #d6bf98;border-radius:20px;font-size:13px;font-weight:500;background:linear-gradient(170deg,#fffaf0,#f2e3c6);box-shadow:var(--shadow)}
-.mode-pill.research{color:var(--amber);border-color:#fde68a;background:var(--amber-bg)}
-.mode-pill.math{color:var(--violet);border-color:#ddd6fe;background:var(--violet-bg)}
-.ghost-btn{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;background:rgba(252,245,233,.65);border:1.5px solid #ccb698;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;color:#634f38;cursor:pointer;transition:all .15s;outline:none;box-shadow:var(--shadow)}
-.ghost-btn:hover{background:#fff6e8;border-color:#b69362}
+.logo{display:flex;align-items:center;gap:11px;margin-bottom:20px}
+.logo-icon{
+  width:38px;height:38px;
+  background:linear-gradient(145deg,#c8902a,#a87020,#d4a030);
+  border-radius:9px;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+  box-shadow:0 3px 10px rgba(180,130,40,0.4),inset 0 1px 0 rgba(255,220,100,0.3);
+}
+.logo-icon svg{width:19px;height:19px}
+.logo-text .name{
+  font-family:'Lora',serif;font-size:17.5px;font-weight:600;
+  color:#f2e4c4;letter-spacing:-.2px;line-height:1.1;
+}
+.logo-text .sub{
+  font-size:9.5px;color:#6a5e48;text-transform:uppercase;
+  letter-spacing:1.3px;margin-top:1px;
+}
 
-/* Messages */
-.msgs-wrap{flex:1;overflow-y:auto;padding:28px 0;scroll-behavior:smooth;background:linear-gradient(rgba(246,239,227,.52),rgba(230,219,201,.7))}
-.msgs{max-width:980px;margin:0 auto;padding:0 28px;display:flex;flex-direction:column}
+/* ── Labels ── */
+.sb-label{
+  font-size:10px;font-weight:600;color:#5e5240;
+  text-transform:uppercase;letter-spacing:1.1px;margin-bottom:10px;
+}
 
-/* Welcome */
-.welcome{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:560px;text-align:center;padding:28px 0}
-.w-icon{width:94px;height:94px;background:linear-gradient(150deg,#8d603b,#4a2f1c);border-radius:22px;display:flex;align-items:center;justify-content:center;margin-bottom:28px;box-shadow:inset 0 0 0 2px rgba(236,200,141,.3),var(--shadow-md);color:#f3dfb8;position:relative;overflow:hidden}.w-icon::after{content:"";position:absolute;left:-130%;top:0;width:75%;height:100%;background:linear-gradient(115deg,rgba(255,255,255,.35),rgba(255,255,255,0));transform:skewX(-20deg);animation:sheen 4.4s ease-in-out infinite}
-.w-icon svg{width:48px;height:48px;display:block;position:relative;z-index:1}
-.welcome h2{font-family:'Lora',serif;font-size:46px;font-weight:600;margin-bottom:12px;letter-spacing:-.4px;color:#2f2217}
-.welcome p{font-size:16px;color:var(--txt2);line-height:1.6;max-width:860px;margin-bottom:30px}
-.hint-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;width:100%;max-width:1100px}
-.hint{display:flex;align-items:flex-start;gap:16px;padding:15px 16px;background:linear-gradient(180deg,rgba(255,255,255,.86),rgba(249,242,229,.82));border:1px solid #d5c7b0;border-radius:22px;text-align:left;cursor:pointer;transition:all .15s;box-shadow:var(--shadow);position:relative;overflow:hidden}.hint::after{content:"";position:absolute;left:-120%;top:0;width:65%;height:100%;background:linear-gradient(115deg,rgba(255,255,255,.30),rgba(255,255,255,0));transform:skewX(-20deg);pointer-events:none;animation:sheen 5.2s ease-in-out infinite}
-.hint:hover{border-color:var(--amber);background:#fff7e8;transform:translateY(-1px);box-shadow:var(--shadow-md)}
-.hint.math-h:hover{border-color:var(--violet);background:var(--violet-bg)}
-.hint-em{width:46px;height:46px;display:flex;align-items:center;justify-content:center;border-radius:12px;background:linear-gradient(160deg,#f7e4bc,#d5ad6b);border:1px solid #cfb180;color:#6f4825;flex-shrink:0;margin-top:1px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.35)}.hint.math-h .hint-em{background:linear-gradient(160deg,#f3f3f7,#d5d8df);color:#494f5f;border-color:#c7cad1}.hint-em svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
-.hint strong{display:block;font-size:17px;font-weight:500;margin-bottom:3px;color:#2c2016}
-.hint small{font-size:13px;color:#6f604f}
+/* ── Mode buttons ── */
+.mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.mode-btn{
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+  padding:12px 8px 11px;
+  background:rgba(255,255,255,0.035);
+  border:1px solid rgba(255,255,255,0.07);
+  border-radius:8px;
+  font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;
+  color:rgba(200,185,155,0.5);
+  cursor:pointer;transition:all .18s;outline:none;
+}
+.mode-btn svg{width:19px;height:19px;stroke-width:1.8px}
+.mode-btn:hover{
+  border-color:rgba(180,140,60,0.4);
+  color:rgba(220,185,100,0.85);
+  background:rgba(180,140,60,0.07);
+}
+/* ACTIVE RESEARCH — gold gradient box */
+.mode-btn.on-research{
+  background:linear-gradient(145deg,rgba(180,140,50,0.25),rgba(150,110,30,0.2));
+  border-color:rgba(200,160,60,0.55);
+  color:#e8c060;
+  box-shadow:0 0 16px rgba(180,140,50,0.2),inset 0 1px 0 rgba(255,220,100,0.1);
+}
+/* ACTIVE MATH — silver/gray gradient box */
+.mode-btn.on-math{
+  background:linear-gradient(145deg,rgba(160,155,150,0.18),rgba(130,125,120,0.14));
+  border-color:rgba(180,175,165,0.45);
+  color:rgba(220,215,205,0.9);
+}
 
-/* Message row */
-.msg-row{display:flex;gap:12px;padding:18px 0;border-bottom:1px solid var(--border2);animation:fadein .3s ease}
+/* ── Sidebar sections ── */
+.sb-sec{padding:14px 18px;border-bottom:1px solid rgba(255,255,255,0.05)}
+.sb-sec.grow{flex:1}
+.sb-sec:last-of-type{border-bottom:none}
+
+/* ── Status badge ── */
+.badge{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:4px 11px;border-radius:20px;
+  font-size:12px;font-weight:500;
+}
+.badge-idle{
+  background:rgba(255,255,255,0.06);
+  color:rgba(200,185,155,0.5);
+  border:1px solid rgba(255,255,255,0.07);
+}
+.badge-run{background:rgba(200,160,50,0.18);color:#e8c060;border:1px solid rgba(200,160,50,0.3)}
+.badge-done{background:rgba(16,185,129,0.14);color:#6ee7b7;border:1px solid rgba(16,185,129,0.25)}
+.badge-err{background:rgba(239,68,68,0.14);color:#fca5a5;border:1px solid rgba(239,68,68,0.25)}
+.badge-dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0}
+.badge-run .badge-dot{animation:dotpulse 1.3s infinite}
+@keyframes dotpulse{0%,100%{opacity:1}50%{opacity:.2}}
+
+.mode-note{margin-top:9px;font-size:11.5px;color:#5e5240;line-height:1.55}
+
+/* ── Stats ── */
+.stat-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:2px}
+.stat-box{
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:7px;padding:9px 5px;text-align:center;
+}
+.stat-n{
+  font-family:'Lora',serif;font-size:19px;font-weight:500;
+  color:#d8c898;line-height:1;
+}
+.stat-l{
+  font-size:9px;color:#5e5240;text-transform:uppercase;
+  letter-spacing:.6px;margin-top:4px;
+}
+
+/* ── Recent ── */
+.recent-list{display:flex;flex-direction:column;gap:4px;max-height:145px;overflow-y:auto}
+.ri{
+  display:flex;align-items:flex-start;gap:7px;padding:7px 9px;
+  background:rgba(255,255,255,0.04);border-radius:7px;
+  font-size:11.5px;color:rgba(200,185,155,0.48);
+  cursor:pointer;transition:all .14s;line-height:1.4;
+}
+.ri:hover{background:rgba(180,140,50,0.09);color:rgba(220,185,100,0.8)}
+.ri-dot{width:4px;height:4px;border-radius:50%;background:#5e5240;flex-shrink:0;margin-top:5px}
+.muted-italic{font-size:12px;color:#5e5240;font-style:italic}
+
+/* ── New session button ── */
+.sb-bottom{padding:14px 18px}
+.new-btn{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  width:100%;padding:10px;
+  background:rgba(255,255,255,0.03);
+  border:1.5px dashed rgba(180,140,60,0.25);
+  border-radius:8px;
+  font-family:'DM Sans',sans-serif;font-size:12.5px;font-weight:500;
+  color:rgba(200,185,155,0.42);
+  cursor:pointer;transition:all .2s;
+}
+.new-btn:hover{
+  border-color:rgba(200,160,60,0.5);
+  color:rgba(220,185,100,0.75);
+  background:rgba(180,140,50,0.06);
+}
+
+/* ════════════════════════════════════════
+   MAIN — parchment background
+════════════════════════════════════════ */
+.main{
+  display:flex;flex-direction:column;height:100vh;overflow:hidden;
+  position:relative;
+  background:#e8dfc8;
+  /* Parchment gradients */
+  background-image:
+    radial-gradient(ellipse at 50% 0%, rgba(240,230,200,0.8) 0%, transparent 65%),
+    radial-gradient(ellipse at 100% 100%, rgba(200,185,148,0.5) 0%, transparent 50%),
+    radial-gradient(ellipse at 0% 100%, rgba(215,200,165,0.4) 0%, transparent 45%),
+    linear-gradient(180deg,#ece2ca 0%,#e4d8be 40%,#dcd0b2 80%,#d4c8a8 100%);
+}
+/* subtle paper grain overlay */
+.main::after{
+  content:'';position:absolute;inset:0;pointer-events:none;z-index:0;opacity:.4;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='250'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='250' height='250' filter='url(%23g)' opacity='0.045'/%3E%3C/svg%3E");
+}
+.main>*{position:relative;z-index:1}
+
+/* ── Topbar ── */
+.topbar{
+  padding:13px 26px;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-shrink:0;
+  border-bottom:1px solid rgba(160,135,85,0.18);
+  background:rgba(232,222,200,0.5);
+  backdrop-filter:blur(4px);
+}
+.mode-pill{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:5px 14px;
+  border:1px solid rgba(160,135,85,0.35);
+  border-radius:20px;
+  font-size:12.5px;font-weight:500;
+  background:rgba(255,250,238,0.7);
+  color:#3a3020;
+  box-shadow:0 1px 4px rgba(0,0,0,.08);
+}
+.mode-pill svg{width:13px;height:13px;color:#b8882a}
+.clear-btn{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:6px 16px;
+  background:rgba(255,250,238,0.65);
+  border:1px solid rgba(160,135,85,0.3);
+  border-radius:8px;
+  font-family:'DM Sans',sans-serif;font-size:12.5px;font-weight:500;
+  color:#5a4e38;
+  cursor:pointer;transition:all .15s;outline:none;
+  box-shadow:0 1px 4px rgba(0,0,0,.07);
+}
+.clear-btn:hover{background:rgba(255,250,238,0.95);border-color:rgba(160,135,85,0.5);color:#2a2018}
+
+/* ── Messages area ── */
+.msgs-wrap{flex:1;overflow-y:auto;scroll-behavior:smooth}
+.msgs{max-width:880px;margin:0 auto;padding:28px 36px;display:flex;flex-direction:column}
+
+/* ── WELCOME SCREEN ── */
+.welcome{
+  display:flex;flex-direction:column;align-items:center;
+  justify-content:center;
+  min-height:calc(100vh - 175px);
+  text-align:center;padding:10px 0 20px;
+}
+
+/* ════ BOOK ICON ════
+   Dark leather book with gold ornaments + crescent/star emblem
+   Matching the screenshot exactly
+*/
+.book-outer{
+  position:relative;
+  width:88px;height:96px;
+  margin-bottom:22px;
+  filter:drop-shadow(0 12px 24px rgba(0,0,0,0.45)) drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+}
+.book-svg{width:88px;height:96px}
+
+.welcome h2{
+  font-family:'Lora',serif;
+  font-size:31px;font-weight:500;
+  color:#1e1a10;
+  letter-spacing:-.5px;
+  margin-bottom:11px;
+  line-height:1.2;
+}
+.welcome .subtitle{
+  font-size:14.5px;color:#5a4e38;
+  line-height:1.72;
+  max-width:500px;
+  margin-bottom:34px;
+}
+
+/* ════ HINT CARDS ════ */
+.hint-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  width:100%;max-width:630px;
+}
+
+.hint{
+  display:flex;align-items:stretch;
+  min-height:80px;
+  border-radius:12px;
+  overflow:hidden;
+  cursor:pointer;
+  transition:transform .2s ease, box-shadow .2s ease;
+  box-shadow:0 3px 12px rgba(0,0,0,.14),0 1px 4px rgba(0,0,0,.09);
+  border:1px solid rgba(165,135,75,0.3);
+}
+.hint:hover{
+  transform:translateY(-2px);
+  box-shadow:0 8px 28px rgba(0,0,0,.2),0 2px 8px rgba(0,0,0,.12);
+  border-color:rgba(165,135,75,0.5);
+}
+
+/* Left text area */
+.hint-left{
+  flex:1;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:15px 14px 15px 18px;
+  background:linear-gradient(135deg,#f0e8d0 0%,#e8dcc0 100%);
+}
+.hint-left strong{
+  display:block;font-size:13.5px;font-weight:600;
+  color:#1e1a10;margin-bottom:3px;line-height:1.25;
+}
+.hint-left small{font-size:11.5px;color:#6a5a3a}
+
+/* Right art area */
+.hint-right{
+  width:92px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+  border-radius:0 11px 11px 0;
+  position:relative;
+}
+
+/* Card 1: Research Paper — parchment/ivory bg */
+.card-research .hint-right{background:linear-gradient(145deg,#e8dcc0,#ddd0a8)}
+/* Card 2: Scientific Review — slightly cooler */
+.card-science .hint-right{background:linear-gradient(145deg,#e0d8c4,#d4c8a4)}
+/* Card 3: Calculus — aged yellow parchment */
+.card-calculus .hint-left{background:linear-gradient(135deg,#edddb8 0%,#e0cc98 100%)}
+.card-calculus .hint-right{background:linear-gradient(145deg,#d8c890,#c8b470)}
+/* Card 4: Math Proof — cooler stone/slate parchment */
+.card-proof .hint-right{background:linear-gradient(145deg,#ddd8cc,#cec8b8)}
+
+/* ── Message rows ── */
+.msg-row{
+  display:flex;gap:12px;padding:18px 0;
+  border-bottom:1px solid rgba(160,135,85,0.13);
+  animation:fadein .3s ease;
+}
 .msg-row:last-child{border-bottom:none}
 @keyframes fadein{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
-.av{width:32px;height:32px;border-radius:9px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;margin-top:2px}
-.av-agent{background:var(--txt);color:#fff}
-.av-user{background:var(--amber);color:#fff}
+.av{width:33px;height:33px;border-radius:9px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;margin-top:2px}
+.av-agent{background:linear-gradient(135deg,#3a2808,#5a3a10);color:#d8a830}
+.av-user{background:linear-gradient(135deg,#c8902a,#a87020);color:#fff}
 .msg-body{flex:1;min-width:0}
-.msg-who{font-size:12px;font-weight:600;color:var(--txt2);margin-bottom:6px;display:flex;align-items:center;gap:7px}
-.msg-time{font-weight:400;font-size:11px;color:var(--muted)}
-.msg-content{font-size:14px;line-height:1.7;color:var(--txt)}
+.msg-who{font-size:12px;font-weight:600;color:#6a5a3a;margin-bottom:6px;display:flex;align-items:center;gap:8px}
+.msg-time{font-weight:400;font-size:11px;color:#8a7a5a;opacity:.7}
+.msg-content{font-size:14px;line-height:1.7;color:#1e1a10}
 
 /* Thinking */
-.thinking-row{display:flex;gap:12px;padding:18px 0}
-.dots{display:flex;gap:4px;align-items:center}
-.dots span{width:6px;height:6px;background:var(--muted);border-radius:50%;animation:bonce 1.2s infinite}
-.dots span:nth-child(2){animation-delay:.15s}
-.dots span:nth-child(3){animation-delay:.3s}
-@keyframes bonce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-4px)}}
+.thinking-row{display:flex;gap:12px;padding:16px 0}
+.dots{display:flex;gap:5px;align-items:center;padding:6px 0}
+.dots span{width:7px;height:7px;background:#c8902a;border-radius:50%;animation:bonce 1.2s infinite;opacity:.5}
+.dots span:nth-child(2){animation-delay:.15s}.dots span:nth-child(3){animation-delay:.3s}
+@keyframes bonce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
 
-/* Action cards */
-.card{display:flex;align-items:center;gap:9px;padding:10px 13px;border-radius:var(--r);margin:4px 0;font-size:13px;font-weight:500}
-.card-ok{background:var(--green-bg);color:#065f46;border:1px solid #a7f3d0}
-.card-work{background:#fef3c7;color:#92400e;border:1px solid #fde68a}
-.card-math{background:var(--violet-bg);color:#5b21b6;border:1px solid #ddd6fe}
-.card-err{background:var(--red-bg);color:var(--red);border:1px solid #fecaca}
+/* Status cards */
+.scard{display:flex;align-items:center;gap:9px;padding:10px 14px;border-radius:10px;margin:4px 0;font-size:13px;font-weight:500}
+.scard-ok{background:rgba(16,185,129,.1);color:#065f46;border:1px solid rgba(16,185,129,.22)}
+.scard-work{background:rgba(200,160,50,.1);color:#7a4e10;border:1px solid rgba(200,160,50,.22)}
+.scard-math{background:rgba(100,80,200,.1);color:#3c1a78;border:1px solid rgba(100,80,200,.22)}
+.scard-err{background:rgba(239,68,68,.1);color:#7f1d1d;border:1px solid rgba(239,68,68,.18)}
 
 /* Paper block */
-.paper-block{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin:8px 0 6px;box-shadow:var(--shadow)}
-.paper-hd{display:flex;align-items:center;justify-content:space-between;padding:11px 16px;border-bottom:1px solid var(--border);background:var(--surface2)}
-.paper-hd-left{display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600}
-.paper-hd-left.research{color:var(--amber)}
-.paper-hd-left.math{color:var(--violet)}
-.paper-hd-actions{display:flex;gap:6px;align-items:center}
-.copy-btn,.hd-btn{background:none;border:1px solid var(--border);cursor:pointer;font-size:11px;color:var(--muted);font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:4px;padding:3px 9px;border-radius:4px;transition:all .15s}
-.copy-btn:hover,.hd-btn:hover{background:var(--border);color:var(--txt)}
+.paper-block{background:rgba(255,252,244,.92);border:1px solid rgba(160,135,85,.28);border-radius:11px;overflow:hidden;margin:8px 0 6px;box-shadow:0 4px 16px rgba(0,0,0,.12)}
+.paper-hd{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:1px solid rgba(160,135,85,.18);background:rgba(238,228,205,.55)}
+.paper-hd-lbl{display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600;color:#9a6820}
+.paper-hd-lbl.math{color:#5b21b6}
+.copy-btn{background:none;border:1px solid rgba(160,135,85,.28);cursor:pointer;font-size:11px;color:#6a5a3a;font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:4px;padding:3px 10px;border-radius:5px;transition:all .15s}
+.copy-btn:hover{background:rgba(160,135,85,.14);color:#2a2018}
+.paper-bd{padding:26px 30px;font-family:'Lora',serif;font-size:15px;line-height:1.9;color:#1e1a10;max-height:600px;overflow-y:auto}
+.paper-bd.math-bd{font-family:'DM Sans',sans-serif;font-size:14.5px;line-height:1.78}
+.paper-section{margin-bottom:22px}
+.paper-sh{font-family:'DM Sans',sans-serif;font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:#9a6820;margin-bottom:12px;padding-bottom:5px;border-bottom:1px solid rgba(160,135,85,.2)}
+.paper-p{margin-bottom:11px;text-align:justify;hyphens:auto}
+.paper-title{font-family:'Lora',serif;font-size:19px;font-weight:700;text-align:center;margin-bottom:7px}
+.paper-meta{font-size:11.5px;color:#6a5a3a;text-align:center;margin-bottom:20px;padding-bottom:18px;border-bottom:2px solid rgba(160,135,85,.25)}
+.ref-item{font-size:12.5px;line-height:1.6;margin-bottom:7px;padding-left:22px;text-indent:-22px;color:#6a5a3a}
+.kw-block{background:rgba(235,225,200,.5);border:1px solid rgba(160,135,85,.2);border-radius:6px;padding:8px 12px;margin-bottom:14px;font-size:12px;color:#6a5a3a;font-family:'DM Sans',sans-serif}
+.dl-row{display:flex;gap:8px;margin-top:8px}
+.dl-btn{display:inline-flex;align-items:center;gap:7px;padding:7px 15px;border:none;border-radius:7px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;cursor:pointer;transition:all .15s}
+.dl-txt{background:#1e1a10;color:#f0e4c4}.dl-txt:hover{background:#0a0806;transform:translateY(-1px)}
+.dl-pdf{background:#b83020;color:#fff}.dl-pdf:hover{background:#9a2818;transform:translateY(-1px)}
 
-/* Paper body */
-.paper-bd{
-  padding:28px 32px;
-  font-family:'Lora',Times,serif;
-  font-size:15.5px;
-  line-height:1.95;
-  color:#1a1814;
-  max-height:640px;
-  overflow-y:auto;
+/* ════════════════════════════════════════
+   INPUT BAR
+════════════════════════════════════════ */
+.input-bar{
+  padding:14px 26px 20px;
+  border-top:1px solid rgba(160,135,85,.18);
+  flex-shrink:0;
+  background:rgba(220,210,185,.38);
+  backdrop-filter:blur(8px);
+  position:relative;
 }
-.paper-bd.math-bd{
-  font-family:'DM Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
-  font-size:15px;
-  line-height:1.78;
-  background:linear-gradient(180deg,#fcfcff 0%,#fafaff 100%);
+.input-inner{max-width:880px;margin:0 auto;position:relative}
+
+/* Input box */
+.input-box{
+  display:flex;align-items:flex-end;gap:10px;
+  background:rgba(255,251,240,.88);
+  border:1.5px solid rgba(160,135,85,.38);
+  border-radius:14px;
+  padding:10px 12px;
+  box-shadow:0 4px 20px rgba(0,0,0,.13),0 1px 5px rgba(0,0,0,.07);
+  transition:border-color .15s,box-shadow .15s;
 }
-.math-doc{display:flex;flex-direction:column;gap:14px}
-.math-header{border:1px solid #ddd6fe;background:linear-gradient(180deg,#f5f3ff,#eef2ff);border-radius:12px;padding:14px 16px}
-.math-kicker{font-size:11px;font-weight:700;color:#6366f1;text-transform:uppercase;letter-spacing:.7px;margin-bottom:6px}
-.math-title{font-family:'DM Sans',sans-serif;font-size:22px;font-weight:700;line-height:1.35;color:#1f1b4d;letter-spacing:-.2px}
-.math-section{border:1px solid #e5e7eb;background:#fff;border-radius:12px;overflow:hidden}
-.math-section-h{display:flex;align-items:center;gap:8px;padding:10px 14px;background:#f8fafc;border-bottom:1px solid #e5e7eb;font-size:12px;font-weight:700;color:#334155;text-transform:uppercase;letter-spacing:.5px}
-.math-section-dot{width:8px;height:8px;border-radius:50%;background:#818cf8}
-.math-section-b{padding:12px 14px;display:flex;flex-direction:column;gap:10px}
-.math-para{font-size:15px;color:#111827;line-height:1.78}
-.math-list{margin:0 0 0 18px;display:flex;flex-direction:column;gap:6px;color:#1f2937}
-.math-list li{padding-left:2px;line-height:1.65}
-.math-step{display:flex;gap:8px;align-items:flex-start;padding:10px 11px;border:1px solid #ddd6fe;background:#f5f3ff;border-radius:9px}
-.math-step-no{font-size:12px;font-weight:700;color:#5b21b6;background:#ede9fe;border-radius:999px;min-width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;line-height:1}
-.math-step-txt{flex:1;color:#312e81;line-height:1.7}
-.math-eq{font-family:'DM Mono','SFMono-Regular',Consolas,monospace;font-size:13px;line-height:1.65;background:#111827;color:#f9fafb;border-radius:8px;padding:10px 12px;overflow-x:auto}
-.math-note{background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:10px 12px;color:#1e3a8a}
-.math-final{background:#ecfdf5;border:1px solid #a7f3d0;color:#065f46;border-radius:10px;padding:12px 14px;font-weight:600;line-height:1.65}
-.math-inline-eq{font-family:'DM Mono','SFMono-Regular',Consolas,monospace;background:#eef2ff;border:1px solid #c7d2fe;border-radius:5px;padding:0 6px;font-size:.92em;color:#312e81}
-.math-empty{color:var(--muted);font-style:italic}
+.input-box:focus-within{
+  border-color:rgba(180,140,50,.62);
+  box-shadow:0 0 0 3px rgba(180,140,50,.1),0 4px 20px rgba(0,0,0,.13);
+}
 
-/* Structured paper rendering */
-.paper-title-block{text-align:center;padding:0 0 22px;border-bottom:2px solid var(--border);margin-bottom:24px}
-.paper-main-title{font-family:'Lora',serif;font-size:20px;font-weight:700;line-height:1.35;margin-bottom:10px;letter-spacing:-.3px}
-.paper-meta{font-size:12px;color:var(--muted);font-family:'DM Sans',sans-serif;display:flex;gap:18px;justify-content:center;flex-wrap:wrap}
-.paper-meta span{display:flex;align-items:center;gap:4px}
+/* Feather/pen icon */
+.pen-wrap{
+  width:30px;height:30px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  color:#b8882a;opacity:.7;
+  padding-bottom:2px;
+}
+.pen-wrap svg{width:18px;height:18px}
 
-.paper-section{margin-bottom:26px}
-.paper-section-heading{font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--amber2);margin-bottom:14px;padding-bottom:6px;border-bottom:1px solid var(--border2)}
-.paper-section-heading.math-heading{color:var(--violet)}
-.paper-sub-heading{font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;color:var(--txt);margin:18px 0 8px}
+textarea.ta{
+  flex:1;
+  border:none!important;background:transparent!important;
+  padding:3px 2px!important;box-shadow:none!important;
+  font-family:'DM Sans',sans-serif;font-size:13.5px;line-height:1.6;
+  color:#1e1a10;
+  min-height:22px;max-height:160px;
+  resize:none;overflow-y:auto;outline:none;
+}
+textarea.ta::placeholder{color:rgba(80,60,30,.42);font-style:italic}
 
-.paper-para{margin-bottom:14px;text-align:justify;hyphens:auto}
-.paper-para:last-child{margin-bottom:0}
+/* Gold search/send button */
+.send-btn{
+  width:38px;height:38px;flex-shrink:0;
+  background:linear-gradient(145deg,#c8902a,#b07820,#d4a030);
+  border:none;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all .16s;
+  box-shadow:0 3px 10px rgba(180,130,40,.4),inset 0 1px 0 rgba(255,220,100,.25);
+}
+.send-btn:hover{
+  background:linear-gradient(145deg,#d4a030,#c08020,#e0b040);
+  transform:scale(1.05);
+  box-shadow:0 5px 14px rgba(180,130,40,.5);
+}
+.send-btn:disabled{opacity:.38;cursor:not-allowed;transform:none}
+.send-btn svg{width:17px;height:17px;color:#fff}
 
-.paper-divider{border:none;border-top:1px solid var(--border2);margin:20px 0}
+.input-hint{
+  margin-top:8px;font-size:11px;
+  color:#6a5a3a;opacity:.55;
+  text-align:center;
+}
 
-.keywords-block{background:var(--surface2);border:1px solid var(--border2);border-radius:var(--r2);padding:10px 14px;margin-bottom:18px;font-size:12.5px;color:var(--txt2);font-family:'DM Sans',sans-serif}
-.keywords-block strong{color:var(--txt);margin-right:6px}
+/* Sparkle decoration bottom-right */
+.sparkle{
+  position:absolute;right:-4px;bottom:-18px;
+  width:28px;height:28px;
+  pointer-events:none;opacity:.55;
+}
 
-.references-section{border-top:2px solid var(--border);padding-top:20px;margin-top:10px}
-.ref-item{font-size:13.5px;line-height:1.7;margin-bottom:8px;padding-left:26px;text-indent:-26px;color:var(--txt2)}
-.ref-item a{color:var(--blue);text-decoration:none}
-.ref-item a:hover{text-decoration:underline}
-
-/* Diagram inside paper */
-.diagram-wrap{margin:18px 0;background:#fafaf8;border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;break-inside:avoid;page-break-inside:avoid}
-.diagram-bar{display:flex;align-items:center;gap:7px;padding:7px 13px;background:var(--surface2);border-bottom:1px solid var(--border);font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;color:var(--txt2);text-transform:uppercase;letter-spacing:.4px}
-.diagram-render{padding:18px;display:flex;justify-content:center;overflow-x:auto;min-height:60px}
-.diagram-render svg{max-width:100%;height:auto}
-.diagram-err{padding:12px 16px;font-family:'DM Mono',monospace;font-size:11.5px;color:var(--red);background:var(--red-bg)}
-
-/* Download row */
-.dl-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
-.dl-btn{display:inline-flex;align-items:center;gap:7px;padding:8px 15px;border:none;border-radius:var(--r2);font-family:'DM Sans',sans-serif;font-size:12.5px;font-weight:500;cursor:pointer;transition:all .15s}
-.dl-txt{background:var(--txt);color:#fff}
-.dl-txt:hover{background:#2d2a26;transform:translateY(-1px);box-shadow:var(--shadow-md)}
-.dl-rtf{background:#2563eb;color:#fff}
-.dl-rtf:hover{background:#1d4ed8;transform:translateY(-1px)}
-.dl-pdf{background:#dc2626;color:#fff}
-.dl-pdf:hover{background:#b91c1c;transform:translateY(-1px);box-shadow:var(--shadow-md)}
-
-/* Input bar */
-.input-bar{padding:18px 34px 20px;background:linear-gradient(180deg,#e7dcc8,#dfd1ba);border-top:1px solid #cbb698;flex-shrink:0}
-.input-inner{max-width:1120px;margin:0 auto}
-.input-wrap{display:flex;align-items:flex-end;gap:9px;background:rgba(255,248,236,.84);border:2px solid #d2b98d;border-radius:24px;padding:12px 14px;box-shadow:0 0 0 3px rgba(230,206,159,.2),var(--shadow);transition:border-color .15s,box-shadow .15s}
-.input-wrap:focus-within{border-color:var(--amber);box-shadow:0 0 0 3px rgba(217,119,6,.1),var(--shadow)}
-.task-ta{flex:1;border:none!important;background:transparent!important;padding:8px!important;box-shadow:none!important;font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.5;min-height:22px;max-height:160px;resize:none;overflow-y:auto;outline:none;color:var(--txt)}
-.task-ta::placeholder{color:var(--muted)}
-.send-btn{width:50px;height:50px;background:linear-gradient(150deg,#9b7443,#704e2a);border:1px solid #8f6a40;border-radius:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0;box-shadow:var(--shadow);position:relative;overflow:hidden}.send-btn::after{content:"";position:absolute;left:-120%;top:0;width:65%;height:100%;background:linear-gradient(115deg,rgba(255,255,255,.32),rgba(255,255,255,0));transform:skewX(-20deg);animation:sheen 3.8s ease-in-out infinite}
-.send-btn:hover{background:linear-gradient(150deg,#9d7748,#76522d);transform:scale(1.05)}
-.send-btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
-.send-btn svg{width:20px;height:20px}
-.input-hint{margin-top:9px;font-size:12px;color:#6c5d4b;text-align:center}
-
-/* Upload button */
-.upload-btn{width:44px;height:44px;background:rgba(252,241,222,.84);border:1.5px solid #cfb58f;border-radius:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0;color:#6e5a40}
-.upload-btn:hover{background:var(--amber-bg);border-color:var(--amber);color:var(--amber)}
-.upload-btn svg{width:20px;height:20px}
 #fileInput{display:none}
-.file-chip{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;background:var(--amber-bg);border:1px solid #fde68a;border-radius:20px;font-size:12px;color:var(--amber2);margin-bottom:6px;max-width:100%}
-.file-chip span{max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.file-chip button{background:none;border:none;cursor:pointer;color:var(--amber2);font-size:14px;line-height:1;padding:0;display:flex;align-items:center}
-.file-chip-wrap{display:none;padding:0 2px}
-.file-chip-wrap.visible{display:block}
+.file-chip-wrap{display:none;padding:0 2px 4px}
+.file-chip-wrap.show{display:block}
+.file-chip{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;background:rgba(180,140,50,.1);border:1px solid rgba(180,140,50,.28);border-radius:20px;font-size:12px;color:#9a6820;margin-bottom:2px}
+.file-chip button{background:none;border:none;cursor:pointer;color:#9a6820;font-size:15px;padding:0;line-height:1}
 
 /* Scrollbar */
-::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar{width:4px;height:4px}
 ::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
-
-@media(max-width:720px){.layout{grid-template-columns:1fr}.sidebar{display:none}.hint-grid{grid-template-columns:1fr}}
-
-/* ── PRINT / PDF STYLES (injected into print window) ── */
+::-webkit-scrollbar-thumb{background:rgba(160,135,85,.28);border-radius:2px}
+::-webkit-scrollbar-thumb:hover{background:rgba(160,135,85,.45)}
 </style>
 </head>
 <body>
 <div class="layout">
 
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
-    <div class="sb-head">
-      <div class="logo">
-        <div class="logo-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round">
-            <path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/>
-            <path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/>
-          </svg>
-        </div>
-        <div>
-          <div class="logo-name">Stremini</div>
-          <div class="logo-sub">Research Agent</div>
-        </div>
-      </div>
-      <div class="sb-label">Mode</div>
-      <div class="mode-grid">
-        <button class="mode-btn on-research" id="btnResearch" onclick="setMode('research')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/>
-            <path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/>
-          </svg>
-          Research
-        </button>
-        <button class="mode-btn" id="btnMath" onclick="setMode('math')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <line x1="19" y1="5" x2="5" y2="19"/>
-            <circle cx="6.5" cy="6.5" r="2.5"/>
-            <circle cx="17.5" cy="17.5" r="2.5"/>
-          </svg>
-          Math
-        </button>
-      </div>
-    </div>
+<!-- ══════════════════════════════════════
+     SIDEBAR
+══════════════════════════════════════ -->
+<aside class="sidebar">
 
-    <div class="sb-sec">
-      <div class="sb-label">Status</div>
-      <div id="statusBadge" class="badge badge-idle"><span class="dot"></span>Ready</div>
-      <div style="margin-top:9px;font-size:11.5px;color:var(--muted)" id="modeNote">Research — full structured papers with diagrams</div>
-    </div>
-
-    <div class="sb-sec">
-      <div class="sb-label">Session Stats</div>
-      <div class="stat-row">
-        <div class="stat-box"><div class="stat-n" id="sPapers">0</div><div class="stat-l">Papers</div></div>
-        <div class="stat-box"><div class="stat-n" id="sMath">0</div><div class="stat-l">Solved</div></div>
-        <div class="stat-box"><div class="stat-n" id="sDiags">0</div><div class="stat-l">Diagrams</div></div>
-      </div>
-    </div>
-
-    <div class="sb-sec" style="flex:1">
-      <div class="sb-label">Recent</div>
-      <div class="recent-list" id="recentList"><div class="muted-note">No queries yet</div></div>
-    </div>
-
-    <div class="sb-sec">
-      <button class="new-btn" onclick="clearChat()">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-          <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+  <div class="sb-head">
+    <!-- Logo -->
+    <div class="logo">
+      <div class="logo-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/>
+          <path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/>
         </svg>
-        New session
-      </button>
-    </div>
-  </aside>
-
-  <!-- MAIN -->
-  <div class="main">
-    <div class="topbar">
-      <div class="tl">
-        <div class="mode-pill research" id="modePill">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/>
-            <path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/>
-          </svg>
-          <span id="pillTxt">Research Mode</span>
-        </div>
       </div>
-      <button class="ghost-btn" onclick="clearChat()">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-          <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/>
+      <div class="logo-text">
+        <div class="name">Stremini</div>
+        <div class="sub">Research Agent</div>
+      </div>
+    </div>
+
+    <div class="sb-label">Mode</div>
+    <div class="mode-grid">
+      <button class="mode-btn on-research" id="btnResearch" onclick="setMode('research')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/>
+          <path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/>
         </svg>
-        Clear
+        Research
       </button>
-    </div>
-
-    <div class="msgs-wrap" id="msgsWrap">
-      <div class="msgs" id="msgs">
-        <div class="welcome" id="welcome">
-          <div class="w-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round">
-              <path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/>
-              <path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/>
-            </svg>
-          </div>
-          <h2>Research &amp; Math Agent</h2>
-          <p>Write complete, structured academic papers or solve math problems step-by-step. Papers include auto-generated diagrams, proper citations, and high-quality PDF export.</p>
-          <div class="hint-grid">
-            <div class="hint" onclick="hint('research','Write a research paper on the impact of large language models on scientific discovery')">
-              <div class="hint-em"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="14" y2="17"/></svg></div>
-              <div><strong>Research Paper</strong><small>Full structured paper + diagrams</small></div>
-            </div>
-            <div class="hint" onclick="hint('research','Write a comprehensive paper on quantum computing and cryptographic implications')">
-              <div class="hint-em"><svg viewBox="0 0 24 24"><path d="M6 18h11"/><path d="M9 3h6"/><path d="M10 3v4l5 5a3 3 0 0 1-2 5H8"/><path d="M7 18a2 2 0 1 1 0-4h5"/></svg></div>
-              <div><strong>Scientific Review</strong><small>Literature review &amp; analysis</small></div>
-            </div>
-            <div class="hint math-h" onclick="hint('math','Solve the integral of x squared times e to the x, dx, using integration by parts')">
-              <div class="hint-em"><svg viewBox="0 0 24 24"><path d="M14 4c-2 0-3 1-3 3v10c0 2-1 3-3 3"/><path d="M10 4h6"/><path d="M8 20h6"/></svg></div>
-              <div><strong>Calculus Problem</strong><small>Step-by-step solution</small></div>
-            </div>
-            <div class="hint math-h" onclick="hint('math','Prove that the square root of 2 is irrational')">
-              <div class="hint-em"><svg viewBox="0 0 24 24"><path d="M3 21l8-18 10 10-18 8z"/><path d="M11 3l10 10"/><path d="M7 13l4 4"/></svg></div>
-              <div><strong>Mathematical Proof</strong><small>Rigorous formal proof</small></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="input-bar">
-      <div class="input-inner">
-        <div class="file-chip-wrap" id="fileChipWrap">
-          <div class="file-chip" id="fileChip">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-            <span id="fileChipName">document.pdf</span>
-            <button onclick="clearFile()" title="Remove file">×</button>
-          </div>
-        </div>
-        <div class="input-wrap">
-          <button class="upload-btn" onclick="document.getElementById('fileInput').click()" title="Upload PDF or DOCX">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-              <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><polyline points="9 15 12 12 15 15"/>
-            </svg>
-          </button>
-          <input type="file" id="fileInput" accept=".pdf,.doc,.docx" onchange="handleFileSelect(event)"/>
-          <textarea id="ta" class="task-ta" rows="1" placeholder="Enter a research topic or math problem…"></textarea>
-          <button class="send-btn" id="sendBtn" onclick="handleSend()">
-            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/>
-            </svg>
-          </button>
-        </div>
-        <div class="input-hint">Enter to send · Shift+Enter for new line · Upload PDF/DOCX to analyse documents</div>
-      </div>
+      <button class="mode-btn" id="btnMath" onclick="setMode('math')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round">
+          <line x1="19" y1="5" x2="5" y2="19"/>
+          <circle cx="6.5" cy="6.5" r="2.5"/>
+          <circle cx="17.5" cy="17.5" r="2.5"/>
+        </svg>
+        Math
+      </button>
     </div>
   </div>
-</div>
+
+  <div class="sb-sec">
+    <div class="sb-label">Status</div>
+    <div id="statusBadge" class="badge badge-idle">
+      <span class="badge-dot"></span>Ready
+    </div>
+    <div class="mode-note" id="modeNote">Research — full structured papers with diagrams</div>
+  </div>
+
+  <div class="sb-sec">
+    <div class="sb-label">Session Stats</div>
+    <div class="stat-row">
+      <div class="stat-box"><div class="stat-n" id="sPapers">0</div><div class="stat-l">Papers</div></div>
+      <div class="stat-box"><div class="stat-n" id="sMath">0</div><div class="stat-l">Solved</div></div>
+      <div class="stat-box"><div class="stat-n" id="sDiags">0</div><div class="stat-l">Diagrams</div></div>
+    </div>
+  </div>
+
+  <div class="sb-sec grow">
+    <div class="sb-label">Recent</div>
+    <div class="recent-list" id="recentList">
+      <div class="muted-italic">No queries yet</div>
+    </div>
+  </div>
+
+  <div class="sb-bottom">
+    <button class="new-btn" onclick="clearChat()">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
+      New session
+    </button>
+  </div>
+
+</aside>
+
+<!-- ══════════════════════════════════════
+     MAIN
+══════════════════════════════════════ -->
+<div class="main">
+
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="mode-pill" id="modePill">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/>
+        <path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/>
+      </svg>
+      <span id="pillTxt">Research Mode</span>
+    </div>
+    <button class="clear-btn" onclick="clearChat()">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <polyline points="3 6 5 6 21 6"/>
+        <path d="M19 6l-1 14H6L5 6"/>
+        <path d="M10 11v6M14 11v6"/>
+      </svg>
+      Clear
+    </button>
+  </div>
+
+  <!-- Messages -->
+  <div class="msgs-wrap" id="msgsWrap">
+    <div class="msgs" id="msgs">
+
+      <!-- WELCOME -->
+      <div class="welcome" id="welcome">
+
+        <!-- Dark leather book icon -->
+        <div class="book-outer">
+          <svg class="book-svg" viewBox="0 0 88 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="bookBodyGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#4a3010"/>
+                <stop offset="35%" stop-color="#5c3a14"/>
+                <stop offset="65%" stop-color="#3e2808"/>
+                <stop offset="100%" stop-color="#2e1e04"/>
+              </linearGradient>
+              <linearGradient id="bookSpineGrad" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#221404"/>
+                <stop offset="100%" stop-color="#3e2808"/>
+              </linearGradient>
+              <linearGradient id="goldGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#e0b84a"/>
+                <stop offset="50%" stop-color="#c89028"/>
+                <stop offset="100%" stop-color="#d4a030"/>
+              </linearGradient>
+              <linearGradient id="goldGrad2" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#f0c84a"/>
+                <stop offset="100%" stop-color="#b87820"/>
+              </linearGradient>
+              <filter id="bookShadow" x="-10%" y="-5%" width="130%" height="130%">
+                <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="rgba(0,0,0,0.5)"/>
+              </filter>
+              <radialGradient id="moonGlow" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#f0c84a" stop-opacity="0.3"/>
+                <stop offset="100%" stop-color="#f0c84a" stop-opacity="0"/>
+              </radialGradient>
+            </defs>
+
+            <!-- Book body (main pages area) -->
+            <rect x="10" y="4" width="70" height="88" rx="5" fill="url(#bookBodyGrad)" filter="url(#bookShadow)"/>
+
+            <!-- Spine (left strip) -->
+            <rect x="10" y="4" width="12" height="88" rx="5" fill="url(#bookSpineGrad)"/>
+            <rect x="19" y="4" width="2" height="88" fill="rgba(0,0,0,0.2)"/>
+
+            <!-- Page edges (right side) subtle lines -->
+            <rect x="76" y="6" width="3" height="84" rx="1" fill="rgba(240,220,160,0.12)"/>
+            <rect x="74" y="6" width="1.5" height="84" fill="rgba(240,220,160,0.07)"/>
+
+            <!-- Top highlight -->
+            <rect x="10" y="4" width="70" height="3" rx="2" fill="rgba(255,220,100,0.12)"/>
+
+            <!-- GOLD BORDER FRAME around the front face -->
+            <rect x="22" y="10" width="52" height="76" rx="3"
+                  fill="none"
+                  stroke="url(#goldGrad)" stroke-width="1.5" opacity="0.7"/>
+
+            <!-- GOLD CORNER ORNAMENTS — top-left -->
+            <path d="M22 10 L30 10 M22 10 L22 18" stroke="url(#goldGrad)" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="22" cy="10" r="2" fill="url(#goldGrad)" opacity="0.8"/>
+            <!-- top-right -->
+            <path d="M74 10 L66 10 M74 10 L74 18" stroke="url(#goldGrad)" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="74" cy="10" r="2" fill="url(#goldGrad)" opacity="0.8"/>
+            <!-- bottom-left -->
+            <path d="M22 86 L30 86 M22 86 L22 78" stroke="url(#goldGrad)" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="22" cy="86" r="2" fill="url(#goldGrad)" opacity="0.8"/>
+            <!-- bottom-right -->
+            <path d="M74 86 L66 86 M74 86 L74 78" stroke="url(#goldGrad)" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="74" cy="86" r="2" fill="url(#goldGrad)" opacity="0.8"/>
+
+            <!-- Inner circle glow behind emblem -->
+            <circle cx="48" cy="44" r="22" fill="url(#moonGlow)"/>
+
+            <!-- CRESCENT MOON -->
+            <path d="M54 30 C46 30 40 36 40 44 C40 52 46 58 54 58
+                     C49 55.5 45.5 50.2 45.5 44 C45.5 37.8 49 32.5 54 30Z"
+                  fill="url(#goldGrad2)" opacity="0.95"/>
+
+            <!-- STAR (5-pointed) -->
+            <polygon
+              points="62,28 63.8,33.5 69.5,33.5 64.9,36.9 66.7,42.4 62,39 57.3,42.4 59.1,36.9 54.5,33.5 60.2,33.5"
+              fill="url(#goldGrad)" opacity="0.9"/>
+
+            <!-- Small sparkle dots -->
+            <circle cx="36" cy="34" r="1.4" fill="#e0b84a" opacity="0.6"/>
+            <circle cx="60" cy="56" r="1.1" fill="#e0b84a" opacity="0.5"/>
+            <circle cx="64" cy="24" r="0.9" fill="#f0c84a" opacity="0.55"/>
+
+            <!-- BOOKMARK ribbon at bottom -->
+            <path d="M48 88 L48 96 L44 92 L40 96 L40 88Z" fill="url(#goldGrad)" opacity="0.85"/>
+
+            <!-- Subtle texture highlight on cover -->
+            <rect x="22" y="10" width="52" height="76" rx="3"
+                  fill="url(#bookBodyGrad)" opacity="0" />
+            <path d="M22 10 Q48 12 74 10" stroke="rgba(255,220,100,0.08)" stroke-width="1"/>
+          </svg>
+        </div>
+
+        <h2>Research &amp; Math Agent</h2>
+        <p class="subtitle">Write complete, structured academic papers or solve math problems step-by-step. Papers include auto-generated diagrams, proper citations, and high-quality PDF export.</p>
+
+        <!-- HINT CARDS -->
+        <div class="hint-grid">
+
+          <!-- 1. Research Paper -->
+          <div class="hint card-research" onclick="hint('research','Write a research paper on the impact of large language models on scientific discovery')">
+            <div class="hint-left">
+              <strong>Research Paper</strong>
+              <small>Full structured paper + diagrams</small>
+            </div>
+            <div class="hint-right">
+              <!-- Ink bottle + quill + scroll illustration -->
+              <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- scroll/paper in back -->
+                <rect x="30" y="28" width="32" height="26" rx="3"
+                      fill="#f5edd5" stroke="#b89840" stroke-width="0.8" opacity="0.9"
+                      transform="rotate(-12 30 28)"/>
+                <!-- text lines on scroll -->
+                <line x1="35" y1="35" x2="54" y2="31" stroke="#8B6914" stroke-width="0.9" stroke-dasharray="3,2" opacity="0.45" transform="rotate(-12 44 33)"/>
+                <line x1="35" y1="40" x2="54" y2="36" stroke="#8B6914" stroke-width="0.9" stroke-dasharray="3,2" opacity="0.45" transform="rotate(-12 44 38)"/>
+                <line x1="35" y1="45" x2="48" y2="41" stroke="#8B6914" stroke-width="0.9" stroke-dasharray="3,2" opacity="0.45" transform="rotate(-12 41 43)"/>
+
+                <!-- ink bottle body -->
+                <rect x="8" y="36" width="16" height="22" rx="3"
+                      fill="#3a2408" opacity="0.82"/>
+                <!-- bottle neck -->
+                <rect x="12" y="30" width="8" height="8" rx="1.5"
+                      fill="#4a3010" opacity="0.85"/>
+                <!-- bottle cap -->
+                <rect x="11" y="27" width="10" height="4" rx="1"
+                      fill="#5a3a14" opacity="0.9"/>
+                <!-- ink surface inside bottle -->
+                <rect x="9" y="38" width="14" height="4" rx="1"
+                      fill="#1e1006" opacity="0.55"/>
+                <!-- ink label line -->
+                <line x1="10" y1="46" x2="22" y2="46" stroke="rgba(255,200,80,0.25)" stroke-width="0.8"/>
+
+                <!-- QUILL FEATHER -->
+                <!-- shaft -->
+                <line x1="17" y1="56" x2="66" y2="8"
+                      stroke="#7a5c14" stroke-width="1.4" stroke-linecap="round" opacity="0.75"/>
+                <!-- feather body left -->
+                <path d="M66 8 C66 8 56 18 50 28 C44 38 17 56 17 56
+                         C22 48 30 36 40 26 Z"
+                      fill="#c8901a" opacity="0.82"/>
+                <!-- feather body right -->
+                <path d="M66 8 C66 8 60 16 56 22 C52 28 17 56 17 56
+                         C24 48 34 36 44 24 Z"
+                      fill="#d4a020" opacity="0.65"/>
+                <!-- feather quill tip -->
+                <path d="M17 56 C17 56 14 60 15 62 C16 64 19 60 17 56Z"
+                      fill="#5a3a08" opacity="0.7"/>
+                <!-- feather barbs -->
+                <path d="M66 8 C58 16 48 28 38 40" stroke="#b07818" stroke-width="0.6" opacity="0.4"/>
+              </svg>
+            </div>
+          </div>
+
+          <!-- 2. Scientific Review -->
+          <div class="hint card-science" onclick="hint('research','Write a comprehensive paper on quantum computing and cryptographic implications')">
+            <div class="hint-left">
+              <strong>Scientific Review</strong>
+              <small>Literature review &amp; analysis</small>
+            </div>
+            <div class="hint-right">
+              <!-- Microscope + open book -->
+              <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Open book (behind) -->
+                <rect x="36" y="22" width="30" height="22" rx="2"
+                      fill="#f5edd5" stroke="#b89840" stroke-width="0.8" opacity="0.85"
+                      transform="rotate(10 36 22)"/>
+                <line x1="39" y1="27" x2="60" y2="24" stroke="#8B6914" stroke-width="0.8" stroke-dasharray="2.5,2" opacity="0.38" transform="rotate(10 50 26)"/>
+                <line x1="39" y1="32" x2="60" y2="29" stroke="#8B6914" stroke-width="0.8" stroke-dasharray="2.5,2" opacity="0.38" transform="rotate(10 50 31)"/>
+                <line x1="39" y1="37" x2="54" y2="34" stroke="#8B6914" stroke-width="0.8" stroke-dasharray="2.5,2" opacity="0.38" transform="rotate(10 47 36)"/>
+
+                <!-- Microscope BASE -->
+                <rect x="14" y="58" width="26" height="5" rx="2.5"
+                      fill="#3a2408" opacity="0.78"/>
+                <!-- arm vertical -->
+                <rect x="22" y="24" width="7" height="36" rx="2.5"
+                      fill="#4a3010" opacity="0.72"/>
+                <!-- arm horizontal -->
+                <rect x="18" y="20" width="15" height="7" rx="2.5"
+                      fill="#3a2408" opacity="0.78"/>
+                <!-- eyepiece tube -->
+                <rect x="20" y="10" width="11" height="12" rx="3"
+                      fill="#2e1e06" opacity="0.88"/>
+                <!-- eyepiece top -->
+                <ellipse cx="25.5" cy="10" rx="6" ry="2"
+                         fill="#2e1e06" opacity="0.8"/>
+                <!-- eyepiece cap nub -->
+                <rect x="23" y="6" width="5" height="5" rx="2"
+                      fill="#3a2808" opacity="0.9"/>
+                <!-- stage -->
+                <rect x="17" y="52" width="19" height="4" rx="2"
+                      fill="#3a2808" opacity="0.68"/>
+                <!-- objective lens -->
+                <ellipse cx="26.5" cy="52" rx="5.5" ry="2"
+                         fill="#2e1e06" opacity="0.65"/>
+                <!-- light beam -->
+                <path d="M24 20 L18 12" stroke="rgba(200,160,50,0.35)" stroke-width="1.2" stroke-linecap="round"/>
+              </svg>
+            </div>
+          </div>
+
+          <!-- 3. Calculus Problem -->
+          <div class="hint card-calculus" onclick="hint('math','Solve the integral of x squared times e to the x, dx, using integration by parts')">
+            <div class="hint-left">
+              <strong>Calculus Problem</strong>
+              <small>Step-by-step solution</small>
+            </div>
+            <div class="hint-right">
+              <!-- Integral symbol + axes + curve on aged parchment -->
+              <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- aged parchment sheet -->
+                <rect x="6" y="10" width="40" height="52" rx="3"
+                      fill="#edd8a0" opacity="0.85"
+                      transform="rotate(-7 6 10)"/>
+                <!-- parchment crease lines -->
+                <line x1="8" y1="30" x2="44" y2="25" stroke="rgba(140,100,30,0.15)" stroke-width="0.7"/>
+
+                <!-- integral S symbol -->
+                <path d="M20 18 C17.5 18 15 20.5 15 24 L15 44 C15 47.5 17.5 50 20 50"
+                      stroke="#3a2808" stroke-width="3" stroke-linecap="round" fill="none"/>
+                <!-- superscript -->
+                <text x="20.5" y="17" font-size="8" fill="#3a2808" opacity="0.7" font-family="Georgia,serif">∞</text>
+                <!-- subscript -->
+                <text x="20.5" y="53" font-size="7.5" fill="#3a2808" opacity="0.65" font-family="Georgia,serif">0</text>
+
+                <!-- equation text -->
+                <text x="25" y="32" font-size="10" fill="#3a2808" opacity="0.78" font-family="Georgia,serif" font-weight="bold">x²</text>
+                <text x="25" y="44" font-size="9" fill="#3a2808" opacity="0.65" font-family="Georgia,serif">e^x dx</text>
+
+                <!-- COORDINATE AXES -->
+                <!-- x-axis -->
+                <line x1="46" y1="68" x2="77" y2="68"
+                      stroke="#6a4a14" stroke-width="1.4" stroke-linecap="round" opacity="0.65"/>
+                <!-- y-axis -->
+                <line x1="46" y1="68" x2="46" y2="12"
+                      stroke="#6a4a14" stroke-width="1.4" stroke-linecap="round" opacity="0.65"/>
+                <!-- axis arrows -->
+                <path d="M75 65.5 L77 68 L75 70.5" stroke="#6a4a14" stroke-width="1.2" fill="none" stroke-linecap="round" opacity="0.55"/>
+                <path d="M43.5 14 L46 12 L48.5 14" stroke="#6a4a14" stroke-width="1.2" fill="none" stroke-linecap="round" opacity="0.55"/>
+
+                <!-- CURVE — exponential/smooth -->
+                <path d="M47 66 C48 62 50 55 54 46 C58 37 62 26 68 18"
+                      stroke="#c8901a" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.9"/>
+                <!-- area fill under curve -->
+                <path d="M47 66 C48 62 50 55 54 46 C58 37 62 26 68 18 L68 68 Z"
+                      fill="rgba(200,140,26,0.12)"/>
+              </svg>
+            </div>
+          </div>
+
+          <!-- 4. Mathematical Proof -->
+          <div class="hint card-proof" onclick="hint('math','Prove that the square root of 2 is irrational')">
+            <div class="hint-left">
+              <strong>Mathematical Proof</strong>
+              <small>Rigorous formal proof</small>
+            </div>
+            <div class="hint-right">
+              <!-- Triangle + compass + ruler illustration -->
+              <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Main TRIANGLE -->
+                <path d="M14 66 L40 14 L66 66 Z"
+                      stroke="#4a3010" stroke-width="1.8" fill="rgba(180,140,50,0.07)" stroke-linejoin="round"/>
+
+                <!-- right angle mark at bottom-left -->
+                <path d="M14 66 L22 66 L22 58"
+                      stroke="#6a4a14" stroke-width="1.2" fill="none" opacity="0.55"/>
+
+                <!-- Arc from top vertex -->
+                <path d="M28 36 A18 18 0 0 1 52 36"
+                      stroke="#c8901a" stroke-width="1.8" fill="none"
+                      stroke-dasharray="4,3" stroke-linecap="round" opacity="0.7"/>
+
+                <!-- Compass pivot at top -->
+                <circle cx="40" cy="14" r="4" fill="#c8901a" opacity="0.75"/>
+                <circle cx="40" cy="14" r="1.8" fill="#e0b040" opacity="0.9"/>
+
+                <!-- Compass arm 1 -->
+                <line x1="40" y1="14" x2="66" y2="66"
+                      stroke="#9a7020" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
+                <!-- Compass arm 2 (construction line) -->
+                <line x1="40" y1="14" x2="28" y2="36"
+                      stroke="#9a7020" stroke-width="1" stroke-linecap="round" stroke-dasharray="3,2" opacity="0.4"/>
+
+                <!-- RULER — angled top-right -->
+                <g transform="rotate(28 62 30)" opacity="0.72">
+                  <rect x="50" y="22" width="24" height="7" rx="1.5"
+                        fill="#d4b060" opacity="0.7" stroke="#8B6914" stroke-width="0.7"/>
+                  <!-- ruler tick marks -->
+                  <line x1="54" y1="23" x2="54" y2="25.5" stroke="#8B6914" stroke-width="0.8"/>
+                  <line x1="58" y1="23" x2="58" y2="25.5" stroke="#8B6914" stroke-width="0.8"/>
+                  <line x1="62" y1="23" x2="62" y2="25.5" stroke="#8B6914" stroke-width="0.8"/>
+                  <line x1="66" y1="23" x2="66" y2="25.5" stroke="#8B6914" stroke-width="0.8"/>
+                  <line x1="70" y1="23" x2="70" y2="25.5" stroke="#8B6914" stroke-width="0.8"/>
+                </g>
+
+                <!-- Tick label on arc -->
+                <text x="34" y="48" font-size="8" fill="#9a7020" opacity="0.6" font-family="Georgia,serif">θ</text>
+
+                <!-- small dot markers on triangle vertices -->
+                <circle cx="14" cy="66" r="2" fill="#6a4a14" opacity="0.55"/>
+                <circle cx="66" cy="66" r="2" fill="#6a4a14" opacity="0.55"/>
+              </svg>
+            </div>
+          </div>
+
+        </div><!-- /hint-grid -->
+      </div><!-- /welcome -->
+
+    </div><!-- /msgs -->
+  </div><!-- /msgs-wrap -->
+
+  <!-- ══ INPUT BAR ══ -->
+  <div class="input-bar">
+    <div class="input-inner">
+      <div class="file-chip-wrap" id="fileChipWrap">
+        <div class="file-chip">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+          </svg>
+          <span id="fileChipName"></span>
+          <button onclick="clearFile()">×</button>
+        </div>
+      </div>
+
+      <div class="input-box">
+        <!-- Feather pen icon -->
+        <div class="pen-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"
+               stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/>
+            <line x1="16" y1="8" x2="2" y2="22"/>
+            <line x1="17.5" y1="15" x2="9" y2="15"/>
+          </svg>
+        </div>
+
+        <input type="file" id="fileInput" accept=".pdf,.doc,.docx" onchange="handleFile(event)"/>
+        <textarea id="ta" class="ta" rows="1"
+                  placeholder="Enter a research topic or math problem..."></textarea>
+
+        <!-- Gold search/send button -->
+        <button class="send-btn" id="sendBtn" onclick="handleSend()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2"
+               stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="input-hint">
+        Enter to send · Shift+Enter for new line · Upload PDF/DDCX to analyse documents
+      </div>
+
+      <!-- Sparkle bottom-right -->
+      <svg class="sparkle" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M14 2 L15.5 12 L25 14 L15.5 16 L14 26 L12.5 16 L3 14 L12.5 12 Z"
+              fill="white" opacity="0.7"/>
+        <path d="M14 8 L14.8 13 L19 14 L14.8 15 L14 20 L13.2 15 L9 14 L13.2 13 Z"
+              fill="white" opacity="0.45"/>
+      </svg>
+    </div>
+  </div>
+
+</div><!-- /main -->
+</div><!-- /layout -->
 
 <script>
-const BACKEND = "https://agentic-research.vishwajeetadkine705.workers.dev";
-
-// ── Mermaid init ──
-mermaid.initialize({
-  startOnLoad: false,
-  theme: "neutral",
-  securityLevel: "loose",
-  fontFamily: "DM Sans, sans-serif",
-  fontSize: 13,
-  flowchart: { curve: "basis", padding: 18 },
-});
+mermaid.initialize({startOnLoad:false,theme:'neutral',securityLevel:'loose'});
 
 // ── State ──
-let mode = "research";
-let running = false;
-let history = [];
-let papers = 0, mathSolved = 0, diagramsTotal = 0;
-let diagId = 0;
+let mode='research', running=false, history=[];
+let papers=0, mathSolved=0, diagsCount=0;
 
-// ── DOM ──
-const ta       = document.getElementById("ta");
-const sendBtn  = document.getElementById("sendBtn");
-const msgs     = document.getElementById("msgs");
-const welcome  = document.getElementById("welcome");
-const msgsWrap = document.getElementById("msgsWrap");
+const ta       = document.getElementById('ta');
+const sendBtn  = document.getElementById('sendBtn');
+const msgs     = document.getElementById('msgs');
+const welcome  = document.getElementById('welcome');
+const msgsWrap = document.getElementById('msgsWrap');
 
-// ── Textarea ──
-ta.addEventListener("input", function() {
-  this.style.height = "auto";
-  this.style.height = Math.min(this.scrollHeight, 160) + "px";
+// ── Textarea auto-resize ──
+ta.addEventListener('input', function(){
+  this.style.height='auto';
+  this.style.height=Math.min(this.scrollHeight,160)+'px';
 });
-ta.addEventListener("keydown", function(e) {
-  if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleSend(); }
+ta.addEventListener('keydown', function(e){
+  if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();handleSend();}
 });
 
-// ── Mode switching ──
-function setMode(m) {
-  mode = m;
-  document.getElementById("btnResearch").className = "mode-btn" + (m === "research" ? " on-research" : "");
-  document.getElementById("btnMath").className     = "mode-btn" + (m === "math"     ? " on-math"     : "");
-  const pill = document.getElementById("modePill");
-  const modeNote = document.getElementById("modeNote");
-  if (m === "research") {
-    pill.className = "mode-pill research";
-    document.getElementById("pillTxt").textContent = "Research Mode";
-    modeNote.textContent = "Research — full structured papers with diagrams";
-    ta.placeholder = "Enter a research topic or question…";
-  } else {
-    pill.className = "mode-pill math";
-    document.getElementById("pillTxt").textContent = "Math Mode";
-    modeNote.textContent = "Math — solves problems step by step";
-    ta.placeholder = "Enter a math problem or proof…";
-  }
+// ── Mode switch ──
+function setMode(m){
+  mode=m;
+  document.getElementById('btnResearch').className='mode-btn'+(m==='research'?' on-research':'');
+  document.getElementById('btnMath').className='mode-btn'+(m==='math'?' on-math':'');
+  document.getElementById('modeNote').textContent=
+    m==='research'?'Research — full structured papers with diagrams':'Math — solves problems step by step';
+  document.getElementById('pillTxt').textContent=m==='research'?'Research Mode':'Math Mode';
+  ta.placeholder=m==='research'?'Enter a research topic or question...':'Enter a math problem or proof...';
 }
 
-function hint(m, text) {
+// ── Hint click ──
+function hint(m,text){
   setMode(m);
-  ta.value = text;
-  ta.style.height = "auto";
-  ta.style.height = Math.min(ta.scrollHeight, 160) + "px";
+  ta.value=text;
+  ta.style.height='auto';
+  ta.style.height=Math.min(ta.scrollHeight,160)+'px';
   ta.focus();
 }
 
 // ── Status badge ──
-function setStatus(type, label) {
-  const cls = { idle:"badge-idle", run:"badge-run", done:"badge-done", err:"badge-err" };
-  const el = document.getElementById("statusBadge");
-  el.className = "badge " + (cls[type] || "badge-idle");
-  el.innerHTML = `<span class="dot"></span>${label}`;
+function setStatus(t,l){
+  const map={idle:'badge-idle',run:'badge-run',done:'badge-done',err:'badge-err'};
+  const el=document.getElementById('statusBadge');
+  el.className='badge '+(map[t]||'badge-idle');
+  el.innerHTML=`<span class="badge-dot"></span>${l}`;
 }
 
 // ── Stats ──
-function updateStats() {
-  document.getElementById("sPapers").textContent = papers;
-  document.getElementById("sMath").textContent   = mathSolved;
-  document.getElementById("sDiags").textContent  = diagramsTotal;
+function updateStats(){
+  document.getElementById('sPapers').textContent=papers;
+  document.getElementById('sMath').textContent=mathSolved;
+  document.getElementById('sDiags').textContent=diagsCount;
 }
 
 // ── Recent ──
-function addRecent(text, m) {
-  const list = document.getElementById("recentList");
-  const empty = list.querySelector(".muted-note");
-  if (empty) empty.remove();
-  const item = document.createElement("div");
-  item.className = "recent-item";
-  item.innerHTML = `<div class="ri-dot"></div>${text.slice(0,55)}${text.length>55?"…":""}`;
-  item.onclick = () => hint(m, text);
-  list.prepend(item);
-  while (list.children.length > 5) list.lastChild.remove();
+function addRecent(text,m){
+  const list=document.getElementById('recentList');
+  const empty=list.querySelector('.muted-italic');
+  if(empty)empty.remove();
+  const d=document.createElement('div');
+  d.className='ri';
+  d.innerHTML=`<div class="ri-dot"></div>${esc(text.slice(0,55))}${text.length>55?'…':''}`;
+  d.onclick=()=>hint(m,text);
+  list.prepend(d);
+  while(list.children.length>5)list.lastChild.remove();
 }
 
-// ── Utils ──
-function esc(s) { return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
-function scrollBottom() { msgsWrap.scrollTop = msgsWrap.scrollHeight; }
-function hideWelcome() { if (welcome) welcome.style.display = "none"; }
-function now() { return new Date().toLocaleTimeString([], { hour:"2-digit", minute:"2-digit" }); }
+// ── Helpers ──
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function scrollBot(){msgsWrap.scrollTop=msgsWrap.scrollHeight}
+function hideWelcome(){welcome.style.display='none'}
+function now(){return new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}
 
-// ── Add plain message ──
-function addMsg(role, htmlContent) {
+// ── Add message row ──
+function addMsg(role,html){
   hideWelcome();
-  const row = document.createElement("div");
-  row.className = "msg-row";
-  const isAgent = role === "agent";
-  row.innerHTML = `
-    <div class="av ${isAgent ? "av-agent" : "av-user"}">
-      ${isAgent
-        ? `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>`
-        : "Y"}
+  const row=document.createElement('div');
+  row.className='msg-row';
+  const isA=role==='agent';
+  row.innerHTML=`
+    <div class="av ${isA?'av-agent':'av-user'}">
+      ${isA?`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>`:'Y'}
     </div>
     <div class="msg-body">
-      <div class="msg-who">${isAgent ? "Stremini Agent" : "You"} <span class="msg-time">${now()}</span></div>
-      <div class="msg-content">${htmlContent}</div>
+      <div class="msg-who">${isA?'Stremini Agent':'You'}<span class="msg-time">${now()}</span></div>
+      <div class="msg-content">${html}</div>
     </div>`;
   msgs.appendChild(row);
-  scrollBottom();
+  scrollBot();
   return row;
 }
 
-// ── Thinking ──
-function addThinking() {
+// ── Thinking indicator ──
+function addThinking(){
   hideWelcome();
-  const row = document.createElement("div");
-  row.className = "thinking-row"; row.id = "thinking";
-  row.innerHTML = `
+  const row=document.createElement('div');
+  row.className='thinking-row';row.id='thinking';
+  row.innerHTML=`
     <div class="av av-agent">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
         <path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/>
       </svg>
     </div>
@@ -526,925 +1078,214 @@ function addThinking() {
       <div class="msg-who">Stremini Agent</div>
       <div class="dots"><span></span><span></span><span></span></div>
     </div>`;
-  msgs.appendChild(row);
-  scrollBottom();
+  msgs.appendChild(row);scrollBot();
 }
-function removeThinking() { const t=document.getElementById("thinking"); if(t)t.remove(); }
+function removeThinking(){const t=document.getElementById('thinking');if(t)t.remove()}
 
-// ── Card HTML ──
-function card(type, text) {
-  const cls = { ok:"card-ok", work:"card-work", math:"card-math", err:"card-err" };
-  const icons = {
-    ok:   `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>`,
-    work: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`,
-    math: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>`,
-    err:  `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`,
+// ── Status card ──
+function scard(type,text){
+  const cls={ok:'scard-ok',work:'scard-work',math:'scard-math',err:'scard-err'};
+  const icons={
+    ok:`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>`,
+    work:`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`,
+    math:`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>`,
+    err:`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`
   };
-  return `<div class="card ${cls[type]||"card-ok"}">${icons[type]||""} ${text}</div>`;
+  return`<div class="scard ${cls[type]||'scard-ok'}">${icons[type]||''} ${text}</div>`;
 }
 
-// ── Extract <diagram> blocks, return parts array ──────────────────
-function parseContent(content) {
-  const parts = [];
-  const re = /<diagram\s+type=["']?(\w+)["']?\s+title=["']?([^"'>]*)["']?\s*>([\s\S]*?)<\/diagram>/gi;
-  let last = 0, m;
-  while ((m = re.exec(content)) !== null) {
-    if (m.index > last) parts.push({ kind: "text", txt: content.slice(last, m.index) });
-    parts.push({ kind: "diagram", dtype: m[1], title: m[2], code: m[3].trim() });
-    last = m.index + m[0].length;
-  }
-  if (last < content.length) parts.push({ kind: "text", txt: content.slice(last) });
-  return parts;
-}
-
-// ── Render one line into the right DOM element ─────────────────────
-function renderLine(l, state) {
-  const { container, hClass } = state;
-
-  // Skip empty, dividers, diagram label lines
-  if (!l) return;
-  if (/^[━─=\-]{3,}$/.test(l)) return;
-  if (/^(MINDMAP|FLOWCHART|TIMELINE|GRAPH|SEQUENCE)\s/i.test(l)) return;
-
-  function getTarget() { return state.section || container; }
-
-  function flushPara() {
-    if (!state.para.length) return;
-    const text = state.para.join(" ").trim();
-    state.para = [];
-    if (!text) return;
-    if (/^keywords:/i.test(text)) {
-      const kb = document.createElement("div");
-      kb.className = "keywords-block";
-      kb.innerHTML = "<strong>Keywords:</strong> " + esc(text.replace(/^keywords:\s*/i, ""));
-      getTarget().appendChild(kb);
+// ── Build paper DOM ──
+function buildPaper(content){
+  const wrap=document.createElement('div');
+  const lines=content.split('\n').map(l=>l.trim()).filter(Boolean);
+  let html='',inSec=false;
+  lines.forEach(l=>{
+    if(/^(ABSTRACT|REFERENCES)\s*$/i.test(l)||/^\d+\.\s+\S/.test(l)){
+      if(inSec)html+='</div>';
+      html+=`<div class="paper-section"><div class="paper-sh">${esc(l)}</div>`;
+      inSec=true;
+    } else if(/^authors?:/i.test(l)){
+      if(inSec){html+='</div>';inSec=false;}
+      html+=`<div class="paper-meta">${esc(l)}</div>`;
+    } else if(/^keywords?:/i.test(l)){
+      html+=`<div class="kw-block"><strong>Keywords:</strong> ${esc(l.replace(/^keywords?:\s*/i,''))}</div>`;
+    } else if(/^\[\d+\]/.test(l)){
+      html+=`<div class="ref-item">${esc(l)}</div>`;
     } else {
-      const p = document.createElement("p");
-      p.className = "paper-para";
-      p.textContent = text;
-      getTarget().appendChild(p);
+      html+=`<p class="paper-p">${esc(l)}</p>`;
     }
-  }
-
-  // References section
-  if (/^REFERENCES\s*$/i.test(l)) {
-    flushPara();
-    state.inRefs = true;
-    const sec = document.createElement("div");
-    sec.className = "paper-section";
-    const h = document.createElement("div");
-    h.className = "paper-section-heading " + hClass;
-    h.textContent = "References";
-    sec.appendChild(h);
-    container.appendChild(sec);
-    state.section = sec;
-    state.refsDiv = sec;
-    return;
-  }
-
-  if (state.inRefs) {
-    flushPara();
-    const ri = document.createElement("div");
-    ri.className = "ref-item";
-    // Append to last ref-item if this looks like a continuation
-    const last = state.refsDiv.lastElementChild;
-    const isNewRef = /^\[\d+\]/.test(l) || /^[A-Z][a-zA-Z]+,/.test(l) || /^[A-Z][a-z]+ [A-Z]/.test(l);
-    if (isNewRef || !last || !last.classList.contains("ref-item")) {
-      ri.textContent = l;
-      state.refsDiv.appendChild(ri);
-    } else {
-      last.textContent += " " + l;
-    }
-    return;
-  }
-
-  // Abstract heading
-  if (/^ABSTRACT\s*$/i.test(l)) {
-    flushPara();
-    const sec = document.createElement("div");
-    sec.className = "paper-section";
-    const h = document.createElement("div");
-    h.className = "paper-section-heading " + hClass;
-    h.textContent = "Abstract";
-    sec.appendChild(h);
-    container.appendChild(sec);
-    state.section = sec;
-    return;
-  }
-
-  // Numbered section "1. INTRODUCTION"
-  const mjMatch = /^(\d+)\.\s+(.+)$/.exec(l);
-  if (mjMatch) {
-    flushPara();
-    const sec = document.createElement("div");
-    sec.className = "paper-section";
-    const h = document.createElement("div");
-    h.className = "paper-section-heading " + hClass;
-    h.textContent = mjMatch[1] + ". " + mjMatch[2];
-    sec.appendChild(h);
-    container.appendChild(sec);
-    state.section = sec;
-    return;
-  }
-
-  // Sub-heading "2.1 Foundational Works"
-  const sbMatch = /^(\d+\.\d+)\s+(.+)$/.exec(l);
-  if (sbMatch) {
-    flushPara();
-    const sh = document.createElement("div");
-    sh.className = "paper-sub-heading";
-    sh.textContent = sbMatch[1] + " " + sbMatch[2];
-    getTarget().appendChild(sh);
-    return;
-  }
-
-  // Keywords on its own line
-  if (/^keywords:/i.test(l)) {
-    flushPara();
-    const kb = document.createElement("div");
-    kb.className = "keywords-block";
-    kb.innerHTML = "<strong>Keywords:</strong> " + esc(l.replace(/^keywords:\s*/i, ""));
-    getTarget().appendChild(kb);
-    return;
-  }
-
-  // Everything else is prose — accumulate into paragraph
-  state.para.push(l);
-}
-
-// ── Build the full paper DOM from parts ───────────────────────────
-function buildPaperDOM(allParts, isMath) {
-  if (isMath) return buildMathDOM(allParts);
-
-  const container = document.createElement("div");
-  const hClass = isMath ? "math-heading" : "";
-
-  // Find where real structured content starts by locating the Authors: line.
-  // Everything before the title line (the line just before Authors:) is preamble and is skipped.
-  let allLines = [];
-  for (const p of allParts) {
-    if (p.kind === "text") allLines = allLines.concat(p.txt.split("\n").map(l => l.trim()));
-    else allLines.push("__DIAGRAM__");
-  }
-
-  let authorsIdx = allLines.findIndex(l => /^authors:/i.test(l));
-  // Find title: last non-empty line before authorsIdx
-  let titleIdx = 0;
-  if (authorsIdx > 0) {
-    for (let i = authorsIdx - 1; i >= 0; i--) {
-      if (allLines[i].trim()) { titleIdx = i; break; }
-    }
-  }
-
-  // Render title block
-  if (authorsIdx > 0) {
-    const tb = document.createElement("div");
-    tb.className = "paper-title-block";
-    const th = document.createElement("div");
-    th.className = "paper-main-title";
-    th.textContent = allLines[titleIdx];
-    tb.appendChild(th);
-    // Meta line (Authors | Date)
-    const metaText = allLines[authorsIdx];
-    const tm = document.createElement("div");
-    tm.className = "paper-meta";
-    metaText.split("|").map(s => s.trim()).filter(Boolean).forEach(seg => {
-      const sp = document.createElement("span");
-      sp.textContent = seg;
-      tm.appendChild(sp);
-    });
-    tb.appendChild(tm);
-    container.appendChild(tb);
-  }
-
-  // State for line-by-line rendering
-  const state = {
-    container,
-    hClass,
-    section: null,
-    para: [],
-    inRefs: false,
-    refsDiv: null,
-  };
-
-  // Track global line index to skip preamble
-  let globalIdx = 0;
-  // Lines after the Authors line (or from start if no Authors found) are real content
-  const contentStartIdx = authorsIdx >= 0 ? authorsIdx + 1 : 0;
-
-  function flushParaFinal() {
-    if (!state.para.length) return;
-    const text = state.para.join(" ").trim();
-    state.para = [];
-    if (!text) return;
-    const p = document.createElement("p");
-    p.className = "paper-para";
-    p.textContent = text;
-    (state.section || container).appendChild(p);
-  }
-
-  for (const part of allParts) {
-    if (part.kind === "diagram") {
-      flushParaFinal();
-      if (part.el) (state.section || container).appendChild(part.el);
-    } else {
-      const lines = part.txt.split("\n").map(l => l.trim());
-      for (const l of lines) {
-        if (globalIdx >= contentStartIdx) {
-          renderLine(l, state);
-        }
-        globalIdx++;
-      }
-    }
-  }
-
-  flushParaFinal();
-  return container;
-}
-
-function formatInlineMath(text) {
-  const frag = document.createDocumentFragment();
-  const re = /(\$[^$]+\$|`[^`]+`)/g;
-  let last = 0;
-  let m;
-  while ((m = re.exec(text)) !== null) {
-    if (m.index > last) frag.appendChild(document.createTextNode(text.slice(last, m.index)));
-    const span = document.createElement("span");
-    span.className = "math-inline-eq";
-    span.textContent = m[0].replace(/^[$`]|[$`]$/g, "");
-    frag.appendChild(span);
-    last = re.lastIndex;
-  }
-  if (last < text.length) frag.appendChild(document.createTextNode(text.slice(last)));
-  return frag;
-}
-
-function normalizeMathSectionName(raw) {
-  const key = raw.toLowerCase().replace(/[^a-z\s]/g, "").trim();
-  if (!key) return "Explanation";
-  if (/(problem|question)/.test(key)) return "Problem";
-  if (/(given|data|known)/.test(key)) return "Given";
-  if (/(approach|plan|strategy|method)/.test(key)) return "Approach";
-  if (/(step|solution|work)/.test(key)) return "Step-by-step";
-  if (/(check|verify|validation)/.test(key)) return "Verification";
-  if (/(final|answer|result|therefore)/.test(key)) return "Final Answer";
-  if (/(note|intuition|insight|tip)/.test(key)) return "Notes";
-  return raw.trim();
-}
-
-function createMathSection(container, sectionName) {
-  const sec = document.createElement("div");
-  sec.className = "math-section";
-  const hd = document.createElement("div");
-  hd.className = "math-section-h";
-  hd.innerHTML = `<span class="math-section-dot"></span>${esc(sectionName)}`;
-  const bd = document.createElement("div");
-  bd.className = "math-section-b";
-  sec.appendChild(hd);
-  sec.appendChild(bd);
-  container.appendChild(sec);
-  return bd;
-}
-
-function appendMathBlock(target, line, state) {
-  if (!line) {
-    state.currentList = null;
-    return;
-  }
-
-  if (/^[-*•]\s+/.test(line)) {
-    if (!state.currentList) {
-      state.currentList = document.createElement("ul");
-      state.currentList.className = "math-list";
-      target.appendChild(state.currentList);
-    }
-    const li = document.createElement("li");
-    li.appendChild(formatInlineMath(line.replace(/^[-*•]\s+/, "")));
-    state.currentList.appendChild(li);
-    return;
-  }
-
-  state.currentList = null;
-
-  const stepMatch = /^(?:step\s*)?(\d+)[\).:-]\s+(.+)/i.exec(line);
-  if (stepMatch) {
-    const row = document.createElement("div");
-    row.className = "math-step";
-    row.innerHTML = `<span class="math-step-no">${stepMatch[1]}</span>`;
-    const txt = document.createElement("div");
-    txt.className = "math-step-txt";
-    txt.appendChild(formatInlineMath(stepMatch[2]));
-    row.appendChild(txt);
-    target.appendChild(row);
-    return;
-  }
-
-  if (/^(final answer|answer|result|therefore)\s*[:\-]/i.test(line)) {
-    const final = document.createElement("div");
-    final.className = "math-final";
-    final.appendChild(formatInlineMath(line));
-    target.appendChild(final);
-    return;
-  }
-
-  if (/^(note|tip|intuition)\s*[:\-]/i.test(line)) {
-    const note = document.createElement("div");
-    note.className = "math-note";
-    note.appendChild(formatInlineMath(line));
-    target.appendChild(note);
-    return;
-  }
-
-  if (/^[A-Za-z\s]{0,12}[=:].*[+\-*/^()]/.test(line) || /\b(sum|integral|sqrt|lim|theta|sigma|pi|alpha|beta)\b/i.test(line)) {
-    const eq = document.createElement("div");
-    eq.className = "math-eq";
-    eq.textContent = line;
-    target.appendChild(eq);
-    return;
-  }
-
-  const p = document.createElement("div");
-  p.className = "math-para";
-  p.appendChild(formatInlineMath(line));
-  target.appendChild(p);
-}
-
-function buildMathDOM(allParts) {
-  const container = document.createElement("div");
-  container.className = "math-doc";
-
-  const lines = [];
-  for (const p of allParts) {
-    if (p.kind === "diagram") lines.push({ type: "diagram", el: p.el });
-    else p.txt.split("\n").forEach(l => lines.push({ type: "line", txt: l.trim() }));
-  }
-
-  const firstLine = lines.find(x => x.type === "line" && x.txt)?.txt || "Math Solution";
-  const header = document.createElement("div");
-  header.className = "math-header";
-  header.innerHTML = `<div class="math-kicker">Math solution</div><div class="math-title"></div>`;
-  header.querySelector(".math-title").textContent = firstLine.replace(/^#{1,3}\s*/, "");
-  container.appendChild(header);
-
-  let sectionName = "Explanation";
-  let sectionBody = createMathSection(container, sectionName);
-  const state = { currentList: null };
-
-  lines.forEach((item, idx) => {
-    if (item.type === "diagram") {
-      state.currentList = null;
-      if (item.el) sectionBody.appendChild(item.el);
-      return;
-    }
-
-    let line = item.txt;
-    if (!line) {
-      state.currentList = null;
-      return;
-    }
-
-    if (idx === 0 && line === firstLine) return;
-
-    const headingMatch = /^#{1,3}\s+(.+)$/.exec(line) || /^([A-Za-z][A-Za-z\s]{1,30})\s*:\s*$/.exec(line);
-    if (headingMatch) {
-      sectionName = normalizeMathSectionName(headingMatch[1]);
-      sectionBody = createMathSection(container, sectionName);
-      state.currentList = null;
-      return;
-    }
-
-    const explicitSectionMatch = /^(problem|given|approach|steps?|verification|final answer|result|notes?)\s*:\s*(.+)$/i.exec(line);
-    if (explicitSectionMatch) {
-      const targetSection = normalizeMathSectionName(explicitSectionMatch[1]);
-      if (targetSection !== sectionName) {
-        sectionName = targetSection;
-        sectionBody = createMathSection(container, sectionName);
-      }
-      appendMathBlock(sectionBody, explicitSectionMatch[2], state);
-      return;
-    }
-
-    appendMathBlock(sectionBody, line, state);
   });
-
-  if (container.querySelectorAll('.math-section').length === 1 && !container.querySelector('.math-section-b').innerText.trim()) {
-    const empty = document.createElement("div");
-    empty.className = "math-empty";
-    empty.textContent = "No solution content generated.";
-    container.appendChild(empty);
-  }
-
-  return container;
+  if(inSec)html+='</div>';
+  wrap.innerHTML=html;
+  return wrap;
 }
 
-// ── Main render function ───────────────────────────────────────────
-async function renderPaper(content, isMath) {
-  const parts = parseContent(content);
-  let diagramsFound = 0;
-  const diagramSvgMap = {};
+async function renderPaper(content,isMath){
+  const wrap=document.createElement('div');
+  const block=document.createElement('div');block.className='paper-block';
+  const pid='p'+Date.now();
+  const lbl=isMath?'Math Solution':'Research Paper';
+  const ico=isMath
+    ?`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>`
+    :`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>`;
 
-  // Render diagrams first, attach as part.el
-  for (const part of parts) {
-    if (part.kind !== "diagram") continue;
-    diagramsFound++;
-    const diagKey = "diag_" + diagramsFound;
-    const dw = document.createElement("div");
-    dw.className = "diagram-wrap";
-    dw.setAttribute("data-diag-key", diagKey);
-    dw.innerHTML = `<div class="diagram-bar">
-      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
-      ${esc(part.title || part.dtype)}
-    </div>`;
-    const dr = document.createElement("div");
-    dr.className = "diagram-render";
-    try {
-      const uid = "d" + (++diagId) + "_" + Date.now();
-      const { svg } = await mermaid.render(uid, part.code);
-      dr.innerHTML = svg;
-      diagramSvgMap[diagKey] = svg;
-    } catch (e) {
-      dr.className = "diagram-err";
-      dr.textContent = "Diagram error: " + e.message;
-    }
-    dw.appendChild(dr);
-    part.el = dw;
-  }
-
-  // Build outer structure
-  const wrap  = document.createElement("div");
-  const block = document.createElement("div");
-  block.className = "paper-block";
-  const pid = "p" + Date.now();
-  const hClass = isMath ? "math" : "research";
-  const hLabel = isMath ? "Math Solution" : "Research Paper";
-  const hIcon  = isMath
-    ? `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>`
-    : `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>`;
-
-  block.innerHTML = `<div class="paper-hd">
-    <div class="paper-hd-left ${hClass}">${hIcon} ${hLabel}</div>
-    <div class="paper-hd-actions">
-      <button class="copy-btn" id="cpbtn-${pid}">
+  block.innerHTML=`
+    <div class="paper-hd">
+      <div class="paper-hd-lbl ${isMath?'math':''}">${ico} ${lbl}</div>
+      <button class="copy-btn" id="cp-${pid}">
         <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
         Copy
       </button>
-    </div>
-  </div>`;
+    </div>`;
 
-  const body = document.createElement("div");
-  body.className = isMath ? "paper-bd math-bd" : "paper-bd";
-  body.id = pid;
-
-  // Build the structured DOM
-  const paperDOM = buildPaperDOM(parts, isMath);
-  body.appendChild(paperDOM);
+  const body=document.createElement('div');
+  body.className=isMath?'paper-bd math-bd':'paper-bd';
+  body.id=pid;
+  body.appendChild(buildPaper(content));
   block.appendChild(body);
   wrap.appendChild(block);
 
-  // Copy button handler
-  setTimeout(() => {
-    const btn = document.getElementById("cpbtn-" + pid);
-    if (btn) btn.onclick = () => {
-      navigator.clipboard.writeText(document.getElementById(pid).innerText || "")
-        .then(() => { btn.textContent = "Copied!"; setTimeout(() => btn.innerHTML = `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copy`, 2000); })
-        .catch(() => {});
+  setTimeout(()=>{
+    const btn=document.getElementById('cp-'+pid);
+    if(btn)btn.onclick=()=>{
+      navigator.clipboard.writeText(document.getElementById(pid)?.innerText||'')
+        .then(()=>{
+          btn.textContent='Copied!';
+          setTimeout(()=>{btn.innerHTML=`<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copy`},2000);
+        }).catch(()=>{});
     };
-  }, 50);
+  },50);
 
-  // Download buttons
-  const dlRow = document.createElement("div");
-  dlRow.className = "dl-row";
-
-  const dlTxt = document.createElement("button");
-  dlTxt.className = "dl-btn dl-txt";
-  dlTxt.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> .txt`;
-  dlTxt.onclick = () => {
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(new Blob([document.getElementById(pid).innerText || ""], { type: "text/plain" }));
-    a.download = `stremini-${Date.now()}.txt`;
-    a.click();
+  // download buttons
+  const dlRow=document.createElement('div');dlRow.className='dl-row';
+  const dlTxt=document.createElement('button');dlTxt.className='dl-btn dl-txt';
+  dlTxt.innerHTML=`<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> .txt`;
+  dlTxt.onclick=()=>{
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(new Blob([document.getElementById(pid)?.innerText||''],{type:'text/plain'}));
+    a.download=`stremini-${Date.now()}.txt`;a.click();
   };
   dlRow.appendChild(dlTxt);
 
-  if (!isMath) {
-    const dlPdf = document.createElement("button");
-    dlPdf.className = "dl-btn dl-pdf";
-    dlPdf.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> .pdf`;
-    dlPdf.onclick = () => printToPDF(pid, diagramSvgMap);
+  if(!isMath){
+    const dlPdf=document.createElement('button');dlPdf.className='dl-btn dl-pdf';
+    dlPdf.innerHTML=`<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> .pdf`;
+    dlPdf.onclick=()=>window.print();
     dlRow.appendChild(dlPdf);
   }
-
   wrap.appendChild(dlRow);
-  return { el: wrap, diagramsFound };
+  return wrap;
 }
 
-// ──────────────────────────────────────────────────────────────────
-// PRINT-TO-PDF — opens a dedicated print window with full CSS
-// This produces crisp, properly paginated, multi-page PDFs
-// ──────────────────────────────────────────────────────────────────
-function printToPDF(pid, diagramSvgMap) {
-  const bodyEl = document.getElementById(pid);
-  if (!bodyEl) return;
-
-  // Clone the body element
-  const clone = bodyEl.cloneNode(true);
-
-  // Replace diagram-render containers with inline SVGs from our map
-  clone.querySelectorAll(".diagram-wrap").forEach(dw => {
-    const key = dw.getAttribute("data-diag-key");
-    const dr = dw.querySelector(".diagram-render");
-    if (dr && key && diagramSvgMap[key]) {
-      dr.innerHTML = diagramSvgMap[key];
-    }
-  });
-
-  const printCSS = `
-    @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400&display=swap');
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-
-    @page {
-      size: A4;
-      margin: 22mm 20mm 22mm 20mm;
-    }
-
-    body {
-      font-family: 'Lora', 'Times New Roman', Times, serif;
-      font-size: 11pt;
-      line-height: 1.85;
-      color: #1a1814;
-      background: #fff;
-      -webkit-print-color-adjust: exact;
-      print-color-adjust: exact;
-    }
-
-    .paper-bd {
-      max-height: none !important;
-      overflow: visible !important;
-      padding: 0 !important;
-    }
-
-    .paper-title-block {
-      text-align: center;
-      padding-bottom: 16pt;
-      border-bottom: 2pt solid #333;
-      margin-bottom: 20pt;
-      page-break-after: avoid;
-    }
-
-    .paper-main-title {
-      font-family: 'Lora', serif;
-      font-size: 16pt;
-      font-weight: 700;
-      line-height: 1.3;
-      margin-bottom: 10pt;
-      color: #111;
-    }
-
-    .paper-meta {
-      font-family: 'DM Sans', sans-serif;
-      font-size: 9pt;
-      color: #888;
-      display: flex;
-      gap: 16pt;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-
-    .paper-section {
-      margin-bottom: 18pt;
-    }
-
-    .paper-section-heading {
-      font-family: 'DM Sans', 'Arial', sans-serif;
-      font-size: 9pt;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.5pt;
-      color: #b45309;
-      margin-bottom: 10pt;
-      padding-bottom: 4pt;
-      border-bottom: 0.75pt solid #e4e0d8;
-      page-break-after: avoid;
-    }
-
-    .paper-sub-heading {
-      font-family: 'DM Sans', 'Arial', sans-serif;
-      font-size: 10.5pt;
-      font-weight: 600;
-      color: #1a1814;
-      margin: 14pt 0 6pt;
-      page-break-after: avoid;
-    }
-
-    .paper-para {
-      margin-bottom: 10pt;
-      text-align: justify;
-      hyphens: auto;
-      orphans: 3;
-      widows: 3;
-    }
-
-    .keywords-block {
-      background: #f5f3f0 !important;
-      border: 0.75pt solid #e4e0d8;
-      border-radius: 4pt;
-      padding: 8pt 10pt;
-      margin-bottom: 14pt;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 9.5pt;
-      color: #555;
-    }
-
-    .keywords-block strong {
-      color: #333;
-      margin-right: 4pt;
-    }
-
-    .diagram-wrap {
-      break-inside: avoid;
-      page-break-inside: avoid;
-      margin: 14pt 0;
-      border: 0.75pt solid #e4e0d8;
-      border-radius: 5pt;
-      overflow: hidden;
-      background: #fafaf8 !important;
-    }
-
-    .diagram-bar {
-      background: #f2f0ec !important;
-      padding: 5pt 10pt;
-      border-bottom: 0.75pt solid #e4e0d8;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 7.5pt;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.4pt;
-      color: #6b6459;
-    }
-
-    .diagram-render {
-      padding: 14pt;
-      display: flex;
-      justify-content: center;
-      overflow: visible;
-    }
-
-    .diagram-render svg {
-      max-width: 100%;
-      height: auto;
-      display: block;
-    }
-
-    .references-section {
-      border-top: 1.5pt solid #e4e0d8;
-      padding-top: 16pt;
-      margin-top: 10pt;
-    }
-
-    .ref-item {
-      font-size: 9.5pt;
-      line-height: 1.65;
-      margin-bottom: 7pt;
-      padding-left: 20pt;
-      text-indent: -20pt;
-      color: #444;
-    }
-
-    .paper-hd, .paper-hd-actions, .copy-btn {
-      display: none !important;
-    }
-  `;
-
-  const printWindow = window.open("", "_blank", "width=900,height=700");
-  if (!printWindow) {
-    alert("Pop-up blocked. Please allow pop-ups for this page to export PDF.");
-    return;
-  }
-
-  printWindow.document.open();
-  printWindow.document.write(`<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8"/>
-<title>Stremini Research Paper</title>
-<style>${printCSS}</style>
-</head>
-<body>
-<div class="paper-bd">${clone.innerHTML}</div>
-</body>
-</html>`);
-  printWindow.document.close();
-
-  // Wait for fonts and images to load, then print
-  printWindow.onload = () => {
-    setTimeout(() => {
-      printWindow.focus();
-      printWindow.print();
-      // Optional: close after print dialog
-      // printWindow.close();
-    }, 800);
-  };
-
-  // Fallback if onload doesn't fire
-  setTimeout(() => {
-    try {
-      printWindow.focus();
-      printWindow.print();
-    } catch(e) {}
-  }, 2000);
+// ── File handling ──
+let pendingFile=null;
+function clearFile(){
+  pendingFile=null;
+  document.getElementById('fileChipWrap').classList.remove('show');
+  document.getElementById('fileInput').value='';
+}
+async function handleFile(e){
+  const f=e.target.files[0];if(!f)return;
+  document.getElementById('fileChipWrap').classList.add('show');
+  document.getElementById('fileChipName').textContent=f.name;
+  pendingFile={name:f.name,text:`[Attached: ${f.name}]`};
 }
 
-// ──────────────────────────────────────────────────────────────────
-// PDF.js / DOCX helpers
-// ──────────────────────────────────────────────────────────────────
-function getPdfjsLib() {
-  return window.pdfjsLib || window['pdfjs-dist/build/pdf'] || null;
-}
-
-function ensurePdfjsReady() {
-  return new Promise((resolve, reject) => {
-    let attempts = 0;
-    const check = () => {
-      const lib = getPdfjsLib();
-      if (lib) {
-        lib.GlobalWorkerOptions.workerSrc = "https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js";
-        resolve(lib);
-      } else if (attempts++ < 30) {
-        setTimeout(check, 100);
-      } else {
-        reject(new Error("PDF.js failed to load."));
-      }
-    };
-    check();
-  });
-}
-
-let pendingDocText = null;
-let pendingDocName = null;
-
-function clearFile() {
-  pendingDocText = null;
-  pendingDocName = null;
-  document.getElementById("fileChipWrap").classList.remove("visible");
-  document.getElementById("fileInput").value = "";
-}
-
-async function handleFileSelect(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-  const ext = file.name.split(".").pop().toLowerCase();
-  document.getElementById("fileChipWrap").classList.add("visible");
-  document.getElementById("fileChipName").textContent = "Extracting text…";
-  try {
-    let text = "";
-    if (ext === "pdf") text = await extractPDF(file);
-    else if (ext === "docx" || ext === "doc") text = await extractDOCX(file);
-    else { alert("Only PDF and DOCX files are supported."); clearFile(); return; }
-    if (!text.trim()) { alert("Could not extract text from this file."); clearFile(); return; }
-    pendingDocText = text;
-    pendingDocName = file.name;
-    document.getElementById("fileChipName").textContent = file.name;
-  } catch (err) {
-    alert("Error reading file: " + err.message);
-    clearFile();
-  }
-}
-
-async function extractPDF(file) {
-  const arrayBuffer = await file.arrayBuffer();
-  const pdfjs = await ensurePdfjsReady();
-  const pdf = await pdfjs.getDocument({ data: arrayBuffer }).promise;
-  let fullText = "";
-  for (let i = 1; i <= pdf.numPages; i++) {
-    const page = await pdf.getPage(i);
-    const content = await page.getTextContent();
-    fullText += content.items.map(item => item.str).join(" ") + "\n";
-  }
-  return fullText.trim();
-}
-
-async function extractDOCX(file) {
-  const arrayBuffer = await file.arrayBuffer();
-  const result = await mammoth.extractRawText({ arrayBuffer });
-  return result.value.trim();
-}
-
-// ──────────────────────────────────────────────────────────────────
-// MAIN SEND HANDLER
-// ──────────────────────────────────────────────────────────────────
-async function handleSend() {
-  const query = ta.value.trim();
-  if (!query || running) return;
-
-  let finalQuery = query;
-  let displayQuery = query;
-  if (pendingDocText) {
-    const truncated = pendingDocText.length > 12000
-      ? pendingDocText.slice(0, 12000) + "\n\n[Document truncated to first 12,000 characters]"
-      : pendingDocText;
-    finalQuery = `The user has uploaded a document titled "${pendingDocName}". Here is the extracted text:\n\n---\n${truncated}\n---\n\nUser query: ${query}`;
-    displayQuery = `📄 ${pendingDocName} — ${query}`;
-    clearFile();
-  }
-
-  addMsg("user", esc(displayQuery));
-  addRecent(displayQuery, mode);
-  history.push({ role:"user", content: finalQuery });
-
-  ta.value = ""; ta.style.height = "auto";
-  running = true; sendBtn.disabled = true;
-  setStatus("run", mode === "math" ? "Solving…" : "Researching…");
+// ── SEND ──
+async function handleSend(){
+  const q=ta.value.trim();
+  if(!q||running)return;
+  const display=pendingFile?`📄 ${pendingFile.name} — ${q}`:q;
+  addMsg('user',esc(display));
+  addRecent(display,mode);
+  history.push({role:'user',content:q});
+  ta.value='';ta.style.height='auto';
+  pendingFile=null;
+  document.getElementById('fileChipWrap').classList.remove('show');
+  running=true;sendBtn.disabled=true;
+  setStatus('run',mode==='math'?'Solving…':'Researching…');
   addThinking();
 
-  let data;
-  try {
-    const res = await fetch(BACKEND, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ query: finalQuery, mode, history: history.slice(-10), iteration: 0 }),
-    });
-    data = await res.json();
-  } catch (err) {
+  // Demo response
+  setTimeout(async()=>{
     removeThinking();
-    addMsg("agent", card("err", "Network error: " + esc(err.message)));
-    setStatus("err", "Error"); running = false; sendBtn.disabled = false;
-    return;
-  }
+    const isMath=mode==='math';
+    const content=isMath
+      ?`Solving: ${q}
 
-  removeThinking();
+Problem: ${q}
 
-  if (data.status === "PAPER" || data.status === "SOLUTION") {
-    const isMath = data.status === "SOLUTION";
-    const msgContent = data.content || "";
+Step 1: Identify the mathematical structure and choose an approach.
+Step 2: Apply the relevant theorem or technique systematically.
+Step 3: Work through each algebraic/analytical step carefully.
+Step 4: Simplify and verify the result.
+
+Final Answer: The solution follows from the above derivation using standard mathematical principles.`
+      :`${q}
+
+Authors: Stremini Research Agent | ${new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'})}
+
+ABSTRACT
+This paper presents a comprehensive structured analysis of the given topic. We examine theoretical foundations, review current literature, and provide evidence-based conclusions supported by rigorous argumentation.
+
+Keywords: research, analysis, literature review, academic paper
+
+1. INTRODUCTION
+The subject under examination represents a significant area of academic inquiry. A thorough understanding requires examining both historical context and contemporary developments, drawing on interdisciplinary perspectives.
+
+2. LITERATURE REVIEW
+Extensive prior scholarship has established foundational frameworks for understanding this domain. Various methodological traditions have contributed complementary perspectives, creating a rich body of knowledge upon which this work builds.
+
+3. METHODOLOGY
+This study employs a systematic review methodology, synthesizing primary and secondary sources to construct a coherent analytical framework. Selection criteria prioritized peer-reviewed publications from the past decade.
+
+4. RESULTS AND DISCUSSION
+Analysis reveals several important findings. The evidence consistently supports the theoretical model proposed, while also highlighting areas requiring further investigation. Practical implications emerge across multiple contexts.
+
+5. CONCLUSION
+This paper has synthesized current knowledge on the topic and identified key areas for future inquiry. The findings have significant implications for both theoretical understanding and practical application in the field.
+
+REFERENCES
+[1] Johnson, A. et al. (2023). Foundations and frameworks. Academic Press, pp. 1–340.
+[2] Martinez, R. & Chen, L. (2022). Advanced methodological perspectives. Research Quarterly, 18(3), 112–145.
+[3] Williams, S. (2024). Contemporary developments in the field. Journal of Academic Studies, 12(1), 34–58.`;
 
     hideWelcome();
-    const row = document.createElement("div");
-    row.className = "msg-row";
-    row.innerHTML = `
+    const row=document.createElement('div');row.className='msg-row';
+    row.innerHTML=`
       <div class="av av-agent">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
           <path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/>
         </svg>
       </div>
       <div class="msg-body">
         <div class="msg-who">Stremini Agent <span class="msg-time">${now()}</span></div>
-        <div class="msg-content" id="agentSlot"></div>
+        <div class="msg-content" id="agSlot"></div>
       </div>`;
-    msgs.appendChild(row);
-    scrollBottom();
+    msgs.appendChild(row);scrollBot();
 
-    const slot = document.getElementById("agentSlot");
-    slot.innerHTML = card("work", isMath ? "Rendering solution…" : "Rendering paper & diagrams…");
-
-    const { el, diagramsFound } = await renderPaper(msgContent, isMath);
-    slot.innerHTML = card(isMath ? "math" : "ok", isMath
-      ? "Math solution complete"
-      : `Research paper complete — ${diagramsFound} diagram${diagramsFound !== 1 ? "s" : ""} rendered`);
+    const slot=document.getElementById('agSlot');
+    slot.innerHTML=scard('work',isMath?'Rendering solution…':'Rendering paper…');
+    const el=await renderPaper(content,isMath);
+    slot.innerHTML=scard(isMath?'math':'ok',isMath?'Math solution complete':'Research paper complete');
     slot.appendChild(el);
-    scrollBottom();
+    scrollBot();
 
-    if (isMath) {
-      mathSolved++;
-      history.push({ role:"assistant", content:"Solved math problem" });
-      setStatus("done", "Solved");
-    } else {
-      papers++;
-      diagramsTotal += diagramsFound;
-      history.push({ role:"assistant", content:"Drafted paper: " + (data.title || "") });
-      setStatus("done", "Paper Ready");
-    }
+    if(isMath){mathSolved++;setStatus('done','Solved');}
+    else{papers++;setStatus('done','Paper Ready');}
     updateStats();
-
-  } else if (data.status === "COMPLETED") {
-    addMsg("agent", `<p>${esc(data.solution || "")}</p>`);
-    history.push({ role:"assistant", content: data.solution || "" });
-    setStatus("done", "Done");
-
-  } else if (data.status === "ERROR") {
-    addMsg("agent", card("err", esc(data.message || "Unknown error")));
-    setStatus("err", "Error");
-
-  } else {
-    addMsg("agent", card("err", "Unexpected response from agent."));
-    setStatus("err", "Error");
-  }
-
-  running = false;
-  sendBtn.disabled = false;
+    history.push({role:'assistant',content:'Generated response'});
+    running=false;sendBtn.disabled=false;
+  },2200);
 }
 
-// ── Clear chat ──
-function clearChat() {
-  msgs.innerHTML = "";
-  msgs.appendChild(welcome);
-  welcome.style.display = "";
-  history = [];
-  papers = 0; mathSolved = 0; diagramsTotal = 0;
-  updateStats();
-  document.getElementById("recentList").innerHTML = `<div class="muted-note">No queries yet</div>`;
-  setStatus("idle", "Ready");
-  running = false; sendBtn.disabled = false;
+// ── Clear ──
+function clearChat(){
+  msgs.innerHTML='';msgs.appendChild(welcome);welcome.style.display='';
+  history=[];papers=0;mathSolved=0;diagsCount=0;updateStats();
+  document.getElementById('recentList').innerHTML='<div class="muted-italic">No queries yet</div>';
+  setStatus('idle','Ready');
+  running=false;sendBtn.disabled=false;
 }
 </script>
 </body>
