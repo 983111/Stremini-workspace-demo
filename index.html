@@ -40,6 +40,9 @@ html,body{height:100%;background:var(--bg);font-family:'DM Sans',sans-serif;colo
 .lm svg{width:17px;height:17px}
 .bt .n{font-family:'Lora',serif;font-size:17px;font-weight:600;letter-spacing:-.3px;line-height:1.2}
 .bt .s{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;margin-top:1px}
+.top-actions{display:flex;align-items:center;gap:10px}
+.academy-link{font-size:12px;color:var(--surface);padding:6px 12px;border:1px solid var(--txt);border-radius:20px;background:var(--txt);font-weight:600;text-decoration:none;transition:opacity .15s}
+.academy-link:hover{opacity:.9}
 .ac{font-size:12px;color:var(--txt2);padding:5px 13px;border:1px solid var(--border);border-radius:20px;background:var(--surface);font-weight:500}
 
 /* ── main grows to fill ── */
@@ -130,7 +133,10 @@ html,body{height:100%;background:var(--bg);font-family:'DM Sans',sans-serif;colo
     <div class="lm"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
     <div class="bt"><div class="n">Stremini Workspace</div><div class="s">Unified Agent Console</div></div>
   </div>
-  <div class="ac">10 Agents · 4 Layers</div>
+  <div class="top-actions">
+    <a class="academy-link" href="academy.html">Stremini Academy</a>
+    <div class="ac">15 Agents · 4 Layers</div>
+  </div>
 </header>
 
 <!-- main -->
@@ -153,6 +159,16 @@ html,body{height:100%;background:var(--bg);font-family:'DM Sans',sans-serif;colo
         <div class="lrule"></div>
       </div>
       <div class="grid">
+
+        <a class="card" href="dataset-builder.html">
+          <div class="ct">
+            <div class="ci"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></svg></div>
+            <div class="chip">Dataset</div>
+          </div>
+          <div class="cn">Dataset Builder Agent</div>
+          <div class="cd">Create robust training datasets from product docs, PDFs, and source material with schema guidance and quality checks.</div>
+          <div class="cta">Open agent <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+        </a>
 
         <a class="card" href="Research.html">
           <div class="ct">
@@ -274,6 +290,16 @@ html,body{height:100%;background:var(--bg);font-family:'DM Sans',sans-serif;colo
           <div class="cta">Open agent <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
         </a>
 
+        <a class="card" href="conept.html">
+          <div class="ct">
+            <div class="ci"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9 9a3 3 0 016 0c0 2-3 2.5-3 5"/><line x1="12" y1="17" x2="12" y2="17"/></svg></div>
+            <div class="chip">Learning</div>
+          </div>
+          <div class="cn">Concept Explainer Agent</div>
+          <div class="cd">Break down complex technical ideas into clear explanations, examples, and step-by-step learning paths for faster understanding.</div>
+          <div class="cta">Open agent <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+        </a>
+
       </div>
     </div>
 
@@ -319,6 +345,16 @@ html,body{height:100%;background:var(--bg);font-family:'DM Sans',sans-serif;colo
           <div class="cta">Open agent <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
         </a>
 
+        <a class="card" href="model-evaluator.html">
+          <div class="ct">
+            <div class="ci"><svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+            <div class="chip">Evaluation</div>
+          </div>
+          <div class="cn">AI Model Evaluator</div>
+          <div class="cd">Benchmark model quality, compare outputs, detect hallucinations, and evaluate reliability before shipping to production.</div>
+          <div class="cta">Open agent <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
+        </a>
+
       </div>
     </div>
 
@@ -326,7 +362,7 @@ html,body{height:100%;background:var(--bg);font-family:'DM Sans',sans-serif;colo
 </main>
 
 <footer class="footer">
-  Stremini Workspace &mdash; Professional multi-agent console &mdash; 4 layers · 10 agents
+  Stremini Workspace &mdash; Professional multi-agent console &mdash; 4 layers · 15 agents
 </footer>
 
 </div>
