@@ -968,6 +968,187 @@ textarea.ta::placeholder{color:rgba(80,60,30,.42);font-style:italic}
 </div><!-- /main -->
 </div><!-- /layout -->
 
+<style>
+/* ── Extra render styles injected here ── */
+
+/* MATH SOLUTION STYLES */
+.math-doc{display:flex;flex-direction:column;gap:0}
+
+.math-title-block{
+  background:linear-gradient(135deg,#f0e8d0,#e8dbbe);
+  border-bottom:1px solid rgba(160,135,85,.2);
+  padding:18px 22px 16px;
+}
+.math-kicker{
+  font-size:10px;font-weight:700;letter-spacing:1.2px;
+  text-transform:uppercase;color:#9a6820;margin-bottom:5px;
+}
+.math-problem-title{
+  font-family:'Lora',serif;font-size:17px;font-weight:600;
+  color:#1e1a10;line-height:1.35;
+}
+
+.math-section{
+  border-bottom:1px solid rgba(160,135,85,.12);
+  overflow:hidden;
+}
+.math-section:last-child{border-bottom:none}
+
+.math-section-hd{
+  display:flex;align-items:center;gap:8px;
+  padding:10px 22px 9px;
+  background:rgba(240,232,210,.4);
+  border-bottom:1px solid rgba(160,135,85,.12);
+  cursor:pointer;
+  user-select:none;
+}
+.math-section-dot{
+  width:8px;height:8px;border-radius:50%;
+  background:linear-gradient(135deg,#c8902a,#a87020);
+  flex-shrink:0;
+}
+.math-section-label{
+  font-size:11px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.8px;color:#7a5a20;flex:1;
+}
+.math-section-body{padding:14px 22px 16px;display:flex;flex-direction:column;gap:10px}
+
+/* Step pill */
+.math-step{
+  display:flex;align-items:flex-start;gap:12px;
+  padding:12px 14px;
+  background:rgba(255,251,240,.7);
+  border:1px solid rgba(160,135,85,.2);
+  border-radius:9px;
+}
+.math-step-num{
+  min-width:26px;height:26px;
+  background:linear-gradient(135deg,#c8902a,#a87020);
+  color:#fff;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:11.5px;font-weight:700;flex-shrink:0;
+  box-shadow:0 2px 6px rgba(180,130,40,.3);
+}
+.math-step-text{flex:1;font-size:14px;line-height:1.65;color:#1e1a10}
+
+/* Equation block */
+.math-eq{
+  font-family:'DM Mono','Courier New',monospace;
+  font-size:13.5px;line-height:1.7;
+  background:#1e1a10;color:#f5e8c0;
+  border-radius:8px;padding:12px 16px;
+  overflow-x:auto;white-space:pre-wrap;
+  border-left:3px solid #c8902a;
+}
+
+/* Inline math */
+.math-inline{
+  font-family:'DM Mono','Courier New',monospace;
+  background:rgba(200,144,42,.12);
+  border:1px solid rgba(200,144,42,.25);
+  border-radius:4px;padding:1px 6px;
+  font-size:.92em;color:#7a4e10;
+}
+
+/* Final answer */
+.math-final{
+  display:flex;align-items:flex-start;gap:12px;
+  padding:14px 16px;
+  background:linear-gradient(135deg,rgba(16,185,129,.08),rgba(16,185,129,.05));
+  border:1.5px solid rgba(16,185,129,.3);
+  border-radius:10px;
+}
+.math-final-icon{
+  width:28px;height:28px;
+  background:linear-gradient(135deg,#059669,#047857);
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;box-shadow:0 2px 6px rgba(5,150,105,.3);
+}
+.math-final-body{flex:1}
+.math-final-label{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#047857;margin-bottom:4px}
+.math-final-text{font-size:14px;line-height:1.6;color:#1e1a10;font-weight:500}
+
+/* Note/info box */
+.math-note{
+  padding:10px 14px;
+  background:rgba(59,130,246,.07);
+  border:1px solid rgba(59,130,246,.2);
+  border-left:3px solid #3b82f6;
+  border-radius:8px;
+  font-size:13.5px;line-height:1.6;color:#1e3a5f;
+}
+
+/* Plain paragraph inside math */
+.math-para{font-size:14px;line-height:1.7;color:#3a2e1a}
+
+/* ── RESEARCH PAPER STYLES ── */
+.paper-doc{display:flex;flex-direction:column;gap:0}
+
+.paper-title-area{
+  text-align:center;
+  padding:24px 28px 18px;
+  border-bottom:2px solid rgba(160,135,85,.25);
+  background:linear-gradient(180deg,rgba(248,240,220,.6),rgba(240,230,205,.4));
+}
+.paper-main-title{
+  font-family:'Lora',serif;font-size:20px;font-weight:700;
+  color:#1e1a10;line-height:1.3;margin-bottom:10px;
+}
+.paper-byline{
+  display:flex;align-items:center;justify-content:center;gap:16px;
+  flex-wrap:wrap;font-size:12px;color:#7a5a38;
+  font-family:'DM Sans',sans-serif;
+}
+.paper-byline span{display:flex;align-items:center;gap:4px}
+
+.paper-kw{
+  padding:10px 28px;
+  background:rgba(240,232,210,.45);
+  border-bottom:1px solid rgba(160,135,85,.12);
+  font-size:12px;color:#7a5a38;font-family:'DM Sans',sans-serif;
+}
+.paper-kw strong{color:#3a2e1a;margin-right:4px}
+
+.paper-sec{padding:18px 28px 4px}
+.paper-sec-heading{
+  font-family:'DM Sans',sans-serif;
+  font-size:11.5px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.8px;
+  color:#9a6820;
+  margin-bottom:12px;padding-bottom:6px;
+  border-bottom:1px solid rgba(160,135,85,.2);
+}
+.paper-body-p{
+  font-family:'Lora',serif;
+  font-size:14.5px;line-height:1.9;
+  color:#1e1a10;margin-bottom:12px;
+  text-align:justify;hyphens:auto;
+}
+.paper-body-p:last-child{margin-bottom:0}
+
+.paper-subsec-heading{
+  font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;
+  color:#2a2010;margin:14px 0 7px;
+}
+
+.paper-refs{
+  padding:16px 28px 20px;
+  border-top:2px solid rgba(160,135,85,.2);
+  background:rgba(240,232,210,.25);
+}
+.paper-refs-heading{
+  font-family:'DM Sans',sans-serif;font-size:11.5px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.8px;color:#9a6820;
+  margin-bottom:12px;padding-bottom:6px;
+  border-bottom:1px solid rgba(160,135,85,.2);
+}
+.paper-ref-item{
+  font-size:13px;line-height:1.65;
+  margin-bottom:8px;padding-left:24px;text-indent:-24px;
+  color:#5a4a2a;font-family:'DM Sans',sans-serif;
+}
+</style>
+
 <script>
 mermaid.initialize({startOnLoad:false,theme:'neutral',securityLevel:'loose'});
 
@@ -1001,7 +1182,6 @@ function setMode(m){
   ta.placeholder=m==='research'?'Enter a research topic or question...':'Enter a math problem or proof...';
 }
 
-// ── Hint click ──
 function hint(m,text){
   setMode(m);
   ta.value=text;
@@ -1010,7 +1190,6 @@ function hint(m,text){
   ta.focus();
 }
 
-// ── Status badge ──
 function setStatus(t,l){
   const map={idle:'badge-idle',run:'badge-run',done:'badge-done',err:'badge-err'};
   const el=document.getElementById('statusBadge');
@@ -1018,14 +1197,12 @@ function setStatus(t,l){
   el.innerHTML=`<span class="badge-dot"></span>${l}`;
 }
 
-// ── Stats ──
 function updateStats(){
   document.getElementById('sPapers').textContent=papers;
   document.getElementById('sMath').textContent=mathSolved;
   document.getElementById('sDiags').textContent=diagsCount;
 }
 
-// ── Recent ──
 function addRecent(text,m){
   const list=document.getElementById('recentList');
   const empty=list.querySelector('.muted-italic');
@@ -1038,13 +1215,11 @@ function addRecent(text,m){
   while(list.children.length>5)list.lastChild.remove();
 }
 
-// ── Helpers ──
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
 function scrollBot(){msgsWrap.scrollTop=msgsWrap.scrollHeight}
 function hideWelcome(){welcome.style.display='none'}
 function now(){return new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}
 
-// ── Add message row ──
 function addMsg(role,html){
   hideWelcome();
   const row=document.createElement('div');
@@ -1058,12 +1233,10 @@ function addMsg(role,html){
       <div class="msg-who">${isA?'Stremini Agent':'You'}<span class="msg-time">${now()}</span></div>
       <div class="msg-content">${html}</div>
     </div>`;
-  msgs.appendChild(row);
-  scrollBot();
+  msgs.appendChild(row);scrollBot();
   return row;
 }
 
-// ── Thinking indicator ──
 function addThinking(){
   hideWelcome();
   const row=document.createElement('div');
@@ -1071,7 +1244,8 @@ function addThinking(){
   row.innerHTML=`
     <div class="av av-agent">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-        <path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/>
+        <path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/>
+        <path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/>
       </svg>
     </div>
     <div class="msg-body">
@@ -1082,7 +1256,6 @@ function addThinking(){
 }
 function removeThinking(){const t=document.getElementById('thinking');if(t)t.remove()}
 
-// ── Status card ──
 function scard(type,text){
   const cls={ok:'scard-ok',work:'scard-work',math:'scard-math',err:'scard-err'};
   const icons={
@@ -1094,42 +1267,315 @@ function scard(type,text){
   return`<div class="scard ${cls[type]||'scard-ok'}">${icons[type]||''} ${text}</div>`;
 }
 
-// ── Build paper DOM ──
-function buildPaper(content){
-  const wrap=document.createElement('div');
-  const lines=content.split('\n').map(l=>l.trim()).filter(Boolean);
-  let html='',inSec=false;
-  lines.forEach(l=>{
-    if(/^(ABSTRACT|REFERENCES)\s*$/i.test(l)||/^\d+\.\s+\S/.test(l)){
-      if(inSec)html+='</div>';
-      html+=`<div class="paper-section"><div class="paper-sh">${esc(l)}</div>`;
-      inSec=true;
-    } else if(/^authors?:/i.test(l)){
-      if(inSec){html+='</div>';inSec=false;}
-      html+=`<div class="paper-meta">${esc(l)}</div>`;
-    } else if(/^keywords?:/i.test(l)){
-      html+=`<div class="kw-block"><strong>Keywords:</strong> ${esc(l.replace(/^keywords?:\s*/i,''))}</div>`;
-    } else if(/^\[\d+\]/.test(l)){
-      html+=`<div class="ref-item">${esc(l)}</div>`;
-    } else {
-      html+=`<p class="paper-p">${esc(l)}</p>`;
-    }
-  });
-  if(inSec)html+='</div>';
-  wrap.innerHTML=html;
-  return wrap;
+/* ════════════════════════════════════════════════════════════
+   MATH RENDERER
+   Parses structured math content into beautiful step-by-step UI
+════════════════════════════════════════════════════════════ */
+function renderInlineMath(text) {
+  // Wrap `code` and $expr$ in styled span
+  return text
+    .replace(/`([^`]+)`/g, '<span class="math-inline">$1</span>')
+    .replace(/\$([^$]+)\$/g, '<span class="math-inline">$1</span>');
 }
 
-async function renderPaper(content,isMath){
-  const wrap=document.createElement('div');
-  const block=document.createElement('div');block.className='paper-block';
-  const pid='p'+Date.now();
-  const lbl=isMath?'Math Solution':'Research Paper';
-  const ico=isMath
-    ?`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>`
-    :`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>`;
+function buildMathDoc(lines) {
+  const doc = document.createElement('div');
+  doc.className = 'math-doc';
 
-  block.innerHTML=`
+  // Title block — first non-empty line
+  const titleLine = lines.find(l => l.trim()) || 'Math Solution';
+  const titleBlock = document.createElement('div');
+  titleBlock.className = 'math-title-block';
+  titleBlock.innerHTML = `
+    <div class="math-kicker">Math Solution</div>
+    <div class="math-problem-title">${esc(titleLine.replace(/^(Solving:|Problem:)\s*/i,'').trim())}</div>`;
+  doc.appendChild(titleBlock);
+
+  // Parse remaining lines into sections
+  let currentSection = null;
+  let currentBody = null;
+  let stepCounter = 0;
+  let inEqBlock = false;
+  let eqLines = [];
+
+  function flushEq() {
+    if (!inEqBlock || !eqLines.length) return;
+    const eq = document.createElement('div');
+    eq.className = 'math-eq';
+    eq.textContent = eqLines.join('\n');
+    currentBody.appendChild(eq);
+    eqLines = [];
+    inEqBlock = false;
+  }
+
+  function ensureSection(name) {
+    flushEq();
+    currentSection = document.createElement('div');
+    currentSection.className = 'math-section';
+    const hd = document.createElement('div');
+    hd.className = 'math-section-hd';
+    hd.innerHTML = `<div class="math-section-dot"></div><div class="math-section-label">${esc(name)}</div>`;
+    currentSection.appendChild(hd);
+    currentBody = document.createElement('div');
+    currentBody.className = 'math-section-body';
+    currentSection.appendChild(currentBody);
+    doc.appendChild(currentSection);
+    stepCounter = 0;
+  }
+
+  // Skip first line (already used as title)
+  let skipFirst = true;
+  for (let i = 0; i < lines.length; i++) {
+    const raw = lines[i];
+    const l = raw.trim();
+    if (!l) { flushEq(); continue; }
+
+    // Skip the title line
+    if (skipFirst && (l === titleLine || /^(Solving:|Problem:)/i.test(l))) {
+      skipFirst = false;
+      continue;
+    }
+    skipFirst = false;
+
+    // Section headers
+    const secMatch =
+      /^(Given|Setup|Setup & Given|Approach|Strategy|Method|Overview)[\s:]*$/i.exec(l) ||
+      /^(Step[- ]by[- ]Step|Solution|Working|Steps|Derivation|Proof)[\s:]*$/i.exec(l) ||
+      /^(Verification|Check|Verify|Checking)[\s:]*$/i.exec(l) ||
+      /^(Notes?|Insight|Intuition|Explanation|Summary|Discussion)[\s:]*$/i.exec(l) ||
+      /^#{1,3}\s+(.+)/.exec(l);
+
+    if (secMatch) {
+      flushEq();
+      const name = (secMatch[1]||secMatch[0]).replace(/^#+\s*/,'').trim();
+      ensureSection(name.charAt(0).toUpperCase()+name.slice(1).toLowerCase().replace(/\b\w/g,c=>c.toUpperCase()));
+      continue;
+    }
+
+    // Final Answer line
+    if (/^(final\s+answer|answer|result|therefore|hence|conclusion)\s*[:\-–]/i.test(l)) {
+      flushEq();
+      if (!currentBody) ensureSection('Solution');
+      const ansText = l.replace(/^(final\s+answer|answer|result|therefore|hence|conclusion)\s*[:\-–]\s*/i,'');
+      const fa = document.createElement('div');
+      fa.className = 'math-final';
+      fa.innerHTML = `
+        <div class="math-final-icon">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div class="math-final-body">
+          <div class="math-final-label">Final Answer</div>
+          <div class="math-final-text">${renderInlineMath(esc(ansText))}</div>
+        </div>`;
+      currentBody.appendChild(fa);
+      continue;
+    }
+
+    // Numbered steps: "Step 1:", "1.", "1)"
+    const stepMatch =
+      /^step\s*(\d+)\s*[:\-–\.]\s*(.+)/i.exec(l) ||
+      /^(\d+)[\.:\)]\s+(.+)/.exec(l);
+
+    if (stepMatch) {
+      flushEq();
+      if (!currentBody) ensureSection('Solution');
+      stepCounter++;
+      const num = stepMatch[1];
+      const text = stepMatch[2];
+      const step = document.createElement('div');
+      step.className = 'math-step';
+      step.innerHTML = `
+        <div class="math-step-num">${num}</div>
+        <div class="math-step-text">${renderInlineMath(esc(text))}</div>`;
+      currentBody.appendChild(step);
+      continue;
+    }
+
+    // Note / tip
+    if (/^(note|tip|warning|important)\s*[:\-–]/i.test(l)) {
+      flushEq();
+      if (!currentBody) ensureSection('Notes');
+      const note = document.createElement('div');
+      note.className = 'math-note';
+      note.innerHTML = renderInlineMath(esc(l));
+      currentBody.appendChild(note);
+      continue;
+    }
+
+    // Equation block: lines that look like math expressions
+    const isEq = /[=\+\-\*\/\^∫∑∏√≈≠≤≥±∞]/.test(l) &&
+                 /[0-9a-zA-Zαβγδεθλμπσφψω]/.test(l) &&
+                 !/^[A-Z][a-z].*[a-z]$/.test(l); // not plain prose sentence
+
+    if (isEq && currentBody) {
+      if (!inEqBlock) { inEqBlock=true; eqLines=[]; }
+      eqLines.push(l);
+      continue;
+    } else {
+      flushEq();
+    }
+
+    // Plain paragraph
+    if (!currentBody) ensureSection('Solution');
+    const p = document.createElement('div');
+    p.className = 'math-para';
+    p.innerHTML = renderInlineMath(esc(l));
+    currentBody.appendChild(p);
+  }
+
+  flushEq();
+  return doc;
+}
+
+/* ════════════════════════════════════════════════════════════
+   RESEARCH PAPER RENDERER
+════════════════════════════════════════════════════════════ */
+function buildResearchDoc(lines) {
+  const doc = document.createElement('div');
+  doc.className = 'paper-doc';
+
+  // Find title = first non-empty line before "Authors:"
+  let titleText = '';
+  let authorsText = '';
+  let dateText = '';
+  let bodyStartIdx = 0;
+
+  for (let i = 0; i < lines.length; i++) {
+    const l = lines[i].trim();
+    if (/^authors?\s*:/i.test(l)) {
+      // Title is previous non-empty line
+      for (let j = i-1; j >= 0; j--) {
+        if (lines[j].trim()) { titleText = lines[j].trim(); break; }
+      }
+      // Parse authors line — may have | date
+      const parts = l.replace(/^authors?\s*:\s*/i,'').split('|');
+      authorsText = parts[0].trim();
+      dateText = (parts[1]||'').trim();
+      bodyStartIdx = i + 1;
+      break;
+    }
+    if (i === 0) titleText = l;
+  }
+
+  // Title area
+  if (titleText || authorsText) {
+    const ta = document.createElement('div');
+    ta.className = 'paper-title-area';
+    ta.innerHTML = `<div class="paper-main-title">${esc(titleText)}</div>
+      <div class="paper-byline">
+        ${authorsText?`<span><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> ${esc(authorsText)}</span>`:''}
+        ${dateText?`<span><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> ${esc(dateText)}</span>`:''}
+      </div>`;
+    doc.appendChild(ta);
+  }
+
+  // Body
+  let currentSection = null;
+  let currentBody = null;
+  let inRefs = false;
+  let refsContainer = null;
+
+  function newSection(heading) {
+    currentSection = document.createElement('div');
+    currentSection.className = 'paper-sec';
+    const h = document.createElement('div');
+    h.className = 'paper-sec-heading';
+    h.textContent = heading;
+    currentSection.appendChild(h);
+    currentBody = currentSection;
+    doc.appendChild(currentSection);
+  }
+
+  for (let i = bodyStartIdx; i < lines.length; i++) {
+    const l = lines[i].trim();
+    if (!l) continue;
+
+    // Keywords
+    if (/^keywords?\s*:/i.test(l)) {
+      const kw = document.createElement('div');
+      kw.className = 'paper-kw';
+      kw.innerHTML = `<strong>Keywords:</strong> ${esc(l.replace(/^keywords?\s*:\s*/i,''))}`;
+      doc.appendChild(kw);
+      continue;
+    }
+
+    // REFERENCES section
+    if (/^references?\s*$/i.test(l)) {
+      inRefs = true;
+      refsContainer = document.createElement('div');
+      refsContainer.className = 'paper-refs';
+      refsContainer.innerHTML = `<div class="paper-refs-heading">References</div>`;
+      doc.appendChild(refsContainer);
+      continue;
+    }
+
+    if (inRefs) {
+      const ref = document.createElement('div');
+      ref.className = 'paper-ref-item';
+      ref.textContent = l;
+      refsContainer.appendChild(ref);
+      continue;
+    }
+
+    // ABSTRACT
+    if (/^abstract\s*$/i.test(l)) {
+      newSection('Abstract');
+      continue;
+    }
+
+    // Numbered sections "1. INTRODUCTION" or "1. Introduction"
+    const numSec = /^(\d+)[\.\)]\s+(.+)/.exec(l);
+    if (numSec) {
+      newSection(numSec[1] + '. ' + numSec[2]);
+      continue;
+    }
+
+    // Sub-heading "2.1 Something"
+    const subSec = /^(\d+\.\d+)\s+(.+)/.exec(l);
+    if (subSec) {
+      if (currentBody) {
+        const sh = document.createElement('div');
+        sh.className = 'paper-subsec-heading';
+        sh.textContent = l;
+        currentBody.appendChild(sh);
+      }
+      continue;
+    }
+
+    // ALL-CAPS heading e.g. "INTRODUCTION"
+    if (/^[A-Z][A-Z\s]{3,}$/.test(l) && l.length < 40) {
+      newSection(l.charAt(0)+l.slice(1).toLowerCase().replace(/\b\w/g,c=>c.toUpperCase()));
+      continue;
+    }
+
+    // Paragraph
+    if (!currentBody) newSection('');
+    const p = document.createElement('div');
+    p.className = 'paper-body-p';
+    p.textContent = l;
+    currentBody.appendChild(p);
+  }
+
+  return doc;
+}
+
+/* ════════════════════════════════════════════════════════════
+   MASTER RENDER WRAPPER — wraps in paper-block chrome
+════════════════════════════════════════════════════════════ */
+async function renderOutput(content, isMath) {
+  const lines = content.split('\n');
+
+  const wrap  = document.createElement('div');
+  const block = document.createElement('div');
+  block.className = 'paper-block';
+  const pid = 'p' + Date.now();
+
+  const lbl = isMath ? 'Math Solution' : 'Research Paper';
+  const ico = isMath
+    ? `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>`
+    : `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>`;
+
+  block.innerHTML = `
     <div class="paper-hd">
       <div class="paper-hd-lbl ${isMath?'math':''}">${ico} ${lbl}</div>
       <button class="copy-btn" id="cp-${pid}">
@@ -1138,154 +1584,306 @@ async function renderPaper(content,isMath){
       </button>
     </div>`;
 
-  const body=document.createElement('div');
-  body.className=isMath?'paper-bd math-bd':'paper-bd';
-  body.id=pid;
-  body.appendChild(buildPaper(content));
+  const body = document.createElement('div');
+  body.className = isMath ? 'paper-bd math-bd' : 'paper-bd';
+  body.style.padding = '0';
+  body.id = pid;
+
+  // Build structured content
+  const innerDoc = isMath ? buildMathDoc(lines) : buildResearchDoc(lines);
+  body.appendChild(innerDoc);
   block.appendChild(body);
   wrap.appendChild(block);
 
-  setTimeout(()=>{
-    const btn=document.getElementById('cp-'+pid);
-    if(btn)btn.onclick=()=>{
-      navigator.clipboard.writeText(document.getElementById(pid)?.innerText||'')
-        .then(()=>{
-          btn.textContent='Copied!';
-          setTimeout(()=>{btn.innerHTML=`<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copy`},2000);
-        }).catch(()=>{});
+  // Copy button
+  setTimeout(() => {
+    const btn = document.getElementById('cp-' + pid);
+    if (btn) btn.onclick = () => {
+      navigator.clipboard.writeText(document.getElementById(pid)?.innerText || '')
+        .then(() => {
+          btn.textContent = 'Copied!';
+          setTimeout(() => {
+            btn.innerHTML = `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copy`;
+          }, 2000);
+        }).catch(() => {});
     };
-  },50);
+  }, 50);
 
-  // download buttons
-  const dlRow=document.createElement('div');dlRow.className='dl-row';
-  const dlTxt=document.createElement('button');dlTxt.className='dl-btn dl-txt';
-  dlTxt.innerHTML=`<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> .txt`;
-  dlTxt.onclick=()=>{
-    const a=document.createElement('a');
-    a.href=URL.createObjectURL(new Blob([document.getElementById(pid)?.innerText||''],{type:'text/plain'}));
-    a.download=`stremini-${Date.now()}.txt`;a.click();
+  // Download row
+  const dlRow = document.createElement('div');
+  dlRow.className = 'dl-row';
+  const dlTxt = document.createElement('button');
+  dlTxt.className = 'dl-btn dl-txt';
+  dlTxt.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> .txt`;
+  dlTxt.onclick = () => {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([document.getElementById(pid)?.innerText || ''], {type:'text/plain'}));
+    a.download = `stremini-${Date.now()}.txt`;
+    a.click();
   };
   dlRow.appendChild(dlTxt);
-
-  if(!isMath){
-    const dlPdf=document.createElement('button');dlPdf.className='dl-btn dl-pdf';
-    dlPdf.innerHTML=`<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> .pdf`;
-    dlPdf.onclick=()=>window.print();
+  if (!isMath) {
+    const dlPdf = document.createElement('button');
+    dlPdf.className = 'dl-btn dl-pdf';
+    dlPdf.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> .pdf`;
+    dlPdf.onclick = () => window.print();
     dlRow.appendChild(dlPdf);
   }
   wrap.appendChild(dlRow);
   return wrap;
 }
 
-// ── File handling ──
-let pendingFile=null;
+/* ════════════════════════════════════════════════════════════
+   DEMO CONTENT — realistic detailed answers
+════════════════════════════════════════════════════════════ */
+function getMathDemo(q) {
+  const isIntegral = /integral|integrate/i.test(q);
+  const isProof    = /prove|proof|show that/i.test(q);
+  const isCalc     = /derivative|differentiat/i.test(q);
+
+  if (isIntegral && /x.*squared|x\^2|x²/i.test(q)) {
+    return `Solving: ∫ x² eˣ dx using Integration by Parts
+
+Problem: Evaluate ∫ x² eˣ dx using integration by parts.
+
+Given
+We need to evaluate: ∫ x² eˣ dx
+
+The integration by parts formula is: ∫ u dv = uv - ∫ v du
+
+Approach
+Integration by parts must be applied twice because the power of x decreases by 1 each application. We choose u = x² (algebraic, simplifies on differentiation) and dv = eˣ dx (exponential, unchanged by integration).
+
+Step-by-Step
+
+Step 1: First application — set u and dv
+Let u = x²  →  du = 2x dx
+Let dv = eˣ dx  →  v = eˣ
+
+∫ x² eˣ dx = x² eˣ - ∫ eˣ · 2x dx
+           = x² eˣ - 2 ∫ x eˣ dx
+
+Step 2: Second application — solve ∫ x eˣ dx
+Let u = x  →  du = dx
+Let dv = eˣ dx  →  v = eˣ
+
+∫ x eˣ dx = x eˣ - ∫ eˣ dx
+           = x eˣ - eˣ
+           = eˣ(x - 1)
+
+Step 3: Substitute back into Step 1
+∫ x² eˣ dx = x² eˣ - 2 · eˣ(x - 1)
+            = x² eˣ - 2x eˣ + 2eˣ
+            = eˣ(x² - 2x + 2)
+
+Step 4: Add constant of integration
+∫ x² eˣ dx = eˣ(x² - 2x + 2) + C
+
+Verification
+Differentiate to verify: d/dx [eˣ(x² - 2x + 2)]
+= eˣ(x² - 2x + 2) + eˣ(2x - 2)
+= eˣ(x² - 2x + 2 + 2x - 2)
+= eˣ · x²  ✓
+
+Final Answer: ∫ x² eˣ dx = eˣ(x² − 2x + 2) + C`;
+  }
+
+  if (isProof && /sqrt.*2|√2|irrational/i.test(q)) {
+    return `Prove that √2 is irrational
+
+Problem: Prove that the square root of 2 is irrational.
+
+Given
+A real number is irrational if it cannot be expressed as p/q where p, q are integers and q ≠ 0.
+
+Approach
+We use proof by contradiction. Assume √2 is rational and derive a logical impossibility.
+
+Step-by-Step
+
+Step 1: Assume for contradiction that √2 is rational
+Suppose √2 = p/q where p, q ∈ ℤ, q ≠ 0, and gcd(p, q) = 1 (fraction in lowest terms).
+
+Step 2: Square both sides
+2 = p²/q²
+p² = 2q²
+
+Step 3: Conclude p is even
+Since p² = 2q², p² is even. Since the square of an odd number is odd, p must be even.
+So p = 2k for some integer k.
+
+Step 4: Substitute and simplify
+(2k)² = 2q²
+4k²   = 2q²
+2k²   = q²
+Therefore q² is even, which means q is also even.
+
+Step 5: Derive the contradiction
+Both p and q are even, so they share a common factor of 2. This contradicts our assumption that gcd(p, q) = 1.
+
+Verification
+The contradiction is complete: assuming √2 is rational leads to p and q both being even, violating the reduced-fraction requirement.
+
+Final Answer: √2 is irrational. The assumption that √2 = p/q in lowest terms leads to both p and q being even — a contradiction.`;
+  }
+
+  // Generic math fallback
+  return `Solving: ${q}
+
+Problem: ${q}
+
+Given
+Identify the key elements of the problem and the mathematical domain involved (algebra, calculus, number theory, etc.).
+
+Approach
+Select the most appropriate method or theorem for this type of problem.
+
+Step-by-Step
+
+Step 1: Understand and restate the problem clearly
+Read the problem carefully. Identify known quantities, unknowns, and constraints.
+
+Step 2: Select the appropriate technique
+Choose the relevant mathematical framework — e.g. substitution, integration by parts, induction, contradiction.
+
+Step 3: Apply the technique systematically
+Work through each algebraic or logical step with care. Show all intermediate results.
+
+x = known_values
+Result = f(x) after applying technique
+
+Step 4: Simplify and verify
+Reduce to simplest form. Check answer by substituting back or using a different method.
+
+Note: Always add the constant of integration C for indefinite integrals.
+
+Final Answer: The solution follows from the systematic application of the chosen technique above.`;
+}
+
+function getResearchDemo(q) {
+  const date = new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+  return `${q}
+
+Authors: Stremini Research Agent | ${date}
+
+ABSTRACT
+This paper presents a comprehensive academic analysis of ${q.toLowerCase()}. We examine theoretical foundations, synthesize current literature, and offer structured evidence-based conclusions. The analysis draws on interdisciplinary sources to develop a nuanced understanding of key mechanisms and implications relevant to the field.
+
+Keywords: ${q.split(' ').slice(0,4).join(', ').toLowerCase()}, academic review, research synthesis
+
+1. INTRODUCTION
+The subject of ${q.toLowerCase()} represents a significant and evolving area of scholarly inquiry. Understanding it requires careful examination of its historical development, current state, and potential future trajectories. This paper situates the topic within broader intellectual traditions while identifying the specific questions that motivate this review.
+
+Prior scholarship has approached this topic from multiple angles, creating a rich but sometimes fragmented body of knowledge. This paper seeks to synthesize those contributions into a coherent analytical framework accessible to specialists and informed general readers alike.
+
+2. LITERATURE REVIEW
+The foundational literature establishes several key conceptual frameworks. Early contributions focused primarily on definitional questions and theoretical scaffolding, while more recent work has increasingly engaged with empirical data and practical applications.
+
+2.1 Foundational Works
+Seminal contributions laid the groundwork by establishing core concepts and terminologies that continue to shape discourse in this area. These works remain indispensable reference points for any serious engagement with the subject.
+
+2.2 Contemporary Developments
+Recent scholarship has expanded the scope of inquiry to include cross-disciplinary perspectives, computational methods, and global comparative analyses. These developments have significantly enriched our understanding while also introducing new complexities.
+
+3. METHODOLOGY
+This study employs a systematic literature review methodology. We surveyed peer-reviewed publications from the past decade, selecting sources based on relevance, methodological rigor, and citation impact. Data were coded thematically and analyzed to identify convergent findings and areas of ongoing debate.
+
+4. RESULTS AND DISCUSSION
+Our analysis yields several important findings. First, there is broad consensus on the fundamental theoretical principles, even as interpretations of their implications vary. Second, empirical evidence increasingly supports predictive models derived from theoretical work. Third, practical applications have expanded substantially, with meaningful real-world consequences.
+
+Points of active scholarly debate include questions of causality, measurement, and normative implications. These debates reflect genuine complexity in the subject matter rather than methodological deficiencies.
+
+5. CONCLUSION
+This review has synthesized current knowledge on ${q.toLowerCase()} and identified key areas warranting further investigation. The findings carry significant implications for both theoretical development and applied practice. Future research should prioritize longitudinal studies, cross-cultural comparisons, and integration of emerging data sources to build on the foundations established here.
+
+REFERENCES
+[1] Anderson, J. M. et al. (2023). Theoretical frameworks in contemporary research. Oxford University Press, pp. 1–412.
+[2] Chen, L. & Patel, R. (2022). Empirical approaches and their applications. Journal of Academic Studies, 18(3), 112–145.
+[3] Williams, S. T. (2024). Recent advances and future directions. Annual Review of Research, 12(1), 34–78.
+[4] Kumar, A. & Lopez, M. (2023). Cross-disciplinary perspectives on emerging questions. Nature Reviews, 8(2), 55–89.
+[5] Thompson, B. et al. (2022). Methodological innovation in field research. Research Quarterly, 29(4), 200–238.`;
+}
+
+/* ════════════════════════════════════════════════════════════
+   FILE HANDLING
+════════════════════════════════════════════════════════════ */
+let pendingFile = null;
 function clearFile(){
   pendingFile=null;
   document.getElementById('fileChipWrap').classList.remove('show');
   document.getElementById('fileInput').value='';
 }
 async function handleFile(e){
-  const f=e.target.files[0];if(!f)return;
+  const f=e.target.files[0]; if(!f) return;
   document.getElementById('fileChipWrap').classList.add('show');
   document.getElementById('fileChipName').textContent=f.name;
-  pendingFile={name:f.name,text:`[Attached: ${f.name}]`};
+  pendingFile={name:f.name};
 }
 
-// ── SEND ──
+/* ════════════════════════════════════════════════════════════
+   SEND HANDLER
+════════════════════════════════════════════════════════════ */
 async function handleSend(){
-  const q=ta.value.trim();
-  if(!q||running)return;
-  const display=pendingFile?`📄 ${pendingFile.name} — ${q}`:q;
-  addMsg('user',esc(display));
-  addRecent(display,mode);
-  history.push({role:'user',content:q});
-  ta.value='';ta.style.height='auto';
+  const q = ta.value.trim();
+  if (!q || running) return;
+  const display = pendingFile ? `📄 ${pendingFile.name} — ${q}` : q;
+  addMsg('user', esc(display));
+  addRecent(display, mode);
+  history.push({role:'user', content:q});
+  ta.value=''; ta.style.height='auto';
   pendingFile=null;
   document.getElementById('fileChipWrap').classList.remove('show');
-  running=true;sendBtn.disabled=true;
-  setStatus('run',mode==='math'?'Solving…':'Researching…');
+  running=true; sendBtn.disabled=true;
+  setStatus('run', mode==='math' ? 'Solving…' : 'Researching…');
   addThinking();
 
-  // Demo response
-  setTimeout(async()=>{
+  setTimeout(async () => {
     removeThinking();
-    const isMath=mode==='math';
-    const content=isMath
-      ?`Solving: ${q}
-
-Problem: ${q}
-
-Step 1: Identify the mathematical structure and choose an approach.
-Step 2: Apply the relevant theorem or technique systematically.
-Step 3: Work through each algebraic/analytical step carefully.
-Step 4: Simplify and verify the result.
-
-Final Answer: The solution follows from the above derivation using standard mathematical principles.`
-      :`${q}
-
-Authors: Stremini Research Agent | ${new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'})}
-
-ABSTRACT
-This paper presents a comprehensive structured analysis of the given topic. We examine theoretical foundations, review current literature, and provide evidence-based conclusions supported by rigorous argumentation.
-
-Keywords: research, analysis, literature review, academic paper
-
-1. INTRODUCTION
-The subject under examination represents a significant area of academic inquiry. A thorough understanding requires examining both historical context and contemporary developments, drawing on interdisciplinary perspectives.
-
-2. LITERATURE REVIEW
-Extensive prior scholarship has established foundational frameworks for understanding this domain. Various methodological traditions have contributed complementary perspectives, creating a rich body of knowledge upon which this work builds.
-
-3. METHODOLOGY
-This study employs a systematic review methodology, synthesizing primary and secondary sources to construct a coherent analytical framework. Selection criteria prioritized peer-reviewed publications from the past decade.
-
-4. RESULTS AND DISCUSSION
-Analysis reveals several important findings. The evidence consistently supports the theoretical model proposed, while also highlighting areas requiring further investigation. Practical implications emerge across multiple contexts.
-
-5. CONCLUSION
-This paper has synthesized current knowledge on the topic and identified key areas for future inquiry. The findings have significant implications for both theoretical understanding and practical application in the field.
-
-REFERENCES
-[1] Johnson, A. et al. (2023). Foundations and frameworks. Academic Press, pp. 1–340.
-[2] Martinez, R. & Chen, L. (2022). Advanced methodological perspectives. Research Quarterly, 18(3), 112–145.
-[3] Williams, S. (2024). Contemporary developments in the field. Journal of Academic Studies, 12(1), 34–58.`;
+    const isMath = mode === 'math';
+    const content = isMath ? getMathDemo(q) : getResearchDemo(q);
 
     hideWelcome();
-    const row=document.createElement('div');row.className='msg-row';
-    row.innerHTML=`
+    const row = document.createElement('div');
+    row.className = 'msg-row';
+    row.innerHTML = `
       <div class="av av-agent">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-          <path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/>
+          <path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/>
+          <path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/>
         </svg>
       </div>
       <div class="msg-body">
         <div class="msg-who">Stremini Agent <span class="msg-time">${now()}</span></div>
         <div class="msg-content" id="agSlot"></div>
       </div>`;
-    msgs.appendChild(row);scrollBot();
+    msgs.appendChild(row);
+    scrollBot();
 
-    const slot=document.getElementById('agSlot');
-    slot.innerHTML=scard('work',isMath?'Rendering solution…':'Rendering paper…');
-    const el=await renderPaper(content,isMath);
-    slot.innerHTML=scard(isMath?'math':'ok',isMath?'Math solution complete':'Research paper complete');
+    const slot = document.getElementById('agSlot');
+    slot.innerHTML = scard('work', isMath ? 'Rendering solution…' : 'Rendering paper…');
+
+    const el = await renderOutput(content, isMath);
+    slot.innerHTML = scard(isMath ? 'math' : 'ok', isMath ? 'Math solution complete' : 'Research paper complete');
     slot.appendChild(el);
     scrollBot();
 
-    if(isMath){mathSolved++;setStatus('done','Solved');}
-    else{papers++;setStatus('done','Paper Ready');}
+    if (isMath) { mathSolved++; setStatus('done','Solved'); }
+    else        { papers++;     setStatus('done','Paper Ready'); }
     updateStats();
-    history.push({role:'assistant',content:'Generated response'});
-    running=false;sendBtn.disabled=false;
-  },2200);
+    history.push({role:'assistant', content:'Generated'});
+    running=false; sendBtn.disabled=false;
+  }, 2200);
 }
 
-// ── Clear ──
+/* ════════════════════════════════════════════════════════════
+   CLEAR
+════════════════════════════════════════════════════════════ */
 function clearChat(){
-  msgs.innerHTML='';msgs.appendChild(welcome);welcome.style.display='';
-  history=[];papers=0;mathSolved=0;diagsCount=0;updateStats();
+  msgs.innerHTML=''; msgs.appendChild(welcome); welcome.style.display='';
+  history=[]; papers=0; mathSolved=0; diagsCount=0; updateStats();
   document.getElementById('recentList').innerHTML='<div class="muted-italic">No queries yet</div>';
   setStatus('idle','Ready');
-  running=false;sendBtn.disabled=false;
+  running=false; sendBtn.disabled=false;
 }
 </script>
 </body>
