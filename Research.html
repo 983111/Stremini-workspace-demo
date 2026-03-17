@@ -4,378 +4,452 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Stremini — Research Agent</title>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
 <script src="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
 <script src="https://unpkg.com/mammoth@1.6.0/mammoth.browser.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;font-family:'DM Sans',sans-serif;-webkit-font-smoothing:antialiased;overflow:hidden;background:#0c0c0f}
+html,body{height:100%;font-family:'Syne',sans-serif;-webkit-font-smoothing:antialiased;overflow:hidden;background:#f6f8fb}
 
 :root{
-  --gold:#c8922a;--gold-lt:#e4b04a;--gold-dk:#9a6c18;
-  --bg:#0c0c0f;--bg2:#111116;--bg3:#16161c;--bg4:#1c1c24;
-  --border:rgba(255,255,255,.07);--border-gold:rgba(200,146,42,.25);
-  --text:#e8e4dc;--text-2:#9e9a92;--text-3:#5a5650;
-  --green:#22c55e;--red:#ef4444;--blue:#6366f1;
-  --sb-w:280px;
+  --gold:#d4a84b;--gold-lt:#f0c96a;--gold-dk:#a07828;--gold-glow:rgba(212,168,75,.22);
+  --bg:#f6f8fb;--bg2:#ffffff;--bg3:#f3f5f9;--bg4:#e9edf5;--bg5:#dfe6f1;
+  --border:rgba(15,23,42,.12);--border-m:rgba(15,23,42,.2);--border-gold:rgba(212,168,75,.35);
+  --text:#0f172a;--text-2:#334155;--text-3:#64748b;
+  --green:#34d399;--red:#f87171;--blue:#818cf8;--violet:#a78bfa;
+  --sb-w:270px;
+  --paper-bg:#faf8f3;--paper-text:#1a1714;--paper-text2:#4a4540;
+  --paper-accent:#8b1a1a;--paper-gold:#7a5c1e;--paper-border:#d4cfc0;
+  --paper-section:#2c2825;
 }
 
-/* ── LAYOUT ── */
-.layout{display:grid;grid-template-columns:var(--sb-w) 1fr;height:100vh;overflow:hidden}
+/* LAYOUT */
+.layout{display:grid;grid-template-columns:1fr;height:100vh;overflow:hidden}
 
-/* ══════════════════════════════════════
-   SIDEBAR
-══════════════════════════════════════ */
-.sidebar{
-  display:flex;flex-direction:column;overflow-y:auto;overflow-x:hidden;
-  background:var(--bg2);border-right:1px solid var(--border);
-  position:relative;
+/* ══ SIDEBAR ══ */
+.sidebar{display:none}
+.sidebar::before{
+  content:'';position:absolute;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(ellipse 200px 300px at 50% 0%,rgba(212,168,75,.06) 0%,transparent 70%);
 }
-.sidebar::after{
-  content:'';position:absolute;top:0;left:0;right:0;height:200px;pointer-events:none;
-  background:radial-gradient(ellipse at 50% 0%,rgba(200,146,42,.08) 0%,transparent 70%);
-}
+.sb-inner{position:relative;z-index:1;display:flex;flex-direction:column;height:100%}
 
-.sb-head{padding:18px 16px 14px;border-bottom:1px solid var(--border)}
-.logo{display:flex;align-items:center;gap:10px;margin-bottom:18px}
+.sb-head{padding:20px 16px 16px;border-bottom:1px solid var(--border)}
+.logo{display:flex;align-items:center;gap:10px;margin-bottom:20px}
 .logo-mark{
-  width:34px;height:34px;border-radius:8px;flex-shrink:0;
-  background:linear-gradient(145deg,#c8922a,#9a6c18);
+  width:36px;height:36px;border-radius:9px;flex-shrink:0;position:relative;
+  background:linear-gradient(145deg,#d4a84b 0%,#7a5c1e 100%);
   display:flex;align-items:center;justify-content:center;
-  box-shadow:0 0 20px rgba(200,146,42,.3),inset 0 1px 0 rgba(255,210,100,.25)
+  box-shadow:0 0 24px rgba(212,168,75,.25),0 4px 12px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,220,120,.3)
 }
-.logo-mark svg{width:17px;height:17px;color:#fff}
-.logo-text{line-height:1.2}
-.logo-name{font-family:'Instrument Serif',serif;font-size:16px;color:var(--text);font-weight:400;letter-spacing:.2px}
-.logo-sub{font-size:9px;color:var(--text-3);text-transform:uppercase;letter-spacing:1.4px}
+.logo-mark svg{width:18px;height:18px;color:#fff}
+.logo-text{line-height:1.15}
+.logo-name{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--text);font-weight:500;letter-spacing:.3px}
+.logo-sub{font-size:9px;color:var(--text-3);text-transform:uppercase;letter-spacing:1.6px;font-weight:600}
 
-.sb-label{font-size:9.5px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:8px}
+.sb-label{font-size:9px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:1.4px;margin-bottom:9px}
 
-.mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px}
 .mode-btn{
-  display:flex;flex-direction:column;align-items:center;gap:5px;padding:10px 6px 9px;
-  background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:8px;
-  font-family:'DM Sans',sans-serif;font-size:11.5px;font-weight:500;
-  color:var(--text-3);cursor:pointer;transition:all .18s;outline:none;
+  display:flex;flex-direction:column;align-items:center;gap:6px;padding:11px 6px 10px;
+  background:rgba(255,255,255,.025);border:1px solid var(--border);border-radius:9px;
+  font-family:'Syne',sans-serif;font-size:11px;font-weight:600;
+  color:var(--text-3);cursor:pointer;transition:all .2s;outline:none;letter-spacing:.3px;
 }
-.mode-btn svg{width:17px;height:17px;stroke-width:1.8px}
-.mode-btn:hover{border-color:var(--border-gold);color:rgba(228,176,74,.8);background:rgba(200,146,42,.06)}
+.mode-btn svg{width:15px;height:15px;stroke-width:1.7px}
+.mode-btn:hover{border-color:var(--border-gold);color:rgba(240,201,106,.8);background:rgba(212,168,75,.06)}
 .mode-btn.active-r{
-  background:linear-gradient(145deg,rgba(200,146,42,.18),rgba(154,108,24,.12));
-  border-color:rgba(200,146,42,.5);color:var(--gold-lt);
-  box-shadow:0 0 16px rgba(200,146,42,.15),inset 0 1px 0 rgba(255,210,100,.08)
+  background:linear-gradient(145deg,rgba(212,168,75,.15),rgba(122,92,30,.08));
+  border-color:rgba(212,168,75,.45);color:var(--gold-lt);
+  box-shadow:0 0 20px rgba(212,168,75,.12),inset 0 1px 0 rgba(255,220,120,.08)
 }
 .mode-btn.active-m{
-  background:linear-gradient(145deg,rgba(99,102,241,.18),rgba(79,82,201,.12));
-  border-color:rgba(99,102,241,.5);color:#a5b4fc;
-  box-shadow:0 0 16px rgba(99,102,241,.15)
+  background:linear-gradient(145deg,rgba(129,140,248,.15),rgba(167,139,250,.08));
+  border-color:rgba(167,139,250,.45);color:#c4b5fd;
+  box-shadow:0 0 20px rgba(167,139,250,.12)
 }
 
-.sb-sec{padding:12px 16px;border-bottom:1px solid var(--border)}
+.sb-sec{padding:14px 16px;border-bottom:1px solid var(--border)}
 .sb-sec.grow{flex:1;border-bottom:none}
 
-/* Status badge */
-.status-badge{display:inline-flex;align-items:center;gap:7px;padding:4px 10px;border-radius:20px;font-size:11.5px;font-weight:500;margin-bottom:8px}
-.s-idle{background:rgba(255,255,255,.05);color:var(--text-3);border:1px solid var(--border)}
-.s-run{background:rgba(200,146,42,.12);color:var(--gold-lt);border:1px solid rgba(200,146,42,.28)}
-.s-done{background:rgba(34,197,94,.1);color:#86efac;border:1px solid rgba(34,197,94,.22)}
-.s-err{background:rgba(239,68,68,.1);color:#fca5a5;border:1px solid rgba(239,68,68,.22)}
+/* Status */
+.status-badge{display:inline-flex;align-items:center;gap:7px;padding:5px 11px;border-radius:20px;font-size:11px;font-weight:600;margin-bottom:8px;letter-spacing:.3px}
+.s-idle{background:rgba(255,255,255,.04);color:var(--text-3);border:1px solid var(--border)}
+.s-run{background:rgba(212,168,75,.1);color:var(--gold-lt);border:1px solid rgba(212,168,75,.25)}
+.s-done{background:rgba(52,211,153,.08);color:#6ee7b7;border:1px solid rgba(52,211,153,.2)}
+.s-err{background:rgba(248,113,113,.08);color:#fca5a5;border:1px solid rgba(248,113,113,.2)}
 .s-dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0}
 .s-run .s-dot{animation:pulse 1.4s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.2}}
-.mode-note{font-size:11px;color:var(--text-3);line-height:1.55;margin-top:4px}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.15}}
+.mode-note{font-size:10.5px;color:var(--text-3);line-height:1.6;margin-top:4px}
 
 /* Stats */
 .stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
-.stat-b{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:7px;padding:8px 4px;text-align:center}
-.stat-n{font-family:'Instrument Serif',serif;font-size:20px;color:var(--text);line-height:1}
-.stat-l{font-size:9px;color:var(--text-3);text-transform:uppercase;letter-spacing:.6px;margin-top:3px}
+.stat-b{background:rgba(255,255,255,.025);border:1px solid var(--border);border-radius:8px;padding:10px 4px;text-align:center}
+.stat-n{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--text);line-height:1;font-weight:500}
+.stat-l{font-size:8.5px;color:var(--text-3);text-transform:uppercase;letter-spacing:.8px;margin-top:3px;font-weight:600}
 
 /* Recent */
-.recent-list{display:flex;flex-direction:column;gap:3px;max-height:160px;overflow-y:auto}
-.ri{display:flex;align-items:flex-start;gap:6px;padding:6px 8px;background:rgba(255,255,255,.03);border-radius:6px;font-size:11px;color:var(--text-3);cursor:pointer;transition:all .14s;line-height:1.45}
-.ri:hover{background:rgba(200,146,42,.08);color:rgba(228,176,74,.85)}
+.recent-list{display:flex;flex-direction:column;gap:3px;max-height:180px;overflow-y:auto}
+.ri{display:flex;align-items:flex-start;gap:7px;padding:7px 9px;background:rgba(255,255,255,.025);border-radius:7px;font-size:11px;color:var(--text-3);cursor:pointer;transition:all .15s;line-height:1.5}
+.ri:hover{background:rgba(212,168,75,.08);color:rgba(240,201,106,.8)}
 .ri-dot{width:3px;height:3px;border-radius:50%;background:var(--text-3);flex-shrink:0;margin-top:5px}
-.muted{font-size:11.5px;color:var(--text-3);font-style:italic}
+.muted{font-size:11px;color:var(--text-3);font-style:italic;padding:2px 0}
 
-.sb-bottom{padding:12px 16px}
+.sb-bottom{padding:14px 16px}
 .new-btn{
   display:flex;align-items:center;justify-content:center;gap:7px;width:100%;
-  padding:9px;background:rgba(255,255,255,.03);border:1.5px dashed rgba(200,146,42,.22);
-  border-radius:8px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;
-  color:var(--text-3);cursor:pointer;transition:all .2s
+  padding:10px;background:rgba(255,255,255,.025);border:1.5px dashed rgba(212,168,75,.18);
+  border-radius:9px;font-family:'Syne',sans-serif;font-size:11.5px;font-weight:600;
+  color:var(--text-3);cursor:pointer;transition:all .2s;letter-spacing:.3px
 }
-.new-btn:hover{border-color:rgba(200,146,42,.45);color:rgba(228,176,74,.8);background:rgba(200,146,42,.05)}
+.new-btn:hover{border-color:rgba(212,168,75,.4);color:rgba(240,201,106,.75);background:rgba(212,168,75,.05)}
 
-/* ══════════════════════════════════════
-   MAIN
-══════════════════════════════════════ */
+/* ══ MAIN ══ */
 .main{display:flex;flex-direction:column;height:100vh;overflow:hidden;background:var(--bg)}
 
 .topbar{
-  padding:11px 24px;display:flex;align-items:center;justify-content:space-between;
-  flex-shrink:0;border-bottom:1px solid var(--border);background:rgba(17,17,22,.8);
-  backdrop-filter:blur(8px);
+  padding:12px 28px;display:flex;align-items:center;justify-content:space-between;
+  flex-shrink:0;border-bottom:1px solid var(--border);
+  background:rgba(255,255,255,.92);backdrop-filter:blur(12px);
 }
-.mode-pill{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border:1px solid var(--border-gold);border-radius:20px;font-size:12px;font-weight:500;color:var(--gold-lt);background:rgba(200,146,42,.06)}
+.mode-pill{display:inline-flex;align-items:center;gap:7px;padding:5px 13px;border:1px solid var(--border-gold);border-radius:20px;font-size:11.5px;font-weight:600;color:var(--gold-lt);background:rgba(212,168,75,.05);letter-spacing:.3px}
 .mode-pill svg{width:12px;height:12px}
 .clear-btn{
-  display:inline-flex;align-items:center;gap:6px;padding:5px 14px;
-  background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:7px;
-  font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;color:var(--text-2);
-  cursor:pointer;transition:all .15s;outline:none
+  display:inline-flex;align-items:center;gap:6px;padding:6px 15px;
+  background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:8px;
+  font-family:'Syne',sans-serif;font-size:11.5px;font-weight:600;color:var(--text-2);
+  cursor:pointer;transition:all .15s;outline:none;letter-spacing:.3px
 }
-.clear-btn:hover{background:rgba(255,255,255,.08);color:var(--text)}
+.clear-btn:hover{background:rgba(255,255,255,.07);color:var(--text)}
 
 .msgs-wrap{flex:1;overflow-y:auto;scroll-behavior:smooth}
-.msgs{max-width:820px;margin:0 auto;padding:24px 28px;display:flex;flex-direction:column;gap:0}
+.msgs{max-width:860px;margin:0 auto;padding:28px 32px;display:flex;flex-direction:column;gap:0}
 
-/* ── Welcome ── */
-.welcome{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:calc(100vh - 165px);text-align:center;padding:0 0 20px}
-.welcome-icon{width:64px;height:64px;background:linear-gradient(145deg,#c8922a,#9a6c18);border-radius:16px;display:flex;align-items:center;justify-content:center;margin-bottom:20px;box-shadow:0 0 40px rgba(200,146,42,.35),0 0 80px rgba(200,146,42,.1),inset 0 1px 0 rgba(255,210,100,.2)}
-.welcome-icon svg{width:30px;height:30px;color:#fff}
-.welcome h2{font-family:'Instrument Serif',serif;font-size:32px;font-weight:400;color:var(--text);letter-spacing:-.3px;margin-bottom:8px}
-.welcome .sub{font-size:14px;color:var(--text-2);line-height:1.7;max-width:460px;margin-bottom:30px}
-.hint-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;max-width:580px}
+/* Welcome */
+.welcome{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:calc(100vh - 170px);text-align:center;padding:0 0 24px}
+.welcome-icon{width:68px;height:68px;background:linear-gradient(145deg,#d4a84b,#7a5c1e);border-radius:18px;display:flex;align-items:center;justify-content:center;margin-bottom:22px;box-shadow:0 0 50px rgba(212,168,75,.3),0 0 100px rgba(212,168,75,.08),inset 0 1px 0 rgba(255,220,120,.25)}
+.welcome-icon svg{width:32px;height:32px;color:#fff}
+.welcome h2{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:500;color:var(--text);letter-spacing:-.2px;margin-bottom:10px}
+.welcome .sub{font-size:13.5px;color:var(--text-2);line-height:1.75;max-width:500px;margin-bottom:32px}
+.hint-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;width:100%;max-width:600px}
 .hint-card{
-  display:flex;align-items:center;gap:12px;padding:14px 16px;
-  background:var(--bg2);border:1px solid var(--border);border-radius:10px;
-  cursor:pointer;transition:all .2s;text-align:left
+  display:flex;align-items:center;gap:13px;padding:15px 17px;
+  background:var(--bg2);border:1px solid var(--border);border-radius:12px;
+  cursor:pointer;transition:all .22s;text-align:left
 }
-.hint-card:hover{border-color:var(--border-gold);background:var(--bg3);transform:translateY(-1px);box-shadow:0 4px 20px rgba(0,0,0,.3)}
-.hint-icon{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.hint-icon.gold{background:rgba(200,146,42,.15);color:var(--gold)}
-.hint-icon.violet{background:rgba(99,102,241,.15);color:#a5b4fc}
+.hint-card:hover{border-color:var(--border-gold);background:var(--bg3);transform:translateY(-2px);box-shadow:0 6px 24px rgba(0,0,0,.35),0 0 30px rgba(212,168,75,.05)}
+.hint-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.hint-icon.gold{background:rgba(212,168,75,.12);color:var(--gold)}
+.hint-icon.violet{background:rgba(167,139,250,.12);color:#c4b5fd}
 .hint-icon svg{width:16px;height:16px}
-.hint-text strong{display:block;font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px}
-.hint-text small{font-size:11px;color:var(--text-3)}
+.hint-text strong{display:block;font-size:13px;font-weight:700;color:var(--text);margin-bottom:2px;letter-spacing:.2px}
+.hint-text small{font-size:10.5px;color:var(--text-3)}
 
-/* ── Messages ── */
-.msg-row{display:flex;gap:11px;padding:16px 0;border-bottom:1px solid var(--border);animation:fadein .28s ease}
+/* Messages */
+.msg-row{display:flex;gap:12px;padding:18px 0;border-bottom:1px solid var(--border);animation:fadein .3s ease}
 .msg-row:last-child{border-bottom:none}
-@keyframes fadein{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
-.av{width:30px;height:30px;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px}
-.av-a{background:linear-gradient(145deg,#c8922a,#9a6c18);color:#fff}
-.av-u{background:var(--bg4);border:1px solid var(--border);color:var(--text-2);font-size:11.5px;font-weight:600}
+@keyframes fadein{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+.av{width:32px;height:32px;border-radius:9px;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px}
+.av-a{background:linear-gradient(145deg,#d4a84b,#7a5c1e);color:#fff;box-shadow:0 2px 8px rgba(212,168,75,.3)}
+.av-u{background:var(--bg4);border:1px solid var(--border-m);color:var(--text-2);font-size:12px;font-weight:700}
 .msg-body{flex:1;min-width:0}
-.msg-who{font-size:11.5px;font-weight:600;color:var(--text-2);margin-bottom:5px;display:flex;align-items:center;gap:7px}
-.msg-time{font-weight:400;font-size:10.5px;color:var(--text-3)}
-.msg-content{font-size:13.5px;line-height:1.72;color:var(--text)}
+.msg-who{font-size:11px;font-weight:700;color:var(--text-2);margin-bottom:6px;display:flex;align-items:center;gap:8px;letter-spacing:.5px;text-transform:uppercase}
+.msg-time{font-weight:500;font-size:10px;color:var(--text-3);text-transform:none;letter-spacing:.3px}
+.msg-content{font-size:13.5px;line-height:1.7;color:var(--text)}
 
-/* ── Agentic Steps (Perplexity-style) ── */
-.agent-steps{
-  background:var(--bg2);border:1px solid var(--border);border-radius:10px;
-  overflow:hidden;margin:4px 0 8px;
-}
-.agent-steps-header{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:9px 14px;background:var(--bg3);border-bottom:1px solid var(--border);
-  cursor:pointer;user-select:none;
-}
-.agent-steps-title{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:600;color:var(--text-2)}
+/* Agent Steps */
+.agent-steps{background:var(--bg2);border:1px solid var(--border);border-radius:11px;overflow:hidden;margin:5px 0 10px}
+.agent-steps-header{display:flex;align-items:center;justify-content:space-between;padding:10px 15px;background:var(--bg3);border-bottom:1px solid var(--border);cursor:pointer;user-select:none}
+.agent-steps-title{display:flex;align-items:center;gap:8px;font-size:11.5px;font-weight:700;color:var(--text-2);letter-spacing:.4px}
 .agent-steps-title svg{width:13px;height:13px}
 .agent-chevron{color:var(--text-3);transition:transform .2s}
 .agent-chevron.open{transform:rotate(180deg)}
-.agent-steps-body{display:flex;flex-direction:column;gap:0}
+.agent-steps-body{display:flex;flex-direction:column}
 .agent-steps-body.collapsed{display:none}
-.agent-step{
-  display:flex;align-items:flex-start;gap:10px;padding:9px 14px;
-  border-bottom:1px solid var(--border);font-size:12.5px;line-height:1.55;
-  animation:fadein .2s ease;
-}
+.agent-step{display:flex;align-items:flex-start;gap:11px;padding:10px 15px;border-bottom:1px solid var(--border);font-size:12px;line-height:1.55;animation:fadein .2s ease}
 .agent-step:last-child{border-bottom:none}
-.step-icon{width:20px;height:20px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px}
-.step-pending{background:rgba(255,255,255,.05);border:1px solid var(--border)}
-.step-running{background:rgba(200,146,42,.12);border:1px solid rgba(200,146,42,.3)}
-.step-done{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.22)}
-.step-err{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.22)}
+.step-icon{width:21px;height:21px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px}
+.step-pending{background:rgba(255,255,255,.04);border:1px solid var(--border)}
+.step-running{background:rgba(212,168,75,.1);border:1px solid rgba(212,168,75,.3)}
+.step-done{background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.2)}
+.step-err{background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.2)}
 .step-running svg,.step-pending svg,.step-done svg,.step-err svg{width:10px;height:10px}
 .step-running svg{animation:spin 1s linear infinite}
 @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 .step-text{flex:1;color:var(--text-2)}
-.step-text .step-label{font-weight:600;color:var(--text);display:inline}
-.step-sub{font-size:11px;color:var(--text-3);margin-top:2px}
-.step-time{font-size:10.5px;color:var(--text-3);flex-shrink:0;align-self:flex-start;margin-top:2px}
+.step-text .step-label{font-weight:700;color:var(--text);display:inline}
+.step-sub{font-size:10.5px;color:var(--text-3);margin-top:2px}
 
-/* ── Source pills ── */
-.sources-row{display:flex;flex-wrap:wrap;gap:5px;margin:6px 0 8px}
-.src-pill{
-  display:inline-flex;align-items:center;gap:5px;padding:3px 9px;
-  background:var(--bg3);border:1px solid var(--border);border-radius:20px;
-  font-size:10.5px;color:var(--text-3);cursor:pointer;text-decoration:none;transition:all .14s;
-}
+/* Sources */
+.sources-row{display:flex;flex-wrap:wrap;gap:5px;margin:7px 0 9px}
+.src-pill{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;background:var(--bg3);border:1px solid var(--border);border-radius:20px;font-size:10px;color:var(--text-3);cursor:pointer;text-decoration:none;transition:all .15s;font-weight:600;letter-spacing:.3px}
 .src-pill:hover{border-color:var(--border-gold);color:var(--gold-lt)}
-.src-pill img{width:12px;height:12px;border-radius:2px}
 
-/* ════════════════
-   PAPER BLOCK
-═══════════════ */
-.paper-block{
-  background:var(--bg2);border:1px solid var(--border);border-radius:10px;
-  overflow:hidden;margin:6px 0 4px;
+/* Confidence */
+.confidence-bar{display:flex;align-items:center;gap:11px;margin:7px 0 11px;padding:9px 13px;background:var(--bg3);border:1px solid var(--border);border-radius:8px}
+.conf-label{font-size:10.5px;color:var(--text-2);white-space:nowrap;font-weight:600;letter-spacing:.3px}
+.conf-track{flex:1;height:3px;background:rgba(255,255,255,.05);border-radius:2px;overflow:hidden}
+.conf-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--gold-dk),var(--gold-lt));transition:width .8s cubic-bezier(.4,0,.2,1)}
+.conf-val{font-size:11px;font-weight:700;color:var(--gold-lt);white-space:nowrap}
+
+/* ════════════════════════════════════
+   BEAUTIFUL PAPER BLOCK
+═══════════════════════════════════ */
+.paper-block{margin:6px 0;border-radius:0;overflow:visible;box-shadow:none}
+.paper-toolbar{display:none}
+.paper-toolbar-left{display:flex;align-items:center;gap:10px}
+.paper-type-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:4px 11px;
+  background:rgba(212,168,75,.1);border:1px solid rgba(212,168,75,.22);
+  border-radius:20px;font-size:10px;font-weight:700;color:var(--gold-lt);letter-spacing:.6px;text-transform:uppercase
 }
-.paper-hd{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:9px 14px;background:var(--bg3);border-bottom:1px solid var(--border);
-}
-.paper-hd-lbl{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:600;color:var(--gold-lt)}
-.paper-hd-lbl.math-l{color:#a5b4fc}
-.paper-hd-actions{display:flex;gap:5px}
-.hd-btn{
-  display:flex;align-items:center;gap:4px;padding:3px 9px;
+.paper-toolbar-actions{display:flex;gap:6px}
+.tb-btn{
+  display:flex;align-items:center;gap:5px;padding:5px 11px;
   background:rgba(255,255,255,.04);border:1px solid var(--border);
-  border-radius:5px;font-family:'DM Sans',sans-serif;font-size:11px;color:var(--text-2);
-  cursor:pointer;transition:all .14s
+  border-radius:7px;font-family:'Syne',sans-serif;font-size:10.5px;font-weight:600;
+  color:var(--text-2);cursor:pointer;transition:all .15s;letter-spacing:.3px
 }
-.hd-btn:hover{background:rgba(255,255,255,.08);color:var(--text)}
+.tb-btn:hover{background:rgba(255,255,255,.08);color:var(--text);border-color:var(--border-m)}
 
-.paper-bd{
-  padding:26px 30px;font-family:'Instrument Serif',Times,serif;
-  font-size:15px;line-height:1.9;color:var(--text);
-  max-height:640px;overflow-y:auto;
-  background:var(--bg2);
+/* Paper document itself */
+.paper-doc{background:transparent;max-height:none;overflow:visible;scroll-behavior:smooth}
+.paper-doc::-webkit-scrollbar{width:5px}
+.paper-doc::-webkit-scrollbar-track{background:rgba(0,0,0,.05)}
+.paper-doc::-webkit-scrollbar-thumb{background:rgba(0,0,0,.2);border-radius:3px}
+
+/* Journal-style header band */
+.paper-journal-header{
+  background:linear-gradient(135deg,#1a0a08 0%,#2c1a08 50%,#1a0a08 100%);
+  padding:16px 36px 14px;
+  display:flex;align-items:center;justify-content:space-between;
+  border-bottom:3px solid var(--paper-accent);
 }
-.paper-bd.math-bd{
-  font-family:'DM Sans',sans-serif;font-size:14.5px;line-height:1.75;
-  background:linear-gradient(180deg,var(--bg2) 0%,#13131a 100%);
+.paper-journal-name{
+  font-family:'Cormorant Garamond',serif;font-size:13px;font-weight:600;
+  color:rgba(255,220,140,.9);letter-spacing:1.2px;text-transform:uppercase;
+  font-style:italic;
+}
+.paper-journal-meta{font-size:10px;color:rgba(255,220,140,.5);letter-spacing:.8px;text-transform:uppercase;font-family:'Syne',sans-serif;font-weight:600}
+
+/* Paper body area */
+.paper-inner{padding:40px 48px 36px;max-width:100%}
+
+/* Title area */
+.paper-title-area{text-align:center;margin-bottom:28px;padding-bottom:24px;border-bottom:2px solid var(--paper-border)}
+.paper-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:26px;font-weight:600;line-height:1.28;
+  color:var(--paper-text);margin-bottom:14px;
+  letter-spacing:-.3px;
+}
+.paper-authors-row{
+  font-family:'Syne',sans-serif;font-size:11px;font-weight:600;
+  color:var(--paper-text2);letter-spacing:.6px;text-transform:uppercase;
+  margin-bottom:6px;
+}
+.paper-date-row{font-size:10.5px;color:#8a8070;font-family:'Syne',sans-serif;letter-spacing:.5px}
+.paper-kw-row{margin-top:12px;display:flex;flex-wrap:wrap;gap:5px;justify-content:center}
+.paper-kw{
+  display:inline-block;padding:3px 10px;
+  background:rgba(139,26,26,.06);border:1px solid rgba(139,26,26,.18);
+  border-radius:20px;font-size:10px;font-weight:600;color:var(--paper-accent);
+  letter-spacing:.4px;font-family:'Syne',sans-serif;text-transform:uppercase;
 }
 
-/* Paper typography */
-.paper-title-block{text-align:center;padding-bottom:18px;border-bottom:1px solid var(--border);margin-bottom:20px}
-.paper-main-title{font-family:'Instrument Serif',serif;font-size:20px;font-weight:400;line-height:1.35;margin-bottom:8px;color:var(--text)}
-.paper-meta{font-size:11.5px;color:var(--text-3);font-family:'DM Sans',sans-serif;display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
-.paper-section{margin-bottom:22px}
+/* Abstract */
+.paper-abstract{
+  background:rgba(139,26,26,.03);border:1px solid rgba(139,26,26,.12);
+  border-left:3px solid var(--paper-accent);
+  border-radius:0 8px 8px 0;
+  padding:16px 20px;margin-bottom:28px;
+}
+.paper-abstract-label{
+  font-family:'Syne',sans-serif;font-size:9px;font-weight:800;
+  text-transform:uppercase;letter-spacing:1.4px;color:var(--paper-accent);
+  margin-bottom:8px;
+}
+.paper-abstract p{font-family:'Cormorant Garamond',serif;font-size:15.5px;line-height:1.85;color:var(--paper-text);font-style:italic}
+
+/* Two-column layout for main content */
+.paper-columns{
+  display:grid;grid-template-columns:1fr 1fr;gap:28px;
+}
+.paper-full-width{grid-column:1/-1}
+
+/* Section headers */
 .paper-section-heading{
-  font-family:'DM Sans',sans-serif;font-size:10.5px;font-weight:700;
-  text-transform:uppercase;letter-spacing:.8px;color:var(--gold);
-  margin-bottom:12px;padding-bottom:5px;border-bottom:1px solid var(--border);
+  font-family:'Syne',sans-serif;font-size:10px;font-weight:800;
+  text-transform:uppercase;letter-spacing:1.2px;
+  color:var(--paper-accent);margin-bottom:11px;margin-top:22px;
+  padding-bottom:5px;border-bottom:1.5px solid var(--paper-border);
+  display:flex;align-items:center;gap:8px;
 }
-.paper-section-heading.math-h{color:#a5b4fc}
-.paper-sub-heading{font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;color:var(--text);margin:14px 0 6px}
-.paper-para{margin-bottom:12px;text-align:justify;hyphens:auto;color:var(--text)}
-.keywords-block{
-  background:rgba(200,146,42,.07);border:1px solid var(--border-gold);
-  border-radius:6px;padding:9px 12px;margin-bottom:14px;
-  font-size:12px;color:var(--text-2);font-family:'DM Sans',sans-serif;
+.paper-section-heading::before{
+  content:'';width:16px;height:2px;background:var(--paper-accent);flex-shrink:0;
 }
-.keywords-block strong{color:var(--text);margin-right:5px}
-.references-section{border-top:1px solid var(--border);padding-top:16px;margin-top:8px}
-.ref-item{font-size:12.5px;line-height:1.65;margin-bottom:7px;padding-left:22px;text-indent:-22px;color:var(--text-2)}
-.ref-item a{color:var(--blue);text-decoration:none}
-.ref-item a:hover{text-decoration:underline}
+.paper-section-num{font-size:10px;font-weight:800;color:var(--paper-gold);margin-right:2px}
+.paper-sub-heading{
+  font-family:'Syne',sans-serif;font-size:12px;font-weight:700;
+  color:var(--paper-text);margin:14px 0 7px;letter-spacing:.2px;
+}
+
+/* Body paragraphs */
+.paper-para{
+  font-family:'Cormorant Garamond',serif;
+  font-size:15px;line-height:1.9;color:var(--paper-text);
+  margin-bottom:10px;text-align:justify;hyphens:auto;
+}
+.paper-para:first-of-type::first-letter{
+  font-size:3.2em;font-weight:600;float:left;line-height:.8;
+  margin-right:5px;margin-top:4px;color:var(--paper-accent);
+  font-family:'Cormorant Garamond',serif;
+}
+
+/* Citation inline */
+.cite-num{
+  display:inline-block;font-size:9px;font-weight:700;
+  color:var(--paper-accent);vertical-align:super;line-height:1;
+  font-family:'Syne',sans-serif;cursor:default;
+}
+
+/* Special blocks */
+.paper-callout{
+  background:rgba(26,23,20,.04);border:1px solid var(--paper-border);
+  border-left:3px solid var(--paper-gold);border-radius:0 6px 6px 0;
+  padding:12px 16px;margin:12px 0;
+}
+.paper-callout p{font-family:'Cormorant Garamond',serif;font-size:14.5px;line-height:1.8;color:var(--paper-text2);font-style:italic;margin:0}
+
+.paper-rejected{
+  background:rgba(139,26,26,.03);border:1px solid rgba(139,26,26,.1);border-radius:7px;
+  padding:12px 14px;margin:10px 0;
+}
+.paper-rejected-label{font-size:9.5px;font-weight:800;color:var(--paper-accent);letter-spacing:.8px;text-transform:uppercase;margin-bottom:6px;font-family:'Syne',sans-serif}
+.paper-rejected p{font-family:'Cormorant Garamond',serif;font-size:14px;line-height:1.75;color:var(--paper-text2)}
+
+.paper-uncertainty{
+  background:rgba(122,92,30,.04);border:1px solid rgba(122,92,30,.15);border-radius:7px;
+  padding:12px 14px;margin:10px 0;
+}
+.paper-uncertainty-label{font-size:9.5px;font-weight:800;color:var(--paper-gold);letter-spacing:.8px;text-transform:uppercase;margin-bottom:6px;font-family:'Syne',sans-serif}
+.paper-uncertainty p{font-family:'Cormorant Garamond',serif;font-size:14px;line-height:1.75;color:var(--paper-text2)}
+
+/* References */
+.paper-refs{border-top:2px solid var(--paper-border);padding-top:20px;margin-top:10px}
+.paper-refs-title{font-family:'Syne',sans-serif;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1.4px;color:var(--paper-text);margin-bottom:14px}
+.paper-ref-item{
+  display:flex;gap:10px;font-family:'Cormorant Garamond',serif;
+  font-size:13.5px;line-height:1.7;color:var(--paper-text2);
+  margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid var(--paper-border);
+}
+.paper-ref-item:last-child{border-bottom:none}
+.ref-num{font-family:'Syne',sans-serif;font-size:9px;font-weight:800;color:var(--paper-accent);flex-shrink:0;margin-top:4px;min-width:20px}
+.ref-body a{color:var(--paper-accent);text-decoration:none}
+.ref-body a:hover{text-decoration:underline}
+
+/* Diagram inside paper */
+.paper-diagram{
+  background:white;border:1px solid var(--paper-border);border-radius:8px;
+  overflow:hidden;margin:16px 0;grid-column:1/-1;
+}
+.paper-diagram-bar{
+  background:linear-gradient(135deg,#f5f0e8,#ede8df);
+  padding:7px 14px;border-bottom:1px solid var(--paper-border);
+  display:flex;align-items:center;gap:7px;
+  font-family:'Syne',sans-serif;font-size:9px;font-weight:800;
+  color:var(--paper-gold);text-transform:uppercase;letter-spacing:.8px;
+}
+.paper-diagram-render{padding:18px;display:flex;justify-content:center;overflow-x:auto;min-height:80px;background:white}
+.paper-diagram-render svg{max-width:100%;height:auto}
+.paper-diagram-caption{padding:6px 14px 10px;font-family:'Cormorant Garamond',serif;font-size:12.5px;color:var(--paper-text2);font-style:italic;text-align:center;background:rgba(0,0,0,.02)}
+.paper-diagram-err{padding:10px 14px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#c0392b;background:rgba(192,57,43,.06)}
 
 /* Math doc */
 .math-doc{display:flex;flex-direction:column;gap:12px}
-.math-header{border:1px solid rgba(99,102,241,.25);background:rgba(99,102,241,.07);border-radius:10px;padding:12px 14px}
-.math-kicker{font-size:10px;font-weight:700;color:#818cf8;text-transform:uppercase;letter-spacing:.8px;margin-bottom:5px}
-.math-title{font-family:'DM Sans',sans-serif;font-size:20px;font-weight:700;line-height:1.3;color:var(--text)}
+.math-header{
+  background:linear-gradient(135deg,rgba(129,140,248,.12),rgba(167,139,250,.06));
+  border:1px solid rgba(167,139,250,.25);border-radius:11px;padding:14px 16px;
+}
+.math-kicker{font-size:9.5px;font-weight:800;color:#a78bfa;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;font-family:'Syne',sans-serif}
+.math-title{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:500;line-height:1.3;color:var(--text)}
 .math-section{border:1px solid var(--border);background:var(--bg3);border-radius:10px;overflow:hidden}
-.math-section-h{display:flex;align-items:center;gap:7px;padding:8px 12px;background:rgba(255,255,255,.03);border-bottom:1px solid var(--border);font-size:11px;font-weight:700;color:var(--text-2);text-transform:uppercase;letter-spacing:.5px}
-.math-section-dot{width:7px;height:7px;border-radius:50%;background:#818cf8}
-.math-section-b{padding:10px 12px;display:flex;flex-direction:column;gap:8px}
-.math-para{font-size:14px;color:var(--text);line-height:1.75}
-.math-list{margin:0 0 0 16px;display:flex;flex-direction:column;gap:5px;color:var(--text)}
-.math-list li{padding-left:2px;line-height:1.65}
-.math-step{display:flex;gap:8px;align-items:flex-start;padding:9px 10px;border:1px solid rgba(99,102,241,.2);background:rgba(99,102,241,.05);border-radius:8px}
-.math-step-no{font-size:11px;font-weight:700;color:#818cf8;background:rgba(99,102,241,.15);border-radius:999px;min-width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center}
-.math-step-txt{flex:1;color:var(--text);line-height:1.7}
-.math-eq{font-family:'DM Mono',monospace;font-size:12.5px;line-height:1.6;background:#0a0a10;color:#e2e8f0;border-radius:7px;padding:9px 11px;overflow-x:auto;border:1px solid var(--border)}
-.math-note{background:rgba(99,102,241,.06);border:1px solid rgba(99,102,241,.2);border-radius:7px;padding:9px 11px;color:#c7d2fe;font-size:13px}
-.math-final{background:rgba(34,197,94,.07);border:1px solid rgba(34,197,94,.22);color:#86efac;border-radius:9px;padding:11px 13px;font-weight:600;line-height:1.6}
-.math-inline-eq{font-family:'DM Mono',monospace;background:rgba(99,102,241,.1);border:1px solid rgba(99,102,241,.2);border-radius:4px;padding:0 5px;font-size:.9em;color:#c7d2fe}
+.math-section-h{display:flex;align-items:center;gap:7px;padding:9px 13px;background:rgba(255,255,255,.025);border-bottom:1px solid var(--border);font-size:10px;font-weight:800;color:var(--text-2);text-transform:uppercase;letter-spacing:.8px;font-family:'Syne',sans-serif}
+.math-section-dot{width:7px;height:7px;border-radius:50%;background:#a78bfa}
+.math-section-b{padding:11px 13px;display:flex;flex-direction:column;gap:9px}
+.math-para{font-size:14px;color:var(--text);line-height:1.8;font-family:'Cormorant Garamond',serif}
+.math-list{margin:0 0 0 18px;display:flex;flex-direction:column;gap:5px;color:var(--text)}
+.math-list li{padding-left:2px;line-height:1.7;font-size:14px;font-family:'Cormorant Garamond',serif}
+.math-step{display:flex;gap:9px;align-items:flex-start;padding:10px 12px;border:1px solid rgba(167,139,250,.15);background:rgba(167,139,250,.04);border-radius:9px}
+.math-step-no{font-size:10px;font-weight:800;color:#a78bfa;background:rgba(167,139,250,.12);border-radius:999px;min-width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;flex-shrink:0}
+.math-step-txt{flex:1;color:var(--text);line-height:1.75;font-size:14px;font-family:'Cormorant Garamond',serif}
+.math-eq{font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.65;background:#06060f;color:#e2e8f0;border-radius:8px;padding:10px 13px;overflow-x:auto;border:1px solid var(--border)}
+.math-note{background:rgba(167,139,250,.05);border:1px solid rgba(167,139,250,.18);border-radius:8px;padding:10px 12px;color:#c4b5fd;font-size:13.5px;font-family:'Cormorant Garamond',serif;line-height:1.75}
+.math-final{background:rgba(52,211,153,.06);border:1px solid rgba(52,211,153,.2);color:#6ee7b7;border-radius:10px;padding:12px 14px;font-weight:700;line-height:1.65;font-family:'Cormorant Garamond',serif;font-size:15px}
+.math-inline-eq{font-family:'JetBrains Mono',monospace;background:rgba(167,139,250,.08);border:1px solid rgba(167,139,250,.18);border-radius:4px;padding:0 5px;font-size:.88em;color:#c4b5fd}
 
-/* Diagram */
-.diagram-wrap{margin:14px 0;background:var(--bg3);border:1px solid var(--border);border-radius:8px;overflow:hidden}
-.diagram-bar{display:flex;align-items:center;gap:6px;padding:6px 12px;background:rgba(255,255,255,.03);border-bottom:1px solid var(--border);font-family:'DM Sans',sans-serif;font-size:10.5px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:.4px}
+/* Diagram inside dark chat UI */
+.diagram-wrap{margin:14px 0;background:var(--bg3);border:1px solid var(--border);border-radius:9px;overflow:hidden}
+.diagram-bar{display:flex;align-items:center;gap:6px;padding:7px 13px;background:rgba(255,255,255,.025);border-bottom:1px solid var(--border);font-family:'Syne',sans-serif;font-size:9px;font-weight:800;color:var(--text-3);text-transform:uppercase;letter-spacing:.6px}
 .diagram-render{padding:16px;display:flex;justify-content:center;overflow-x:auto;min-height:60px}
 .diagram-render svg{max-width:100%;height:auto}
-.diagram-err{padding:10px 14px;font-family:'DM Mono',monospace;font-size:11px;color:#fca5a5;background:rgba(239,68,68,.08)}
-
-/* Mermaid dark theme override */
-.mermaid-container .node rect,.mermaid-container .node circle{fill:#1c1c28!important;stroke:rgba(200,146,42,.4)!important}
-.mermaid-container .edgePath .path{stroke:rgba(200,146,42,.4)!important}
-.mermaid-container text{fill:#e8e4dc!important}
+.diagram-err{padding:10px 14px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#fca5a5;background:rgba(239,68,68,.07)}
 
 /* Downloads */
-.dl-row{display:flex;gap:7px;flex-wrap:wrap;margin-top:6px}
-.dl-btn{
-  display:inline-flex;align-items:center;gap:6px;padding:7px 13px;
-  border:none;border-radius:7px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;cursor:pointer;transition:all .15s
-}
-.dl-txt{background:var(--bg4);color:var(--text);border:1px solid var(--border)}
-.dl-txt:hover{background:var(--bg3);border-color:var(--border-gold);transform:translateY(-1px)}
-.dl-pdf{background:rgba(239,68,68,.15);color:#fca5a5;border:1px solid rgba(239,68,68,.25)}
-.dl-pdf:hover{background:rgba(239,68,68,.22);transform:translateY(-1px)}
+.dl-row{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}
+.dl-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border:none;border-radius:8px;font-family:'Syne',sans-serif;font-size:11px;font-weight:700;cursor:pointer;transition:all .15s;letter-spacing:.3px}
+.dl-txt{background:var(--bg4);color:var(--text-2);border:1px solid var(--border)}
+.dl-txt:hover{background:var(--bg3);border-color:var(--border-gold);color:var(--gold-lt);transform:translateY(-1px)}
+.dl-pdf{background:rgba(248,113,113,.1);color:#fca5a5;border:1px solid rgba(248,113,113,.2)}
+.dl-pdf:hover{background:rgba(248,113,113,.15);transform:translateY(-1px)}
 
-/* Confidence bar */
-.confidence-bar{display:flex;align-items:center;gap:10px;margin:6px 0 10px;padding:8px 12px;background:var(--bg3);border:1px solid var(--border);border-radius:7px}
-.conf-label{font-size:11px;color:var(--text-2);white-space:nowrap}
-.conf-track{flex:1;height:4px;background:rgba(255,255,255,.06);border-radius:2px;overflow:hidden}
-.conf-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--gold-dk),var(--gold-lt));transition:width .6s ease}
-.conf-val{font-size:11px;font-weight:600;color:var(--gold-lt);white-space:nowrap}
-
-/* ════════════════
-   INPUT BAR
-═══════════════ */
+/* Input bar */
 .input-bar{
-  padding:12px 24px 18px;border-top:1px solid var(--border);flex-shrink:0;
-  background:rgba(12,12,15,.9);backdrop-filter:blur(12px);
+  padding:13px 28px 20px;border-top:1px solid var(--border);flex-shrink:0;
+  background:rgba(255,255,255,.95);backdrop-filter:blur(16px);
 }
-.input-inner{max-width:820px;margin:0 auto;position:relative}
-.file-chip-wrap{display:none;padding:0 2px 6px}
+.input-inner{max-width:860px;margin:0 auto;position:relative}
+.file-chip-wrap{display:none;padding:0 2px 7px}
 .file-chip-wrap.show{display:block}
-.file-chip{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;background:rgba(200,146,42,.1);border:1px solid var(--border-gold);border-radius:20px;font-size:11.5px;color:var(--gold-lt)}
+.file-chip{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;background:rgba(212,168,75,.08);border:1px solid var(--border-gold);border-radius:20px;font-size:11px;color:var(--gold-lt);font-weight:600;letter-spacing:.3px}
 .file-chip button{background:none;border:none;cursor:pointer;color:var(--gold-lt);font-size:14px;padding:0;line-height:1;margin-left:2px}
 .input-box{
   display:flex;align-items:flex-end;gap:8px;
-  background:var(--bg2);border:1.5px solid var(--border);border-radius:12px;
-  padding:9px 10px;transition:border-color .15s,box-shadow .15s;
-  box-shadow:0 4px 24px rgba(0,0,0,.3)
+  background:#fff;border:1.5px solid var(--border);border-radius:13px;
+  padding:10px 11px;transition:all .18s;
+  box-shadow:0 6px 20px rgba(15,23,42,.08)
 }
-.input-box:focus-within{border-color:rgba(200,146,42,.5);box-shadow:0 0 0 3px rgba(200,146,42,.08),0 4px 24px rgba(0,0,0,.3)}
-.file-btn{
-  width:30px;height:30px;flex-shrink:0;background:none;border:none;
-  cursor:pointer;display:flex;align-items:center;justify-content:center;
-  color:var(--text-3);transition:color .15s;padding-bottom:2px
-}
+.input-box:focus-within{border-color:rgba(212,168,75,.45);box-shadow:0 0 0 3px rgba(212,168,75,.07),0 4px 28px rgba(0,0,0,.35)}
+.file-btn{width:32px;height:32px;flex-shrink:0;background:none;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text-3);transition:color .15s;padding-bottom:2px}
 .file-btn:hover{color:var(--text-2)}
 .file-btn svg{width:15px;height:15px}
-textarea.ta{
-  flex:1;border:none!important;background:transparent!important;padding:2px!important;
-  box-shadow:none!important;font-family:'DM Sans',sans-serif;font-size:13.5px;
-  line-height:1.6;color:var(--text);min-height:22px;max-height:150px;
-  resize:none;overflow-y:auto;outline:none;
-}
+textarea.ta{flex:1;border:none!important;background:transparent!important;padding:2px!important;box-shadow:none!important;font-family:'Syne',sans-serif;font-size:13px;font-weight:400;line-height:1.65;color:var(--text);min-height:22px;max-height:150px;resize:none;overflow-y:auto;outline:none}
 textarea.ta::placeholder{color:var(--text-3);font-style:italic}
-.send-btn{
-  width:36px;height:36px;flex-shrink:0;
-  background:linear-gradient(145deg,#c8922a,#b07820);border:none;border-radius:9px;
-  display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .16s;
-  box-shadow:0 3px 12px rgba(200,146,42,.35),inset 0 1px 0 rgba(255,210,100,.2);
-}
-.send-btn:hover{background:linear-gradient(145deg,#d4a030,#c08828);transform:scale(1.06);box-shadow:0 5px 16px rgba(200,146,42,.45)}
-.send-btn:disabled{opacity:.35;cursor:not-allowed;transform:none}
+.send-btn{width:38px;height:38px;flex-shrink:0;background:linear-gradient(145deg,#d4a84b,#b08230);border:none;border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .18s;box-shadow:0 4px 14px rgba(212,168,75,.3),inset 0 1px 0 rgba(255,220,120,.2)}
+.send-btn:hover{background:linear-gradient(145deg,#e0b456,#c09038);transform:scale(1.07);box-shadow:0 6px 20px rgba(212,168,75,.4)}
+.send-btn:disabled{opacity:.3;cursor:not-allowed;transform:none}
 .send-btn svg{width:15px;height:15px;color:#fff}
-.input-hint{margin-top:7px;font-size:10.5px;color:var(--text-3);text-align:center;opacity:.6}
+.input-hint{margin-top:8px;font-size:10px;color:var(--text-3);text-align:center;opacity:.5;font-weight:600;letter-spacing:.4px;text-transform:uppercase}
 #fileInput{display:none}
 
 /* Scrollbars */
 ::-webkit-scrollbar{width:4px;height:4px}
 ::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:2px}
-::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,.18)}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08);border-radius:2px}
+::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,.15)}
 
-@media(max-width:720px){
-  .layout{grid-template-columns:1fr}.sidebar{display:none}.hint-grid{grid-template-columns:1fr}
-}
+@media(max-width:768px){.layout{grid-template-columns:1fr}.sidebar{display:none}.hint-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <div class="layout">
 
-<!-- ══ SIDEBAR ══ -->
+<!-- SIDEBAR -->
 <aside class="sidebar">
+ <div class="sb-inner">
   <div class="sb-head">
     <div class="logo">
       <div class="logo-mark">
@@ -424,13 +498,14 @@ textarea.ta::placeholder{color:var(--text-3);font-style:italic}
 
   <div class="sb-bottom">
     <button class="new-btn" onclick="clearChat()">
-      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
       New session
     </button>
   </div>
+ </div>
 </aside>
 
-<!-- ══ MAIN ══ -->
+<!-- MAIN -->
 <div class="main">
   <div class="topbar">
     <div class="mode-pill" id="modePill">
@@ -438,7 +513,7 @@ textarea.ta::placeholder{color:var(--text-3);font-style:italic}
       <span id="pillTxt">Research Mode</span>
     </div>
     <button class="clear-btn" onclick="clearChat()">
-      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/></svg>
       Clear
     </button>
   </div>
@@ -447,13 +522,13 @@ textarea.ta::placeholder{color:var(--text-3);font-style:italic}
     <div class="msgs" id="msgs">
       <div class="welcome" id="welcome">
         <div class="welcome-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
             <path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/>
             <path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/>
           </svg>
         </div>
-        <h2>Stremini Research Agent</h2>
-        <p class="sub">Multi-agent pipeline: sources arxiv, Semantic Scholar &amp; the web, then reasons, critiques, and refines to produce structured research papers or step-by-step math solutions.</p>
+        <h2>Stremini Agent</h2>
+        <p class="sub">Multi-agent pipeline: sources arXiv, Semantic Scholar &amp; the web, then reasons, critiques, and refines to produce structured research papers or step-by-step math solutions.</p>
         <div class="hint-grid">
           <div class="hint-card" onclick="hint('research','Explore the impact of large language models on scientific discovery and research')">
             <div class="hint-icon gold"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg></div>
@@ -476,7 +551,6 @@ textarea.ta::placeholder{color:var(--text-3);font-style:italic}
     </div>
   </div>
 
-  <!-- INPUT BAR -->
   <div class="input-bar">
     <div class="input-inner">
       <div class="file-chip-wrap" id="fileChipWrap">
@@ -496,199 +570,122 @@ textarea.ta::placeholder{color:var(--text-3);font-style:italic}
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
         </button>
       </div>
-      <div class="input-hint">Enter to send · Shift+Enter for newline · Upload PDF/DOCX to analyse documents</div>
+      <div class="input-hint">Enter to send · Shift+Enter for newline · Upload PDF/DOCX to analyse</div>
     </div>
   </div>
 </div>
 </div>
 
 <script>
-// ── Mermaid dark config ──
 mermaid.initialize({
-  startOnLoad:false,
-  theme:'dark',
+  startOnLoad:false,theme:'neutral',
   themeVariables:{
-    background:'#16161c',darkMode:true,
-    primaryColor:'#1c1c28',primaryBorderColor:'rgba(200,146,42,.4)',
-    lineColor:'rgba(200,146,42,.5)',textColor:'#e8e4dc',
-    nodeTextColor:'#e8e4dc',edgeLabelBackground:'#16161c',
-    clusterBkg:'#16161c',titleColor:'#e8e4dc',
+    background:'#ffffff',primaryColor:'#f5f0e8',primaryBorderColor:'#8b1a1a',
+    lineColor:'#8b1a1a',textColor:'#1a1714',nodeTextColor:'#1a1714',
+    edgeLabelBackground:'#faf8f3',clusterBkg:'#f5f0e8',
   },
-  securityLevel:'loose',fontFamily:'DM Sans, sans-serif',fontSize:13,
-  flowchart:{curve:'basis',padding:18}
+  securityLevel:'loose',fontFamily:'Syne, sans-serif',fontSize:12,
+  flowchart:{curve:'basis',padding:16}
 });
 
 // ── State ──
-const API = 'https://agentic-research.vishwajeetadkine705.workers.dev';
-let mode='research', running=false, history=[];
-let papers=0, mathSolved=0, diagramsTotal=0, diagId=0;
-let pendingDocText=null, pendingDocName=null;
+const API='https://agentic-research.vishwajeetadkine705.workers.dev';
+let mode='research',running=false,history=[];
+let papers=0,mathSolved=0,diagramsTotal=0,diagId=0;
+let pendingDocText=null,pendingDocName=null;
 
-const ta = document.getElementById('ta');
-const sendBtn = document.getElementById('sendBtn');
-const msgs = document.getElementById('msgs');
-const welcome = document.getElementById('welcome');
-const msgsWrap = document.getElementById('msgsWrap');
+const ta=document.getElementById('ta');
+const sendBtn=document.getElementById('sendBtn');
+const msgs=document.getElementById('msgs');
+const welcome=document.getElementById('welcome');
+const msgsWrap=document.getElementById('msgsWrap');
 
-// ── Textarea ──
 ta.addEventListener('input',function(){this.style.height='auto';this.style.height=Math.min(this.scrollHeight,150)+'px'});
 ta.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();handleSend()}});
 
-// ── Mode ──
-function setMode(m) {
-  mode = m;
-  document.getElementById('btnR').className = 'mode-btn' + (m==='research'?' active-r':'');
-  document.getElementById('btnM').className = 'mode-btn' + (m==='math'?' active-m':'');
-  document.getElementById('modeNote').textContent = m==='research'
-    ? 'Research — structured academic papers with live sources'
-    : 'Math — step-by-step rigorous solutions & proofs';
-  document.getElementById('pillTxt').textContent = m==='research' ? 'Research Mode' : 'Math Mode';
-  ta.placeholder = m==='research'
-    ? 'Enter a research topic or question…'
-    : 'Enter a math problem or proof…';
+function setMode(m){
+  mode=m;
+  document.getElementById('btnR').className='mode-btn'+(m==='research'?' active-r':'');
+  document.getElementById('btnM').className='mode-btn'+(m==='math'?' active-m':'');
+  document.getElementById('modeNote').textContent=m==='research'?'Research — structured academic papers with live sources':'Math — step-by-step rigorous solutions & proofs';
+  document.getElementById('pillTxt').textContent=m==='research'?'Research Mode':'Math Mode';
+  ta.placeholder=m==='research'?'Enter a research topic or question…':'Enter a math problem or proof…';
 }
-function hint(m, text) {
-  setMode(m); ta.value=text;
-  ta.style.height='auto'; ta.style.height=Math.min(ta.scrollHeight,150)+'px';
-  ta.focus();
+function hint(m,text){setMode(m);ta.value=text;ta.style.height='auto';ta.style.height=Math.min(ta.scrollHeight,150)+'px';ta.focus()}
+
+function setStatus(type,label){
+  const cls={idle:'s-idle',run:'s-run',done:'s-done',err:'s-err'};
+  const el=document.getElementById('statusBadge');
+  el.className='status-badge '+(cls[type]||'s-idle');
+  el.innerHTML=`<span class="s-dot"></span>${label}`;
+}
+function updateStats(){
+  document.getElementById('sPapers').textContent=papers;
+  document.getElementById('sMath').textContent=mathSolved;
+  document.getElementById('sDiags').textContent=diagramsTotal;
+}
+function addRecent(text,m){
+  const list=document.getElementById('recentList');
+  const empty=list.querySelector('.muted');if(empty)empty.remove();
+  const d=document.createElement('div');d.className='ri';
+  d.innerHTML=`<div class="ri-dot"></div>${esc(text.slice(0,60))}${text.length>60?'…':''}`;
+  d.onclick=()=>hint(m,text);list.prepend(d);
+  while(list.children.length>6)list.lastChild.remove();
 }
 
-// ── Status ──
-function setStatus(type, label) {
-  const cls = {idle:'s-idle',run:'s-run',done:'s-done',err:'s-err'};
-  const el = document.getElementById('statusBadge');
-  el.className = 'status-badge ' + (cls[type]||'s-idle');
-  el.innerHTML = `<span class="s-dot"></span>${label}`;
-}
-function updateStats() {
-  document.getElementById('sPapers').textContent = papers;
-  document.getElementById('sMath').textContent = mathSolved;
-  document.getElementById('sDiags').textContent = diagramsTotal;
-}
-
-// ── Recent ──
-function addRecent(text, m) {
-  const list = document.getElementById('recentList');
-  const empty = list.querySelector('.muted'); if(empty) empty.remove();
-  const d = document.createElement('div'); d.className='ri';
-  d.innerHTML = `<div class="ri-dot"></div>${esc(text.slice(0,60))}${text.length>60?'…':''}`;
-  d.onclick = () => hint(m, text);
-  list.prepend(d);
-  while(list.children.length > 6) list.lastChild.remove();
-}
-
-// ── Helpers ──
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
 function scrollBot(){msgsWrap.scrollTop=msgsWrap.scrollHeight}
 function hideWelcome(){welcome.style.display='none'}
 function now(){return new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}
 
-// ── Add user msg ──
-function addUserMsg(html) {
+function addUserMsg(html){
   hideWelcome();
-  const row = document.createElement('div'); row.className='msg-row';
-  row.innerHTML = `<div class="av av-u">Y</div><div class="msg-body"><div class="msg-who">You <span class="msg-time">${now()}</span></div><div class="msg-content">${html}</div></div>`;
-  msgs.appendChild(row); scrollBot(); return row;
+  const row=document.createElement('div');row.className='msg-row';
+  row.innerHTML=`<div class="av av-u">Y</div><div class="msg-body"><div class="msg-who">You <span class="msg-time">${now()}</span></div><div class="msg-content">${html}</div></div>`;
+  msgs.appendChild(row);scrollBot();return row;
 }
-
-// ── Add agent msg container ──
-function addAgentMsg() {
+function addAgentMsg(){
   hideWelcome();
-  const row = document.createElement('div'); row.className='msg-row';
-  row.innerHTML = `
-    <div class="av av-a">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
-    </div>
-    <div class="msg-body">
-      <div class="msg-who">Stremini Agent <span class="msg-time">${now()}</span></div>
-      <div class="msg-content" id="agentSlot"></div>
-    </div>`;
-  msgs.appendChild(row); scrollBot();
+  const row=document.createElement('div');row.className='msg-row';
+  row.innerHTML=`<div class="av av-a"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg></div><div class="msg-body"><div class="msg-who">Stremini Agent <span class="msg-time">${now()}</span></div><div class="msg-content" id="agentSlot"></div></div>`;
+  msgs.appendChild(row);scrollBot();
   return document.getElementById('agentSlot');
 }
 
-// ══════════════════════════════════════════════════════
-// AGENTIC STEPS UI (Perplexity-style)
-// ══════════════════════════════════════════════════════
-function createStepsPanel(slot) {
-  const container = document.createElement('div');
-  container.className = 'agent-steps';
-
-  const header = document.createElement('div');
-  header.className = 'agent-steps-header';
-  header.innerHTML = `
-    <div class="agent-steps-title">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-        <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
-      </svg>
-      Agent working…
-    </div>
-    <svg class="agent-chevron open" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-      <polyline points="18 15 12 9 6 15"/>
-    </svg>`;
-  header.onclick = () => {
-    body.classList.toggle('collapsed');
-    header.querySelector('.agent-chevron').classList.toggle('open');
-  };
-
-  const body = document.createElement('div');
-  body.className = 'agent-steps-body';
-
-  container.appendChild(header);
-  container.appendChild(body);
-  slot.appendChild(container);
-
-  return {
-    container, body, header,
-    setTitle(t) {
-      header.querySelector('.agent-steps-title').innerHTML = `
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-          <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
-        </svg>${esc(t)}`;
+// ── Steps panel ──
+function createStepsPanel(slot){
+  const container=document.createElement('div');container.className='agent-steps';
+  const header=document.createElement('div');header.className='agent-steps-header';
+  header.innerHTML=`<div class="agent-steps-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Agent working…</div><svg class="agent-chevron open" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="18 15 12 9 6 15"/></svg>`;
+  const body=document.createElement('div');body.className='agent-steps-body';
+  header.onclick=()=>{body.classList.toggle('collapsed');header.querySelector('.agent-chevron').classList.toggle('open')};
+  container.appendChild(header);container.appendChild(body);slot.appendChild(container);
+  return{
+    container,body,header,
+    setTitle(t){header.querySelector('.agent-steps-title').innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>${esc(t)}`},
+    setDone(t){header.querySelector('.agent-steps-title').innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>${esc(t)}`},
+    addStep(id,label,sub=''){
+      const step=document.createElement('div');step.className='agent-step';step.id='step-'+id;
+      step.innerHTML=`<div class="step-icon step-pending"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="5"/></svg></div><div class="step-text"><span class="step-label">${esc(label)}</span>${sub?`<div class="step-sub">${esc(sub)}</div>`:''}</div>`;
+      body.appendChild(step);scrollBot();return step;
     },
-    setDone(t) {
-      header.querySelector('.agent-steps-title').innerHTML = `
-        <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.2" stroke-linecap="round">
-          <polyline points="20 6 9 17 4 12"/>
-        </svg>${esc(t)}`;
-    },
-    addStep(id, label, sub='') {
-      const step = document.createElement('div');
-      step.className = 'agent-step'; step.id = 'step-'+id;
-      step.innerHTML = `
-        <div class="step-icon step-pending">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="5"/></svg>
-        </div>
-        <div class="step-text">
-          <span class="step-label">${esc(label)}</span>
-          ${sub ? `<div class="step-sub">${esc(sub)}</div>` : ''}
-        </div>`;
-      body.appendChild(step); scrollBot(); return step;
-    },
-    startStep(id) {
-      const el = document.getElementById('step-'+id); if(!el) return;
-      const icon = el.querySelector('.step-icon');
-      icon.className = 'step-icon step-running';
-      icon.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/></svg>`;
+    startStep(id){
+      const el=document.getElementById('step-'+id);if(!el)return;
+      const icon=el.querySelector('.step-icon');icon.className='step-icon step-running';
+      icon.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/></svg>`;
       scrollBot();
     },
-    doneStep(id, detail='') {
-      const el = document.getElementById('step-'+id); if(!el) return;
-      const icon = el.querySelector('.step-icon');
-      icon.className = 'step-icon step-done';
-      icon.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>`;
-      if(detail) {
-        let sub = el.querySelector('.step-sub');
-        if(!sub){sub=document.createElement('div');sub.className='step-sub';el.querySelector('.step-text').appendChild(sub)}
-        sub.textContent = detail;
-      }
+    doneStep(id,detail=''){
+      const el=document.getElementById('step-'+id);if(!el)return;
+      const icon=el.querySelector('.step-icon');icon.className='step-icon step-done';
+      icon.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+      if(detail){let sub=el.querySelector('.step-sub');if(!sub){sub=document.createElement('div');sub.className='step-sub';el.querySelector('.step-text').appendChild(sub)}sub.textContent=detail}
       scrollBot();
     },
-    errStep(id, detail='') {
-      const el = document.getElementById('step-'+id); if(!el) return;
-      const icon = el.querySelector('.step-icon');
-      icon.className = 'step-icon step-err';
-      icon.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`;
+    errStep(id,detail=''){
+      const el=document.getElementById('step-'+id);if(!el)return;
+      const icon=el.querySelector('.step-icon');icon.className='step-icon step-err';
+      icon.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`;
       if(detail){let sub=el.querySelector('.step-sub');if(!sub){sub=document.createElement('div');sub.className='step-sub';el.querySelector('.step-text').appendChild(sub)}sub.textContent=detail}
     }
   };
@@ -697,167 +694,456 @@ function createStepsPanel(slot) {
 // ══════════════════════════════════════════════════════
 // DIAGRAM PARSER
 // ══════════════════════════════════════════════════════
-function parseContent(content) {
-  const parts = [];
-  const re = /<diagram\s+type=["']?(\w+)["']?\s+title=["']?([^"'>]*)["']?\s*>([\s\S]*?)<\/diagram>/gi;
-  let last=0, m;
-  while((m=re.exec(content))!==null) {
-    if(m.index>last) parts.push({kind:'text',txt:content.slice(last,m.index)});
+function parseContent(content){
+  const parts=[];
+  const re=/<diagram\s+type=["']?(\w+)["']?\s+title=["']?([^"'>]*)["']?\s*>([\s\S]*?)<\/diagram>/gi;
+  let last=0,m;
+  while((m=re.exec(content))!==null){
+    if(m.index>last)parts.push({kind:'text',txt:content.slice(last,m.index)});
     parts.push({kind:'diagram',dtype:m[1],title:m[2],code:m[3].trim()});
     last=m.index+m[0].length;
   }
-  if(last<content.length) parts.push({kind:'text',txt:content.slice(last)});
+  if(last<content.length)parts.push({kind:'text',txt:content.slice(last)});
   return parts;
 }
 
 // ══════════════════════════════════════════════════════
-// RESEARCH PAPER LINE RENDERER
+// BEAUTIFUL PAPER RENDERER — New approach
 // ══════════════════════════════════════════════════════
-function renderLine(l, state) {
-  if(!l) return;
-  if(/^[━─=\-]{3,}$/.test(l)) return;
 
-  function getTarget(){return state.section||state.container}
-  function flushPara(){
-    if(!state.para.length) return;
-    const text=state.para.join(' ').trim(); state.para=[];
-    if(!text) return;
-    if(/^keywords:/i.test(text)){
-      const kb=document.createElement('div');kb.className='keywords-block';
-      kb.innerHTML='<strong>Keywords:</strong> '+esc(text.replace(/^keywords:\s*/i,''));
-      getTarget().appendChild(kb);
-    } else {
-      const p=document.createElement('p');p.className='paper-para';p.textContent=text;
-      getTarget().appendChild(p);
-    }
-  }
-  if(/^REFERENCES\s*$/i.test(l)){
-    flushPara(); state.inRefs=true;
-    const sec=document.createElement('div');sec.className='paper-section references-section';
-    const h=document.createElement('div');h.className='paper-section-heading';h.textContent='References';
-    sec.appendChild(h); state.container.appendChild(sec); state.section=sec; state.refsDiv=sec; return;
-  }
-  if(state.inRefs){
-    flushPara();
-    const ri=document.createElement('div');ri.className='ref-item';
-    const last=state.refsDiv.lastElementChild;
-    const isNew=/^\[\d+\]/.test(l)||/^[A-Z][a-zA-Z]+,/.test(l)||/^[A-Z][a-z]+ [A-Z]/.test(l);
-    if(isNew||!last||!last.classList.contains('ref-item')){ri.textContent=l;state.refsDiv.appendChild(ri)}
-    else{last.textContent+=' '+l}
-    return;
-  }
-  if(/^ABSTRACT\s*$/i.test(l)){
-    flushPara();
-    const sec=document.createElement('div');sec.className='paper-section';
-    const h=document.createElement('div');h.className='paper-section-heading';h.textContent='Abstract';
-    sec.appendChild(h); state.container.appendChild(sec); state.section=sec; return;
-  }
-  const mjMatch=/^(\d+)\.\s+(.+)$/.exec(l);
-  if(mjMatch){
-    flushPara();
-    const sec=document.createElement('div');sec.className='paper-section';
-    const h=document.createElement('div');h.className='paper-section-heading';
-    h.textContent=mjMatch[1]+'. '+mjMatch[2]; sec.appendChild(h);
-    state.container.appendChild(sec); state.section=sec; return;
-  }
-  const sbMatch=/^(\d+\.\d+)\s+(.+)$/.exec(l);
-  if(sbMatch){
-    flushPara();
-    const sh=document.createElement('div');sh.className='paper-sub-heading';
-    sh.textContent=sbMatch[1]+' '+sbMatch[2]; getTarget().appendChild(sh); return;
-  }
-  if(/^keywords:/i.test(l)){
-    flushPara();
-    const kb=document.createElement('div');kb.className='keywords-block';
-    kb.innerHTML='<strong>Keywords:</strong> '+esc(l.replace(/^keywords:\s*/i,''));
-    getTarget().appendChild(kb); return;
-  }
-  state.para.push(l);
+/**
+ * Strip diagram tags and other noise from raw content before structure parsing.
+ * Returns clean plain text safe for line-by-line parsing.
+ */
+function cleanForParsing(raw) {
+  return raw
+    .replace(/<diagram[\s\S]*?<\/diagram>/gi, '')   // remove diagram blocks entirely
+    .replace(/\[UNVERIFIED\]/gi, '')                 // remove verification markers (visual noise)
+    .replace(/\[NEEDS VERIFICATION\]/gi, '')
+    .replace(/\[REMOVED[^\]]*\]/gi, '')
+    .replace(/^Overall confidence:.*$/gim, '')       // strip metadata lines
+    .replace(/^Evidence confidence:.*$/gim, '')
+    .replace(/^API:.*$/gim, '')
+    .trim();
 }
 
-function buildPaperDOM(allParts, isMath) {
-  if(isMath) return buildMathDOM(allParts);
-  const container = document.createElement('div');
-  let allLines = [];
-  for(const p of allParts){
-    if(p.kind==='text') allLines=allLines.concat(p.txt.split('\n').map(l=>l.trim()));
-    else allLines.push('__DIAGRAM__');
+/**
+ * Parse raw paper text into structured sections.
+ * Handles the exact output format from the backend FinalWriter prompt.
+ * Returns: { title, authors, date, keywords, abstract[], sections[], references[], rejected[], uncertainty[], bias }
+ */
+function parsePaperStructure(rawText) {
+  // First clean the text of diagram tags and noise
+  const text = cleanForParsing(rawText);
+
+  const result = {
+    title: '',
+    authors: '',
+    date: '',
+    keywords: '',
+    abstract: [],
+    sections: [],
+    references: [],
+    rejected: [],
+    uncertainty: [],
+    bias: ''
+  };
+
+  // Split into raw lines preserving blank lines as paragraph separators
+  const rawLines = text.split('\n');
+  // Trim each line but keep blank lines (they separate paragraphs)
+  const lines = rawLines.map(l => l.trim());
+
+  let i = 0;
+
+  // ── Step 1: Extract title + authors + date from the top header block ──
+  // The backend outputs:
+  //   [Full Title in Title Case]
+  //   (blank)
+  //   Authors: Stremini Agent Research Agent
+  //   Date: March 17, 2026
+  //   ━━━━━━━…
+  //   (blank)
+  //   ABSTRACT
+
+  // Skip leading blanks / separator lines
+  while (i < lines.length && (!lines[i] || /^[━─=\-─]{3,}$/.test(lines[i]))) i++;
+
+  // Title: first meaningful content line that is NOT a field label
+  if (i < lines.length && lines[i] && !/^(authors|date|abstract|keywords):/i.test(lines[i])) {
+    result.title = lines[i];
+    i++;
   }
-  let authorsIdx = allLines.findIndex(l=>/^authors:/i.test(l));
-  let titleIdx = 0;
-  if(authorsIdx>0){for(let i=authorsIdx-1;i>=0;i--){if(allLines[i].trim()){titleIdx=i;break}}}
-  if(authorsIdx>0){
-    const tb=document.createElement('div');tb.className='paper-title-block';
-    const th=document.createElement('div');th.className='paper-main-title';th.textContent=allLines[titleIdx];tb.appendChild(th);
-    const metaText=allLines[authorsIdx];
-    const tm=document.createElement('div');tm.className='paper-meta';
-    metaText.split('|').map(s=>s.trim()).filter(Boolean).forEach(seg=>{
-      const sp=document.createElement('span');sp.textContent=seg;tm.appendChild(sp)
+
+  // Scan next ~8 lines for Authors:, Date:, Keywords:
+  const headerEnd = Math.min(i + 10, lines.length);
+  for (let j = i; j < headerEnd; j++) {
+    const l = lines[j];
+    if (/^authors?:\s*/i.test(l)) {
+      result.authors = l.replace(/^authors?:\s*/i, '').trim();
+      i = j + 1;
+    } else if (/^date:\s*/i.test(l)) {
+      result.date = l.replace(/^date:\s*/i, '').trim();
+      i = j + 1;
+    } else if (/^keywords?:\s*/i.test(l)) {
+      result.keywords = l.replace(/^keywords?:\s*/i, '').trim();
+      i = j + 1;
+    } else if (/^[━─=\-─]{3,}$/.test(l)) {
+      // separator — skip
+      i = j + 1;
+    }
+  }
+
+  // ── Step 2: Parse body ──
+  let currentSection = null;
+  let currentSubSection = null;
+  let mode = 'preamble'; // preamble | abstract | section | refs | rejected | uncertainty | bias
+  let paraBuffer = [];
+
+  function currentTarget() {
+    if (mode === 'abstract') return result.abstract;
+    if (mode === 'rejected') return result.rejected;
+    if (mode === 'uncertainty') return result.uncertainty;
+    if (mode === 'section') {
+      return currentSubSection ? currentSubSection.paragraphs : currentSection ? currentSection.paragraphs : null;
+    }
+    return null;
+  }
+
+  function flushPara() {
+    if (!paraBuffer.length) return;
+    const joined = paraBuffer.join(' ').trim();
+    paraBuffer = [];
+    if (!joined) return;
+    const target = currentTarget();
+    if (target) target.push(joined);
+    else if (mode === 'bias') result.bias += (result.bias ? ' ' : '') + joined;
+  }
+
+  for (; i < lines.length; i++) {
+    const l = lines[i];
+
+    // Blank line → paragraph break
+    if (!l) { flushPara(); continue; }
+
+    // Separator lines → skip
+    if (/^[━─=\-─]{4,}$/.test(l)) { flushPara(); continue; }
+
+    // ── Section-type detectors ──
+
+    // REFERENCES (standalone label)
+    if (/^references\s*$/i.test(l)) {
+      flushPara(); mode = 'refs';
+      currentSection = null; currentSubSection = null;
+      continue;
+    }
+    if (mode === 'refs') {
+      if (l) result.references.push(l);
+      continue;
+    }
+
+    // REJECTED HYPOTHESES
+    if (/^rejected hypotheses?\s*$/i.test(l)) {
+      flushPara(); mode = 'rejected'; continue;
+    }
+
+    // UNCERTAINTY DISCLOSURE
+    if (/^uncertainty disclosure\s*$/i.test(l)) {
+      flushPara(); mode = 'uncertainty'; continue;
+    }
+
+    // BIAS ASSESSMENT
+    if (/^bias assessment\s*$/i.test(l)) {
+      flushPara(); mode = 'bias'; continue;
+    }
+
+    // ABSTRACT (standalone label OR "ABSTRACT\n text")
+    if (/^abstract\s*$/i.test(l)) {
+      flushPara(); mode = 'abstract';
+      currentSection = null; currentSubSection = null;
+      continue;
+    }
+
+    // KEYWORDS line (can appear anywhere)
+    if (/^keywords?:\s*/i.test(l)) {
+      flushPara();
+      result.keywords = l.replace(/^keywords?:\s*/i, '').trim();
+      continue;
+    }
+
+    // Numbered MAJOR section: "1. INTRODUCTION" / "1. Introduction"
+    // Must start with digit(s) followed by dot and space
+    const mjMatch = /^(\d+)\.\s+(.+)$/.exec(l);
+    if (mjMatch && !/^\d+\.\d+/.test(l)) { // not a sub-section
+      flushPara();
+      mode = 'section';
+      currentSection = {
+        num: mjMatch[1],
+        heading: mjMatch[2].replace(/^(introduction|literature review|methodology|analysis|findings|conclusion|discussion)/i, m => m), // keep as-is
+        paragraphs: [],
+        subSections: []
+      };
+      currentSubSection = null;
+      result.sections.push(currentSection);
+      continue;
+    }
+
+    // Sub-section: "4.1 Sub title" or "4.1. Sub title"
+    const sbMatch = /^(\d+\.\d+)\.?\s+(.+)$/.exec(l);
+    if (sbMatch && currentSection) {
+      flushPara();
+      currentSubSection = { num: sbMatch[1], heading: sbMatch[2], paragraphs: [] };
+      currentSection.subSections.push(currentSubSection);
+      continue;
+    }
+
+    // Everything else → paragraph content
+    paraBuffer.push(l);
+  }
+
+  // Final flush
+  flushPara();
+
+  // ── Fallback: if no sections were parsed but we have content, treat everything as one section ──
+  if (result.sections.length === 0 && result.abstract.length === 0) {
+    // Dump all remaining lines as a single "Content" section
+    const allText = text.replace(/^[^\n]*\n/, '').trim(); // skip title line
+    if (allText) {
+      result.sections.push({
+        num: '', heading: 'Content', paragraphs: [allText], subSections: []
+      });
+    }
+  }
+
+  return result;
+}
+
+function renderInlineCitations(text) {
+  // Convert [S1], [1], [2] etc. to superscript spans
+  return text.replace(/\[S?(\d+)\]/g, (_, n) => `<sup class="cite-num">[${n}]</sup>`);
+}
+
+function makeElement(tag, cls, html) {
+  const el = document.createElement(tag);
+  if (cls) el.className = cls;
+  if (html !== undefined) el.innerHTML = html;
+  return el;
+}
+
+async function renderDiagramInPaper(dtype, title, code) {
+  const wrap = document.createElement('div');
+  wrap.className = 'paper-diagram paper-full-width';
+  const bar = makeElement('div', 'paper-diagram-bar',
+    `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg> Figure — ${esc(title || dtype)}`);
+  const render = makeElement('div', 'paper-diagram-render');
+  try {
+    const uid = 'd' + (++diagId) + '_' + Date.now();
+    const { svg } = await mermaid.render(uid, code);
+    render.innerHTML = svg;
+  } catch (e) {
+    render.className = 'paper-diagram-err';
+    render.textContent = 'Diagram render error: ' + e.message;
+  }
+  const caption = makeElement('div', 'paper-diagram-caption', esc(title || 'Diagram'));
+  wrap.appendChild(bar); wrap.appendChild(render); wrap.appendChild(caption);
+  return wrap;
+}
+
+function renderParagraph(text, isFirst) {
+  const p = document.createElement('p');
+  p.className = 'paper-para';
+  if (!isFirst) p.style.cssText = ''; // only first gets drop-cap
+  p.innerHTML = renderInlineCitations(esc(text));
+  return p;
+}
+
+async function buildBeautifulPaper(structure, diagramParts) {
+  const doc = document.createElement('div');
+
+  // Journal header band
+  const jh = makeElement('div', 'paper-journal-header');
+  jh.innerHTML = `<span class="paper-journal-name">Stremini Research Journal</span><span class="paper-journal-meta">Multi-Agent Research Pipeline · ${new Date().getFullYear()}</span>`;
+  doc.appendChild(jh);
+
+  // Inner content
+  const inner = makeElement('div', 'paper-inner');
+  doc.appendChild(inner);
+
+  // Title area
+  const titleArea = makeElement('div', 'paper-title-area');
+  const titleEl = makeElement('div', 'paper-title', esc(structure.title || 'Research Paper'));
+  titleArea.appendChild(titleEl);
+  if (structure.authors) {
+    const authEl = makeElement('div', 'paper-authors-row', esc(structure.authors));
+    titleArea.appendChild(authEl);
+  }
+  if (structure.date) {
+    const dateEl = makeElement('div', 'paper-date-row', esc(structure.date));
+    titleArea.appendChild(dateEl);
+  }
+  if (structure.keywords) {
+    const kwRow = makeElement('div', 'paper-kw-row');
+    structure.keywords.split(/[,;]/).map(k => k.trim()).filter(Boolean).forEach(k => {
+      kwRow.appendChild(makeElement('span', 'paper-kw', esc(k)));
     });
-    tb.appendChild(tm); container.appendChild(tb);
+    titleArea.appendChild(kwRow);
   }
-  const state={container,section:null,para:[],inRefs:false,refsDiv:null};
-  const contentStartIdx=authorsIdx>=0?authorsIdx+1:0;
-  let globalIdx=0;
-  function flushParaFinal(){
-    if(!state.para.length) return;
-    const text=state.para.join(' ').trim(); state.para=[];
-    if(!text) return;
-    const p=document.createElement('p');p.className='paper-para';p.textContent=text;
-    (state.section||container).appendChild(p);
+  inner.appendChild(titleArea);
+
+  // Abstract
+  if (structure.abstract.length > 0) {
+    const abWrap = makeElement('div', 'paper-abstract');
+    abWrap.appendChild(makeElement('div', 'paper-abstract-label', 'Abstract'));
+    const abText = structure.abstract.join(' ');
+    abWrap.appendChild(makeElement('p', null, renderInlineCitations(esc(abText))));
+    inner.appendChild(abWrap);
   }
-  for(const part of allParts){
-    if(part.kind==='diagram'){
-      flushParaFinal();
-      if(part.el)(state.section||container).appendChild(part.el);
-    } else {
-      const lines=part.txt.split('\n').map(l=>l.trim());
-      for(const l of lines){
-        if(globalIdx>=contentStartIdx) renderLine(l,state);
-        globalIdx++;
-      }
+
+  // Diagram index: diagrams ordered by their position in parsed parts
+  const diagQueue = [...diagramParts]; // array of {title, dtype, code}
+
+  // Main sections in two-column grid
+  const grid = makeElement('div', 'paper-columns');
+  inner.appendChild(grid);
+
+  let diagInserted = 0;
+
+  for (let si = 0; si < structure.sections.length; si++) {
+    const sec = structure.sections[si];
+    const secWrap = makeElement('div', 'paper-full-width');
+
+    // Section heading
+    const sh = makeElement('div', 'paper-section-heading');
+    sh.innerHTML = `<span class="paper-section-num">${sec.num}.</span>${esc(sec.heading)}`;
+    secWrap.appendChild(sh);
+
+    // Direct paragraphs in this section
+    sec.paragraphs.forEach((ptext, pi) => {
+      const isFirst = pi === 0 && si === 0; // drop-cap only on first para of first section
+      secWrap.appendChild(renderParagraph(ptext, isFirst));
+    });
+
+    // Insert a diagram after the first section if available
+    if (diagInserted < diagQueue.length && (si === 0 || si === 1)) {
+      const d = diagQueue[diagInserted++];
+      const diagEl = await renderDiagramInPaper(d.dtype, d.title, d.code);
+      secWrap.appendChild(diagEl);
     }
+
+    // Sub-sections
+    for (let ssi = 0; ssi < (sec.subSections || []).length; ssi++) {
+      const sub = sec.subSections[ssi];
+      const subWrap = makeElement('div', null);
+      subWrap.appendChild(makeElement('div', 'paper-sub-heading', `${sub.num} ${esc(sub.heading)}`));
+      sub.paragraphs.forEach(pt => subWrap.appendChild(renderParagraph(pt, false)));
+
+      // Insert diagram after 4.2 or 4.3 subsection
+      if (diagInserted < diagQueue.length && ssi === 1) {
+        const d = diagQueue[diagInserted++];
+        const diagEl = await renderDiagramInPaper(d.dtype, d.title, d.code);
+        subWrap.appendChild(diagEl);
+      }
+      secWrap.appendChild(subWrap);
+    }
+
+    grid.appendChild(secWrap);
   }
-  flushParaFinal();
-  return container;
+
+  // Remaining diagrams
+  while (diagInserted < diagQueue.length) {
+    const d = diagQueue[diagInserted++];
+    const diagEl = await renderDiagramInPaper(d.dtype, d.title, d.code);
+    const fw = makeElement('div', 'paper-full-width');
+    fw.appendChild(diagEl);
+    grid.appendChild(fw);
+  }
+
+  // Rejected hypotheses
+  if (structure.rejected.length > 0) {
+    const rj = makeElement('div', 'paper-rejected paper-full-width');
+    rj.appendChild(makeElement('div', 'paper-rejected-label', 'Rejected Hypotheses'));
+    structure.rejected.forEach(t => rj.appendChild(renderParagraph(t, false)));
+    grid.appendChild(rj);
+  }
+
+  // Uncertainty disclosure
+  if (structure.uncertainty.length > 0) {
+    const uc = makeElement('div', 'paper-uncertainty paper-full-width');
+    uc.appendChild(makeElement('div', 'paper-uncertainty-label', 'Uncertainty Disclosure'));
+    structure.uncertainty.forEach(t => uc.appendChild(renderParagraph(t, false)));
+    grid.appendChild(uc);
+  }
+
+  // Bias assessment
+  if (structure.bias) {
+    const ba = makeElement('div', 'paper-callout paper-full-width');
+    ba.appendChild(makeElement('div', 'paper-uncertainty-label', 'Bias Assessment'));
+    ba.appendChild(makeElement('p', null, renderInlineCitations(esc(structure.bias))));
+    grid.appendChild(ba);
+  }
+
+  // References
+  if (structure.references.length > 0) {
+    const refsWrap = makeElement('div', 'paper-refs paper-full-width');
+    refsWrap.appendChild(makeElement('div', 'paper-refs-title', 'References'));
+    // Merge continuation lines
+    const mergedRefs = [];
+    structure.references.forEach(line => {
+      const isNew = /^\[\d+\]/.test(line) || /^[A-Z][a-zA-Z\u00C0-\u024F]+,/.test(line) || /^\d+\./.test(line);
+      if (isNew || !mergedRefs.length) mergedRefs.push(line);
+      else mergedRefs[mergedRefs.length - 1] += ' ' + line;
+    });
+    mergedRefs.forEach((ref, idx) => {
+      const ri = makeElement('div', 'paper-ref-item');
+      const numEl = makeElement('div', 'ref-num', `[${idx + 1}]`);
+      const body = makeElement('div', 'ref-body');
+      // Make URLs clickable
+      const linked = ref.replace(/(https?:\/\/\S+)/g, (url) => `<a href="${url}" target="_blank" rel="noopener">${url}</a>`);
+      body.innerHTML = linked;
+      ri.appendChild(numEl); ri.appendChild(body);
+      refsWrap.appendChild(ri);
+    });
+    grid.appendChild(refsWrap);
+  }
+
+  return doc;
 }
 
-// ── Math formatting ──
-function formatInlineMath(text) {
-  const frag = document.createDocumentFragment();
-  const re = /(\$[^$]+\$|`[^`]+`)/g;
-  let last=0, m;
+// ══════════════════════════════════════════════════════
+// MATH RENDERER
+// ══════════════════════════════════════════════════════
+function formatInlineMath(text){
+  const frag=document.createDocumentFragment();
+  const re=/(\$[^$]+\$|`[^`]+`)/g;
+  let last=0,m;
   while((m=re.exec(text))!==null){
-    if(m.index>last) frag.appendChild(document.createTextNode(text.slice(last,m.index)));
-    const span=document.createElement('span'); span.className='math-inline-eq';
-    span.textContent=m[0].replace(/^[$`]|[$`]$/g,''); frag.appendChild(span); last=re.lastIndex;
+    if(m.index>last)frag.appendChild(document.createTextNode(text.slice(last,m.index)));
+    const span=document.createElement('span');span.className='math-inline-eq';
+    span.textContent=m[0].replace(/^[$`]|[$`]$/g,'');frag.appendChild(span);last=re.lastIndex;
   }
-  if(last<text.length) frag.appendChild(document.createTextNode(text.slice(last)));
+  if(last<text.length)frag.appendChild(document.createTextNode(text.slice(last)));
   return frag;
 }
-
-function normalizeMathSection(raw) {
+function normalizeMathSection(raw){
   const k=raw.toLowerCase().replace(/[^a-z\s]/g,'').trim();
-  if(!k) return 'Explanation';
-  if(/(problem|question)/.test(k)) return 'Problem';
-  if(/(given|data|known)/.test(k)) return 'Given';
-  if(/(approach|plan|strategy|method)/.test(k)) return 'Approach';
-  if(/(step|solution|work|derivation)/.test(k)) return 'Step-by-Step';
-  if(/(check|verify|validation)/.test(k)) return 'Verification';
-  if(/(final|answer|result|therefore)/.test(k)) return 'Final Answer';
-  if(/(note|intuition|insight)/.test(k)) return 'Notes';
+  if(!k)return'Explanation';
+  if(/(problem|question)/.test(k))return'Problem';
+  if(/(given|data|known)/.test(k))return'Given';
+  if(/(approach|plan|strategy|method)/.test(k))return'Approach';
+  if(/(step|solution|work|derivation)/.test(k))return'Step-by-Step';
+  if(/(check|verify|validation)/.test(k))return'Verification';
+  if(/(final|answer|result|therefore)/.test(k))return'Final Answer';
+  if(/(note|intuition|insight)/.test(k))return'Notes';
   return raw.trim();
 }
-
-function createMathSection(container, name) {
+function createMathSection(container,name){
   const sec=document.createElement('div');sec.className='math-section';
   const hd=document.createElement('div');hd.className='math-section-h';
   hd.innerHTML=`<span class="math-section-dot"></span>${esc(name)}`;
   const bd=document.createElement('div');bd.className='math-section-b';
-  sec.appendChild(hd); sec.appendChild(bd); container.appendChild(sec); return bd;
+  sec.appendChild(hd);sec.appendChild(bd);container.appendChild(sec);return bd;
 }
-
-function appendMathBlock(target, line, state) {
+function appendMathBlock(target,line,state){
   if(!line){state.currentList=null;return}
   if(/^[-*•]\s+/.test(line)){
     if(!state.currentList){state.currentList=document.createElement('ul');state.currentList.className='math-list';target.appendChild(state.currentList)}
@@ -882,8 +1168,7 @@ function appendMathBlock(target, line, state) {
   }
   const p=document.createElement('div');p.className='math-para';p.appendChild(formatInlineMath(line));target.appendChild(p);
 }
-
-function buildMathDOM(allParts) {
+async function buildMathDOM(allParts){
   const container=document.createElement('div');container.className='math-doc';
   const lines=[];
   for(const p of allParts){
@@ -895,116 +1180,151 @@ function buildMathDOM(allParts) {
   header.innerHTML=`<div class="math-kicker">Math Solution</div><div class="math-title"></div>`;
   header.querySelector('.math-title').textContent=firstLine.replace(/^#{1,3}\s*/,'').replace(/^(Solving:|Problem:)\s*/i,'');
   container.appendChild(header);
-  let secName='Explanation', secBody=createMathSection(container,secName);
+  let secName='Explanation',secBody=createMathSection(container,secName);
   const state={currentList:null};
-  lines.forEach((item,idx)=>{
-    if(item.type==='diagram'){state.currentList=null;if(item.el)secBody.appendChild(item.el);return}
+  for(let idx=0;idx<lines.length;idx++){
+    const item=lines[idx];
+    if(item.type==='diagram'){state.currentList=null;if(item.el)secBody.appendChild(item.el);continue}
     let line=item.txt;
-    if(!line){state.currentList=null;return}
-    if(idx===0&&(line===firstLine||/^(Solving:|Problem:)/i.test(line))) return;
+    if(!line){state.currentList=null;continue}
+    if(idx===0&&(line===firstLine||/^(Solving:|Problem:)/i.test(line)))continue;
     const headingMatch=/^#{1,3}\s+(.+)$/.exec(line)||/^([A-Za-z][A-Za-z\s]{1,30})\s*:\s*$/.exec(line);
-    if(headingMatch){secName=normalizeMathSection(headingMatch[1]);secBody=createMathSection(container,secName);state.currentList=null;return}
+    if(headingMatch){secName=normalizeMathSection(headingMatch[1]);secBody=createMathSection(container,secName);state.currentList=null;continue}
     const explicitMatch=/^(problem|given|approach|steps?|derivation|verification|final answer|result|notes?)\s*:\s*(.+)$/i.exec(line);
     if(explicitMatch){
       const ts=normalizeMathSection(explicitMatch[1]);
       if(ts!==secName){secName=ts;secBody=createMathSection(container,secName)}
-      appendMathBlock(secBody,explicitMatch[2],state);return;
+      appendMathBlock(secBody,explicitMatch[2],state);continue;
     }
     appendMathBlock(secBody,line,state);
-  });
+  }
   return container;
 }
 
 // ══════════════════════════════════════════════════════
 // MASTER RENDER
 // ══════════════════════════════════════════════════════
-async function renderPaper(content, isMath) {
-  const parts = parseContent(content);
-  let diagramsFound = 0;
-  const diagramSvgMap = {};
+async function renderPaper(content, isMath){
+  const parts=parseContent(content);
+
+  // Pre-render all diagrams
+  let diagramsFound=0;
+  const diagramParts=[];
+  const diagramSvgMap={};
+
   for(const part of parts){
-    if(part.kind!=='diagram') continue;
+    if(part.kind!=='diagram')continue;
     diagramsFound++;
-    const key = 'diag_'+diagramsFound;
-    const dw=document.createElement('div');dw.className='diagram-wrap';dw.setAttribute('data-diag-key',key);
-    dw.innerHTML=`<div class="diagram-bar"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg> ${esc(part.title||part.dtype)}</div>`;
-    const dr=document.createElement('div');dr.className='diagram-render mermaid-container';
-    try{
-      const uid='d'+(++diagId)+'_'+Date.now();
-      const{svg}=await mermaid.render(uid,part.code);
-      dr.innerHTML=svg; diagramSvgMap[key]=svg;
-    }catch(e){dr.className='diagram-err';dr.textContent='Diagram error: '+e.message}
-    dw.appendChild(dr); part.el=dw;
+    diagramParts.push(part); // collect for paper renderer
+
+    if(isMath){
+      // For math, still render inline
+      const dw=document.createElement('div');dw.className='diagram-wrap';
+      dw.innerHTML=`<div class="diagram-bar"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>${esc(part.title||part.dtype)}</div>`;
+      const dr=document.createElement('div');dr.className='diagram-render';
+      try{const uid='d'+(++diagId)+'_'+Date.now();const{svg}=await mermaid.render(uid,part.code);dr.innerHTML=svg}
+      catch(e){dr.className='diagram-err';dr.textContent='Diagram error: '+e.message}
+      dw.appendChild(dr);part.el=dw;
+    }
   }
 
   const pid='p'+Date.now();
+
+  // ── Build toolbar ──
   const block=document.createElement('div');block.className='paper-block';
-  const hIcon = isMath
-    ? `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>`
-    : `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>`;
-  block.innerHTML=`<div class="paper-hd"><div class="paper-hd-lbl ${isMath?'math-l':''}">${hIcon} ${isMath?'Math Solution':'Research Paper'}</div><div class="paper-hd-actions"><button class="hd-btn" id="cpbtn-${pid}"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copy text</button></div></div>`;
 
-  const body=document.createElement('div');body.className=isMath?'paper-bd math-bd':'paper-bd';
-  body.id=pid; body.appendChild(buildPaperDOM(parts,isMath));
-  block.appendChild(body);
+  if(!isMath){
+    const toolbar=document.createElement('div');toolbar.className='paper-toolbar';
+    toolbar.innerHTML=`<div class="paper-toolbar-left"><div class="paper-type-badge"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg> Research Paper</div></div><div class="paper-toolbar-actions"><button class="tb-btn" id="cpbtn-${pid}"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copy</button><button class="tb-btn" id="pdfbtn-${pid}"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> PDF</button></div>`;
+    block.appendChild(toolbar);
 
-  setTimeout(()=>{
-    const btn=document.getElementById('cpbtn-'+pid);
-    if(btn) btn.onclick=()=>{
-      navigator.clipboard.writeText(document.getElementById(pid)?.innerText||'')
-        .then(()=>{btn.textContent='Copied!';setTimeout(()=>{btn.innerHTML=`<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copy text`},2000)}).catch(()=>{});
-    };
-  },50);
+    // Paper document
+    const paperDoc=document.createElement('div');paperDoc.className='paper-doc';paperDoc.id=pid;
+    block.appendChild(paperDoc);
+
+    // Build beautiful paper
+    const structure=parsePaperStructure(content);
+    const paperDOM=await buildBeautifulPaper(structure,diagramParts);
+    paperDoc.appendChild(paperDOM);
+
+    setTimeout(()=>{
+      const cpBtn=document.getElementById('cpbtn-'+pid);
+      if(cpBtn)cpBtn.onclick=()=>{navigator.clipboard.writeText(document.getElementById(pid)?.innerText||'').then(()=>{cpBtn.textContent='Copied!';setTimeout(()=>{cpBtn.innerHTML=`<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copy`},2000)}).catch(()=>{})};
+      const pdfBtn=document.getElementById('pdfbtn-'+pid);
+      if(pdfBtn)pdfBtn.onclick=()=>printToPDF(pid,diagramSvgMap);
+    },50);
+
+  } else {
+    // Math mode toolbar
+    const toolbar=document.createElement('div');toolbar.className='paper-toolbar';
+    toolbar.innerHTML=`<div class="paper-toolbar-left"><div class="paper-type-badge" style="border-color:rgba(167,139,250,.3);color:#c4b5fd;background:rgba(167,139,250,.08)"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg> Math Solution</div></div><div class="paper-toolbar-actions"><button class="tb-btn" id="cpbtn-${pid}"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copy</button></div>`;
+    block.appendChild(toolbar);
+
+    const mathDoc=document.createElement('div');mathDoc.style.cssText='padding:16px;background:var(--bg2);border-radius:0 0 14px 14px';mathDoc.id=pid;
+    block.appendChild(mathDoc);
+    const mathDOM=await buildMathDOM(parts);
+    mathDoc.appendChild(mathDOM);
+    setTimeout(()=>{const cpBtn=document.getElementById('cpbtn-'+pid);if(cpBtn)cpBtn.onclick=()=>{navigator.clipboard.writeText(document.getElementById(pid)?.innerText||'').then(()=>{cpBtn.textContent='Copied!';setTimeout(()=>{cpBtn.innerHTML=`<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copy`},2000)}).catch(()=>{})}},50);
+  }
 
   const wrap=document.createElement('div');
   const dlRow=document.createElement('div');dlRow.className='dl-row';
   const dlTxt=document.createElement('button');dlTxt.className='dl-btn dl-txt';
-  dlTxt.innerHTML=`<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> .txt`;
+  dlTxt.innerHTML=`<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download .txt`;
   dlTxt.onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([document.getElementById(pid)?.innerText||''],{type:'text/plain'}));a.download=`stremini-${Date.now()}.txt`;a.click()};
   dlRow.appendChild(dlTxt);
-  if(!isMath){
-    const dlPdf=document.createElement('button');dlPdf.className='dl-btn dl-pdf';
-    dlPdf.innerHTML=`<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> Print PDF`;
-    dlPdf.onclick=()=>printToPDF(pid,diagramSvgMap);
-    dlRow.appendChild(dlPdf);
-  }
-  wrap.appendChild(block); wrap.appendChild(dlRow);
-  return {el:wrap, diagramsFound};
+  wrap.appendChild(block);wrap.appendChild(dlRow);
+  return{el:wrap,diagramsFound};
 }
 
-// ── PDF print ──
-function printToPDF(pid, diagMap){
-  const bodyEl=document.getElementById(pid); if(!bodyEl) return;
+// PDF print
+function printToPDF(pid,diagMap){
+  const bodyEl=document.getElementById(pid);if(!bodyEl)return;
   const clone=bodyEl.cloneNode(true);
-  clone.querySelectorAll('.diagram-wrap').forEach(dw=>{
-    const key=dw.getAttribute('data-diag-key');const dr=dw.querySelector('.diagram-render');
-    if(dr&&key&&diagMap[key]) dr.innerHTML=diagMap[key];
-  });
-  const css=`@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400&display=swap');
+  const css=`@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Syne:wght@400;600;700;800&display=swap');
 *{box-sizing:border-box;margin:0;padding:0}
-@page{size:A4;margin:22mm 20mm 22mm 20mm}
-body{font-family:'Instrument Serif','Times New Roman',Times,serif;font-size:11pt;line-height:1.85;color:#111;background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-.paper-bd{max-height:none!important;overflow:visible!important;padding:0!important}
-.paper-title-block{text-align:center;padding-bottom:14pt;border-bottom:1.5pt solid #ddd;margin-bottom:18pt}
-.paper-main-title{font-size:15pt;font-weight:700;line-height:1.3;margin-bottom:8pt}
-.paper-meta{font-family:'DM Sans',sans-serif;font-size:9pt;color:#888;display:flex;gap:14pt;justify-content:center;flex-wrap:wrap}
-.paper-section{margin-bottom:16pt}
-.paper-section-heading{font-family:'DM Sans',sans-serif;font-size:9pt;font-weight:700;text-transform:uppercase;letter-spacing:.5pt;color:#b45309;margin-bottom:9pt;padding-bottom:4pt;border-bottom:.75pt solid #ddd}
-.paper-sub-heading{font-family:'DM Sans',sans-serif;font-size:10.5pt;font-weight:600;color:#111;margin:12pt 0 5pt}
-.paper-para{margin-bottom:9pt;text-align:justify;hyphens:auto;orphans:3;widows:3}
-.keywords-block{background:#f9f6f0;border:.75pt solid #ddd;border-radius:3pt;padding:7pt 9pt;margin-bottom:12pt;font-family:'DM Sans',sans-serif;font-size:9pt}
-.diagram-wrap{break-inside:avoid;margin:12pt 0;border:.75pt solid #ddd;border-radius:4pt}
-.diagram-bar{background:#f5f5f5;padding:4pt 9pt;border-bottom:.75pt solid #ddd;font-family:'DM Sans',sans-serif;font-size:7.5pt;font-weight:700;text-transform:uppercase;color:#666}
-.diagram-render{padding:12pt;display:flex;justify-content:center}
-.diagram-render svg{max-width:100%;height:auto}
-.references-section{border-top:1.5pt solid #ddd;padding-top:14pt;margin-top:8pt}
-.ref-item{font-size:9.5pt;line-height:1.65;margin-bottom:6pt;padding-left:18pt;text-indent:-18pt;color:#444}
-.paper-hd,.paper-hd-actions,.hd-btn{display:none!important}`;
+@page{size:A4;margin:18mm 16mm 18mm 16mm}
+body{background:#fff;color:#1a1714;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.paper-journal-header{background:#1a0a08;padding:10pt 20pt;display:flex;justify-content:space-between;border-bottom:2pt solid #8b1a1a}
+.paper-journal-name{font-family:'Cormorant Garamond',serif;font-size:10pt;font-style:italic;letter-spacing:.6pt;color:rgba(255,220,140,.9)}
+.paper-journal-meta{font-family:'Syne',sans-serif;font-size:8pt;color:rgba(255,220,140,.5);letter-spacing:.5pt;text-transform:uppercase}
+.paper-inner{padding:20pt 22pt}
+.paper-title-area{text-align:center;margin-bottom:16pt;padding-bottom:14pt;border-bottom:1.5pt solid #d4cfc0}
+.paper-title{font-family:'Cormorant Garamond',serif;font-size:20pt;font-weight:600;line-height:1.3;margin-bottom:8pt}
+.paper-authors-row{font-family:'Syne',sans-serif;font-size:9pt;letter-spacing:.4pt;text-transform:uppercase;color:#4a4540;margin-bottom:4pt}
+.paper-date-row{font-size:8pt;color:#8a8070;font-family:'Syne',sans-serif}
+.paper-kw-row{display:flex;flex-wrap:wrap;gap:4pt;justify-content:center;margin-top:8pt}
+.paper-kw{padding:2pt 8pt;border:1pt solid rgba(139,26,26,.3);border-radius:10pt;font-size:7.5pt;font-weight:700;color:#8b1a1a;font-family:'Syne',sans-serif;text-transform:uppercase;letter-spacing:.4pt}
+.paper-abstract{background:rgba(139,26,26,.03);border:1pt solid rgba(139,26,26,.12);border-left:2pt solid #8b1a1a;padding:10pt 14pt;margin-bottom:16pt}
+.paper-abstract-label{font-family:'Syne',sans-serif;font-size:7.5pt;font-weight:800;text-transform:uppercase;letter-spacing:1pt;color:#8b1a1a;margin-bottom:5pt}
+.paper-abstract p{font-family:'Cormorant Garamond',serif;font-size:11pt;line-height:1.8;font-style:italic;text-align:justify}
+.paper-columns{display:grid;grid-template-columns:1fr 1fr;gap:18pt}
+.paper-full-width{grid-column:1/-1}
+.paper-section-heading{font-family:'Syne',sans-serif;font-size:8pt;font-weight:800;text-transform:uppercase;letter-spacing:.8pt;color:#8b1a1a;margin-bottom:8pt;margin-top:14pt;padding-bottom:3pt;border-bottom:1pt solid #d4cfc0;display:flex;align-items:center;gap:5pt}
+.paper-section-heading::before{content:'';width:12pt;height:1.5pt;background:#8b1a1a}
+.paper-sub-heading{font-family:'Syne',sans-serif;font-size:9.5pt;font-weight:700;color:#1a1714;margin:10pt 0 5pt}
+.paper-para{font-family:'Cormorant Garamond',serif;font-size:11pt;line-height:1.9;margin-bottom:7pt;text-align:justify;hyphens:auto}
+.paper-diagram{border:1pt solid #d4cfc0;border-radius:5pt;overflow:hidden;margin:10pt 0;break-inside:avoid}
+.paper-diagram-bar{background:#f5f0e8;padding:4pt 10pt;border-bottom:1pt solid #d4cfc0;font-family:'Syne',sans-serif;font-size:7pt;font-weight:800;color:#7a5c1e;text-transform:uppercase;letter-spacing:.5pt}
+.paper-diagram-render{padding:12pt;display:flex;justify-content:center;background:#fff}
+.paper-diagram-render svg{max-width:100%;height:auto}
+.paper-diagram-caption{padding:4pt 10pt 8pt;font-family:'Cormorant Garamond',serif;font-size:10pt;color:#4a4540;font-style:italic;text-align:center}
+.paper-refs{border-top:1.5pt solid #d4cfc0;padding-top:12pt;margin-top:6pt}
+.paper-refs-title{font-family:'Syne',sans-serif;font-size:8pt;font-weight:800;text-transform:uppercase;letter-spacing:1pt;color:#1a1714;margin-bottom:10pt}
+.paper-ref-item{display:flex;gap:8pt;font-family:'Cormorant Garamond',serif;font-size:10.5pt;line-height:1.7;margin-bottom:6pt;padding-bottom:6pt;border-bottom:.5pt solid #d4cfc0}
+.ref-num{font-family:'Syne',sans-serif;font-size:8pt;font-weight:800;color:#8b1a1a;min-width:16pt;flex-shrink:0}
+.cite-num{font-size:7pt;vertical-align:super;color:#8b1a1a;font-family:'Syne',sans-serif;font-weight:800}
+.paper-rejected,.paper-uncertainty{border:1pt solid #d4cfc0;border-radius:4pt;padding:9pt 12pt;margin:8pt 0}
+.paper-rejected-label,.paper-uncertainty-label{font-family:'Syne',sans-serif;font-size:7.5pt;font-weight:800;text-transform:uppercase;letter-spacing:.8pt;margin-bottom:5pt}
+.paper-rejected-label{color:#8b1a1a}.paper-uncertainty-label{color:#7a5c1e}
+.paper-callout{background:rgba(0,0,0,.02);border:1pt solid #d4cfc0;border-left:2pt solid #7a5c1e;padding:9pt 12pt;margin:8pt 0}
+.paper-toolbar,.paper-toolbar-left,.paper-toolbar-actions,.tb-btn,.paper-type-badge{display:none!important}
+.paper-doc{max-height:none!important;overflow:visible!important}`;
   const pw=window.open('','_blank','width=900,height=700');
   if(!pw){alert('Pop-up blocked. Please allow pop-ups for PDF export.');return}
-  pw.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"/><title>Stremini Research Paper</title><style>${css}</style></head><body><div class="paper-bd">${clone.innerHTML}</div></body></html>`);
+  pw.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"/><title>Research Paper</title><style>${css}</style></head><body>${clone.outerHTML}</body></html>`);
   pw.document.close();
-  setTimeout(()=>{try{pw.focus();pw.print()}catch(e){}},2000);
+  setTimeout(()=>{try{pw.focus();pw.print()}catch(e){}},2500);
 }
 
 // ══════════════════════════════════════════════════════
@@ -1012,22 +1332,22 @@ body{font-family:'Instrument Serif','Times New Roman',Times,serif;font-size:11pt
 // ══════════════════════════════════════════════════════
 function getPdfjsLib(){return window.pdfjsLib||window['pdfjs-dist/build/pdf']||null}
 function clearFile(){
-  pendingDocText=null; pendingDocName=null;
+  pendingDocText=null;pendingDocName=null;
   document.getElementById('fileChipWrap').classList.remove('show');
   document.getElementById('fileInput').value='';
 }
 async function handleFileSelect(e){
-  const file=e.target.files[0]; if(!file) return;
+  const file=e.target.files[0];if(!file)return;
   const ext=file.name.split('.').pop().toLowerCase();
   document.getElementById('fileChipWrap').classList.add('show');
-  document.getElementById('fileChipName').textContent='Extracting text…';
+  document.getElementById('fileChipName').textContent='Extracting…';
   try{
     let text='';
-    if(ext==='pdf') text=await extractPDF(file);
-    else if(ext==='docx'||ext==='doc') text=await extractDOCX(file);
-    else{alert('Only PDF and DOCX files are supported.');clearFile();return}
-    if(!text.trim()){alert('Could not extract text from this file.');clearFile();return}
-    pendingDocText=text; pendingDocName=file.name;
+    if(ext==='pdf')text=await extractPDF(file);
+    else if(ext==='docx'||ext==='doc')text=await extractDOCX(file);
+    else{alert('Only PDF and DOCX supported.');clearFile();return}
+    if(!text.trim()){alert('Could not extract text.');clearFile();return}
+    pendingDocText=text;pendingDocName=file.name;
     document.getElementById('fileChipName').textContent=file.name;
   }catch(err){alert('Error reading file: '+err.message);clearFile()}
 }
@@ -1054,13 +1374,13 @@ async function extractDOCX(file){
 }
 
 // ══════════════════════════════════════════════════════
-// MAIN SEND HANDLER — AGENTIC PIPELINE WITH LIVE STEPS
+// MAIN SEND HANDLER
 // ══════════════════════════════════════════════════════
 async function handleSend(){
-  const q = ta.value.trim();
-  if(!q || running) return;
+  const q=ta.value.trim();
+  if(!q||running)return;
 
-  let finalQuery=q, displayQuery=q;
+  let finalQuery=q,displayQuery=q;
   if(pendingDocText){
     const truncated=pendingDocText.length>12000?pendingDocText.slice(0,12000)+'\n\n[Document truncated]':pendingDocText;
     finalQuery=`The user has uploaded a document titled "${pendingDocName}". Extracted text:\n\n---\n${truncated}\n---\n\nUser query: ${q}`;
@@ -1069,229 +1389,132 @@ async function handleSend(){
   }
 
   addUserMsg(esc(displayQuery));
-  addRecent(displayQuery, mode);
+  addRecent(displayQuery,mode);
   history.push({role:'user',content:finalQuery});
-  ta.value=''; ta.style.height='auto';
-  running=true; sendBtn.disabled=true;
-  setStatus('run', mode==='math'?'Solving…':'Researching…');
+  ta.value='';ta.style.height='auto';
+  running=true;sendBtn.disabled=true;
+  setStatus('run',mode==='math'?'Solving…':'Researching…');
 
-  const isMath = mode==='math';
-  const slot = addAgentMsg();
+  const isMath=mode==='math';
+  const slot=addAgentMsg();
+  const steps=createStepsPanel(slot);
+  let content='';
+  const t0=Date.now();
 
-  // Create live steps panel
-  const steps = createStepsPanel(slot);
-
-  let content = '';
-  const t0 = Date.now();
-
-  try {
-    if(isMath) {
-      // ── MATH PATH — single agent call ──
+  try{
+    if(isMath){
       steps.setTitle('Math Agent working…');
-      steps.addStep('parse', 'Parsing problem', 'Identifying type and constraints');
-      steps.addStep('solve', 'Solving step-by-step', 'Applying mathematical techniques');
-      steps.addStep('verify', 'Verifying result', 'Checking answer via substitution');
-
-      steps.startStep('parse');
-      await sleep(300);
-      steps.doneStep('parse', 'Problem parsed');
+      steps.addStep('parse','Parsing problem','Identifying type and constraints');
+      steps.addStep('solve','Solving step-by-step','Applying mathematical techniques');
+      steps.addStep('verify','Verifying result','Checking answer via substitution');
+      steps.startStep('parse');await sleep(300);steps.doneStep('parse','Problem parsed');
       steps.startStep('solve');
-
-      const res = await fetch(API, {
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({query:finalQuery, mode:'math', phase:'FULL', history, searchResults:[]})
-      });
-      const data = await res.json();
-      if(!res.ok || data.status==='ERROR') throw new Error(data.message||`Request failed ${res.status}`);
-
-      steps.doneStep('solve', `Solved in ${((Date.now()-t0)/1000).toFixed(1)}s`);
-      steps.startStep('verify');
-      await sleep(200);
-      steps.doneStep('verify','Verified');
+      const res=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({query:finalQuery,mode:'math',phase:'FULL',history,searchResults:[]})});
+      const data=await res.json();
+      if(!res.ok||data.status==='ERROR')throw new Error(data.message||`Request failed ${res.status}`);
+      steps.doneStep('solve',`Solved in ${((Date.now()-t0)/1000).toFixed(1)}s`);
+      steps.startStep('verify');await sleep(200);steps.doneStep('verify','Verified');
       steps.setDone('Math solution ready');
+      content=data.content||data.solution||'';
+      if(!content)throw new Error('Empty response from API');
+      mathSolved++;setStatus('done','Solved');
 
-      content = data.content || data.solution || '';
-      if(!content) throw new Error('Empty response from API');
-
-      mathSolved++;
-      setStatus('done', 'Solved');
-
-    } else {
-      // ── RESEARCH PATH — multi-agent pipeline ──
+    }else{
       steps.setTitle('Multi-agent research pipeline starting…');
-
-      // Step 1: Plan
-      const sP = steps.addStep('plan', 'Commander Agent', 'Planning research scope & search queries');
+      steps.addStep('plan','Commander Agent','Planning research scope & search queries');
       steps.startStep('plan');
+      const planRes=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({query:finalQuery,mode:'research',phase:'PLAN',history,searchResults:[]})});
+      const planData=await planRes.json();
+      let planInfo=null;
+      if(planRes.ok&&planData.status!=='ERROR'){planInfo=planData.data;steps.doneStep('plan',planInfo?.title?`"${planInfo.title.slice(0,45)}…"`:'Research plan created')}
+      else steps.doneStep('plan','Plan created (defaults)');
 
-      const planRes = await fetch(API, {
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({query:finalQuery, mode:'research', phase:'PLAN', history, searchResults:[]})
-      });
-      const planData = await planRes.json();
+      steps.addStep('evidence','Evidence Agent','Searching arXiv, Semantic Scholar & web');
+      steps.addStep('reason','Reasoner Agent','Building evidence-grounded arguments');
+      steps.addStep('critique','Critic & Refiner','Adversarial critique + refinement');
+      steps.addStep('qa','QA Agent','Bias detection & structure review');
+      steps.addStep('write','Final Writer','Composing publication-quality paper');
+      steps.startStep('evidence');steps.setTitle('Gathering sources from arXiv & Semantic Scholar…');await sleep(800);
+      steps.doneStep('evidence','Sources gathered');steps.startStep('reason');steps.setTitle('Reasoning Agent building draft…');await sleep(600);
+      steps.doneStep('reason','Draft complete');steps.startStep('critique');steps.setTitle('Adversarial Critic reviewing draft…');await sleep(400);
 
-      let planInfo = null;
-      if(planRes.ok && planData.status !== 'ERROR') {
-        planInfo = planData.data;
-        steps.doneStep('plan', planInfo?.title ? `"${planInfo.title.slice(0,45)}…"` : 'Research plan created');
-      } else {
-        steps.doneStep('plan', 'Plan created (using defaults)');
-      }
+      const fullRes=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({query:finalQuery,mode:'research',phase:'FULL',history,searchResults:[]})});
+      const fullData=await fullRes.json();
+      console.log('[Stremini] status:',fullData.status,'keys:',Object.keys(fullData));
+      if(!fullRes.ok||fullData.status==='ERROR')throw new Error(fullData.message||`Request failed ${fullRes.status}`);
 
-      // Step 2: Evidence gathering
-      const sE = steps.addStep('evidence', 'Evidence Agent', 'Searching arXiv, Semantic Scholar & web');
-      steps.startStep('evidence');
+      steps.doneStep('critique',`${fullData.metadata?.iterations||1} iteration(s)`);
+      steps.startStep('qa');steps.setTitle('QA Agent reviewing…');await sleep(300);
+      steps.doneStep('qa','Review complete');steps.startStep('write');steps.setTitle('Final Writer composing paper…');await sleep(200);
+      steps.doneStep('write',`Paper complete · ${fullData.metadata?.sources_gathered||0} sources`);
 
-      // Step 3: Reasoning
-      const sR = steps.addStep('reason', 'Reasoner Agent', 'Building evidence-grounded arguments');
-
-      // Step 4: Critique
-      const sC = steps.addStep('critique', 'Critic & Refiner', 'Adversarial critique + refinement');
-
-      // Step 5: QA
-      const sQ = steps.addStep('qa', 'QA Agent', 'Bias detection & structure review');
-
-      // Step 6: Final writer
-      const sF = steps.addStep('write', 'Final Writer', 'Composing publication-quality paper with diagrams');
-
-      // Fire the full pipeline
-      steps.setTitle('Gathering sources from arXiv & Semantic Scholar…');
-      await sleep(800);
-      steps.doneStep('evidence', 'Sources gathered from arXiv, Semantic Scholar & web');
-      steps.startStep('reason');
-      steps.setTitle('Reasoning Agent building draft…');
-      await sleep(600);
-      steps.doneStep('reason', 'Evidence-grounded draft complete');
-      steps.startStep('critique');
-      steps.setTitle('Adversarial Critic reviewing draft…');
-      await sleep(400);
-
-      // Do the actual full pipeline call
-      const fullRes = await fetch(API, {
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({query:finalQuery, mode:'research', phase:'FULL', history, searchResults:[]})
-      });
-      const fullData = await fullRes.json();
-      console.log('[Stremini] Pipeline response status:', fullData.status);
-      // Valid statuses: "PAPER", "COMPLETED" — only throw on ERROR or non-ok HTTP
-      if(!fullRes.ok || fullData.status==='ERROR') throw new Error(fullData.message||`Request failed ${fullRes.status}`);
-
-      steps.doneStep('critique', `${fullData.metadata?.iterations||1} iteration(s) completed`);
-      steps.startStep('qa');
-      steps.setTitle('QA Agent reviewing bias & structure…');
-      await sleep(300);
-      steps.doneStep('qa', 'Structure & bias review complete');
-      steps.startStep('write');
-      steps.setTitle('Final Writer composing paper…');
-      await sleep(200);
-      steps.doneStep('write', `Paper written — ${fullData.metadata?.sources_gathered||0} sources cited`);
-
-      // Show confidence
       if(fullData.metadata?.confidence){
-        const confBar = document.createElement('div');
-        confBar.className = 'confidence-bar';
-        const pct = Math.round(fullData.metadata.confidence);
-        confBar.innerHTML = `<span class="conf-label">Evidence confidence</span><div class="conf-track"><div class="conf-fill" style="width:${pct}%"></div></div><span class="conf-val">${pct}%</span>`;
+        const confBar=document.createElement('div');confBar.className='confidence-bar';
+        const pct=Math.round(fullData.metadata.confidence);
+        confBar.innerHTML=`<span class="conf-label">Evidence confidence</span><div class="conf-track"><div class="conf-fill" style="width:${pct}%"></div></div><span class="conf-val">${pct}%</span>`;
         slot.appendChild(confBar);
       }
 
-      // Show sources
-      const sources = fullData.metadata?.sources;
-      if(sources && sources.length > 0){
-        const srcRow = document.createElement('div');
-        srcRow.className = 'sources-row';
+      const sources=fullData.metadata?.sources;
+      if(sources&&sources.length>0){
+        const srcRow=document.createElement('div');srcRow.className='sources-row';
         sources.slice(0,8).forEach(s=>{
-          if(!s.url&&!s.title) return;
-          const pill = document.createElement('a');
-          pill.className='src-pill';
-          pill.href=s.url||'#'; pill.target='_blank'; pill.rel='noopener noreferrer';
-          const domain = s.url ? (() => { try{return new URL(s.url).hostname.replace('www.','')}catch{return s.source||'source'} })() : (s.source||'source');
-          pill.innerHTML=`<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>${esc(domain)}`;
+          if(!s.url&&!s.title)return;
+          const pill=document.createElement('a');pill.className='src-pill';
+          pill.href=s.url||'#';pill.target='_blank';pill.rel='noopener noreferrer';
+          const domain=s.url?(()=>{try{return new URL(s.url).hostname.replace('www.','')}catch{return s.source||'source'}})():(s.source||'source');
+          pill.innerHTML=`<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>${esc(domain)}`;
           srcRow.appendChild(pill);
         });
-        if(srcRow.children.length) slot.appendChild(srcRow);
+        if(srcRow.children.length)slot.appendChild(srcRow);
       }
 
       steps.setDone(`Research complete in ${((Date.now()-t0)/1000).toFixed(1)}s`);
 
-      // Extract paper content — try every possible field the backend might use
-      // Backend returns status:"PAPER" with content field containing <paper>...</paper>
-      let rawContent = fullData.content || fullData.solution || fullData.paper || fullData.text || '';
+      let rawContent=fullData.content||fullData.solution||fullData.paper||fullData.text||'';
+      console.log('[Stremini] rawContent length:',rawContent.length,'preview:',rawContent.slice(0,200));
+      const paperTagMatch=rawContent.match(/<paper>([\s\S]*?)(?:<\/paper>|$)/i);
+      if(paperTagMatch){content=paperTagMatch[1].trim();console.log('[Stremini] Extracted from <paper>, len:',content.length)}
+      else{content=rawContent.trim();console.log('[Stremini] No <paper> tag, len:',content.length)}
+      if(!content)throw new Error('Agent returned empty paper content. Response: '+JSON.stringify(fullData).slice(0,200));
 
-      // Log for debugging — visible in browser console
-      console.log('[Stremini] Full API response keys:', Object.keys(fullData));
-      console.log('[Stremini] status:', fullData.status);
-      console.log('[Stremini] rawContent length:', rawContent.length);
-      console.log('[Stremini] rawContent preview:', rawContent.slice(0, 300));
-
-      // Strip <paper> wrapper tags (backend wraps output in <paper>...</paper>)
-      const paperTagMatch = rawContent.match(/<paper>([\s\S]*?)(?:<\/paper>|$)/i);
-      if(paperTagMatch) {
-        content = paperTagMatch[1].trim();
-        console.log('[Stremini] Extracted from <paper> tag, length:', content.length);
-      } else {
-        content = rawContent.trim();
-        console.log('[Stremini] No <paper> tag found, using raw content, length:', content.length);
-      }
-
-      if(!content) throw new Error('Agent returned empty paper content. Response: ' + JSON.stringify(fullData).slice(0,200));
-
-      // Show a small debug info line so user can confirm what was received
-      const dbg = document.createElement('div');
-      dbg.style.cssText='margin:4px 0 2px;padding:5px 10px;background:rgba(99,102,241,.07);border:1px solid rgba(99,102,241,.15);border-radius:6px;font-size:10.5px;color:var(--text-3);font-family:"DM Mono",monospace';
-      dbg.textContent = `API: status=${fullData.status} · content_len=${content.length} · sources=${fullData.metadata?.sources_gathered||0}`;
-      slot.appendChild(dbg);
-
-      papers++;
-      setStatus('done', 'Paper ready');
-      history.push({role:'assistant', content});
+      papers++;setStatus('done','Paper ready');
+      history.push({role:'assistant',content});
     }
 
-    // Collapse steps panel and render output
-    if(!isMath) {
-      const body = slot.querySelector('.agent-steps-body');
-      const chev = slot.querySelector('.agent-chevron');
-      if(body && chev){body.classList.add('collapsed');chev.classList.remove('open')}
-    }
+    // Collapse steps
+    const body=slot.querySelector('.agent-steps-body');
+    const chev=slot.querySelector('.agent-chevron');
+    if(body&&chev){body.classList.add('collapsed');chev.classList.remove('open')}
 
-    // Render paper/math
-    const {el, diagramsFound} = await renderPaper(content, isMath);
+    const{el,diagramsFound}=await renderPaper(content,isMath);
     slot.appendChild(el);
+    if(!isMath)diagramsTotal+=diagramsFound;
+    updateStats();scrollBot();
 
-    if(!isMath) {
-      diagramsTotal += diagramsFound;
-    }
-    updateStats();
-    scrollBot();
-
-  } catch(err) {
+  }catch(err){
     steps.setTitle('Error — request failed');
-    // Mark last running step as error
     slot.querySelectorAll('.step-icon.step-running').forEach(icon=>{
       icon.className='step-icon step-err';
-      icon.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`;
+      icon.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`;
     });
     const errDiv=document.createElement('div');
-    errDiv.style.cssText='margin-top:8px;padding:10px 12px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:8px;font-size:12.5px;color:#fca5a5;line-height:1.6';
-    errDiv.textContent = err.message || 'An unexpected error occurred.';
+    errDiv.style.cssText='margin-top:8px;padding:11px 14px;background:rgba(248,113,113,.07);border:1px solid rgba(248,113,113,.18);border-radius:9px;font-size:12.5px;color:#fca5a5;line-height:1.65';
+    errDiv.textContent=err.message||'An unexpected error occurred.';
     slot.appendChild(errDiv);
     setStatus('err','Error');
-  } finally {
-    running=false; sendBtn.disabled=false;
+  }finally{
+    running=false;sendBtn.disabled=false;
   }
 }
 
 function sleep(ms){return new Promise(r=>setTimeout(r,ms))}
 
-// ── Clear ──
 function clearChat(){
-  msgs.innerHTML=''; msgs.appendChild(welcome); welcome.style.display='';
-  history=[]; papers=0; mathSolved=0; diagramsTotal=0; updateStats();
+  msgs.innerHTML='';msgs.appendChild(welcome);welcome.style.display='';
+  history=[];papers=0;mathSolved=0;diagramsTotal=0;updateStats();
   document.getElementById('recentList').innerHTML='<div class="muted">No queries yet</div>';
-  setStatus('idle','Ready'); running=false; sendBtn.disabled=false;
+  setStatus('idle','Ready');running=false;sendBtn.disabled=false;
 }
 </script>
 </body>
