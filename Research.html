@@ -1175,6 +1175,8 @@ async function handleSend(){
         body:JSON.stringify({query:finalQuery, mode:'research', phase:'FULL', history, searchResults:[]})
       });
       const fullData = await fullRes.json();
+      console.log('[Stremini] Pipeline response status:', fullData.status);
+      // Valid statuses: "PAPER", "COMPLETED" — only throw on ERROR or non-ok HTTP
       if(!fullRes.ok || fullData.status==='ERROR') throw new Error(fullData.message||`Request failed ${fullRes.status}`);
 
       steps.doneStep('critique', `${fullData.metadata?.iterations||1} iteration(s) completed`);
@@ -1215,12 +1217,33 @@ async function handleSend(){
 
       steps.setDone(`Research complete in ${((Date.now()-t0)/1000).toFixed(1)}s`);
 
-      // Extract paper content — unwrap <paper> tags
-      let rawContent = fullData.content || '';
-      const paperMatch = rawContent.match(/<paper>([\s\S]*?)(?:<\/paper>|$)/i);
-      content = paperMatch ? paperMatch[1].trim() : rawContent.trim();
+      // Extract paper content — try every possible field the backend might use
+      // Backend returns status:"PAPER" with content field containing <paper>...</paper>
+      let rawContent = fullData.content || fullData.solution || fullData.paper || fullData.text || '';
 
-      if(!content) throw new Error('Agent returned empty paper content');
+      // Log for debugging — visible in browser console
+      console.log('[Stremini] Full API response keys:', Object.keys(fullData));
+      console.log('[Stremini] status:', fullData.status);
+      console.log('[Stremini] rawContent length:', rawContent.length);
+      console.log('[Stremini] rawContent preview:', rawContent.slice(0, 300));
+
+      // Strip <paper> wrapper tags (backend wraps output in <paper>...</paper>)
+      const paperTagMatch = rawContent.match(/<paper>([\s\S]*?)(?:<\/paper>|$)/i);
+      if(paperTagMatch) {
+        content = paperTagMatch[1].trim();
+        console.log('[Stremini] Extracted from <paper> tag, length:', content.length);
+      } else {
+        content = rawContent.trim();
+        console.log('[Stremini] No <paper> tag found, using raw content, length:', content.length);
+      }
+
+      if(!content) throw new Error('Agent returned empty paper content. Response: ' + JSON.stringify(fullData).slice(0,200));
+
+      // Show a small debug info line so user can confirm what was received
+      const dbg = document.createElement('div');
+      dbg.style.cssText='margin:4px 0 2px;padding:5px 10px;background:rgba(99,102,241,.07);border:1px solid rgba(99,102,241,.15);border-radius:6px;font-size:10.5px;color:var(--text-3);font-family:"DM Mono",monospace';
+      dbg.textContent = `API: status=${fullData.status} · content_len=${content.length} · sources=${fullData.metadata?.sources_gathered||0}`;
+      slot.appendChild(dbg);
 
       papers++;
       setStatus('done', 'Paper ready');
