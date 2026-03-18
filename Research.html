@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Stremini — Research Agent </title>
+<title>Stremini — Research Agent v6.0</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&family=Spectral:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet"/>
 <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
 <script src="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
@@ -1068,76 +1068,178 @@ const IMRAD_TAB_LABELS=[
   {id:'conclusion',label:'8. Conclusion'},
 ];
 
+// ═══════════════════════════════════════════════════
+// SECTION CONTENT RENDERER
+// Handles: markdown bold **label:**, heading lines, citation tags,
+// subsection headings, single/double newlines, diagram tags
+// ═══════════════════════════════════════════════════
+function renderMdInline(text){
+  // Convert **text** → <strong>, *text* → <em>, [Sn]/[n] → cite superscript
+  return text
+    .replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>')
+    .replace(/\*([^*]+)\*/g,'<em>$1</em>')
+    .replace(/\[S?(\d+)\]/g,'<sup class="cite-ref">[$1]</sup>');
+}
+
+function renderSectionContent(rawText, isAbstract, containerEl, isFirstSection){
+  // Step 1: strip diagram tags (already extracted separately), normalise \r
+  const stripped = rawText.replace(/\r\n/g,'\n').replace(/\r/g,'\n');
+
+  // Step 2: split into lines
+  const lines = stripped.split('\n');
+
+  // Step 3: group into blocks separated by blank lines
+  // Also detect subsection headings (e.g. "4.1 Title" or "### Title" or "**Title**")
+  const blocks = [];
+  let current = [];
+
+  for(const raw of lines){
+    const line = raw.trim();
+
+    if(!line){
+      if(current.length) blocks.push(current.join(' ').trim());
+      current = [];
+      continue;
+    }
+
+    // Subsection heading detection
+    const isSubheading =
+      /^#{2,4}\s/.test(line) ||                          // ## Markdown heading
+      /^\d+\.\d+\.?\s+[A-Z]/.test(line) ||              // 4.1 Title
+      /^\*\*[^*]{3,60}\*\*\s*$/.test(line) ||           // **Title** alone on line
+      (/^[A-Z][A-Za-z\s]{3,50}:?\s*$/.test(line) && line.length < 60 && !/^(The|This|These|A |An |In |On |By |For |With |While |Although |However |Moreover |Furthermore |Therefore )/.test(line));
+
+    if(isSubheading){
+      if(current.length){ blocks.push(current.join(' ').trim()); current=[]; }
+      blocks.push({type:'subheading', text: line.replace(/^#{2,4}\s+/,'').replace(/^\*\*|\*\*$/g,'').replace(/:$/,'')});
+    } else {
+      current.push(line);
+    }
+  }
+  if(current.length) blocks.push(current.join(' ').trim());
+
+  // Step 4: render each block
+  let paraIdx = 0;
+  for(const block of blocks){
+    if(!block) continue;
+
+    // Subheading object
+    if(typeof block === 'object' && block.type === 'subheading'){
+      const h = document.createElement('div');
+      h.className = 'subsec-heading';
+      h.textContent = block.text;
+      containerEl.appendChild(h);
+      continue;
+    }
+
+    const text = block.trim();
+    if(!text) continue;
+
+    // Abstract structured label (e.g. "**Background:** text...")
+    if(isAbstract && /^\*\*[A-Za-z]+(?:\s[A-Za-z]+)?:?\*\*/.test(text)){
+      const div = document.createElement('div');
+      div.className = 'paper-p';
+      div.innerHTML = renderMdInline(esc(text));
+      containerEl.appendChild(div);
+      paraIdx++;
+      continue;
+    }
+
+    // Keywords line
+    if(/^\*\*Keywords?:?\*\*/.test(text) || /^Keywords?:/i.test(text)){
+      const div = document.createElement('div');
+      div.style.cssText = 'font-size:12px;color:var(--ink3);margin-top:10px;font-family:"DM Sans",sans-serif;';
+      div.innerHTML = '<strong>Keywords:</strong> ' + esc(text.replace(/^\*\*Keywords?:?\*\*\s*/,'').replace(/^Keywords?:\s*/i,''));
+      containerEl.appendChild(div);
+      continue;
+    }
+
+    // Skip lines that are just the section title repeated
+    if(text.length < 80 && /^(\d+\.\s+|Abstract|Introduction|Literature|Theoretical|Methodology|Analysis|Findings|Conclusion)/i.test(text) && text.split(' ').length < 8){
+      continue;
+    }
+
+    // Normal paragraph
+    const p = document.createElement('p');
+    p.className = 'paper-p' + (paraIdx === 0 && isFirstSection ? ' dropcap' : '');
+    p.innerHTML = renderMdInline(esc(text));
+    containerEl.appendChild(p);
+    paraIdx++;
+  }
+
+  // Safety fallback: if nothing was rendered, dump raw text
+  if(paraIdx === 0 && !containerEl.querySelector('.subsec-heading')){
+    const p = document.createElement('p');
+    p.className = 'paper-p';
+    p.innerHTML = renderMdInline(esc(stripped.slice(0, 4000)));
+    containerEl.appendChild(p);
+  }
+}
+
 async function buildManuscriptDOM(data){
-  const doc=document.createElement('div');
+  const doc = document.createElement('div');
 
   // Masthead
-  const mh=mkEl('div','paper-masthead ms');
-  mh.innerHTML=`<span class="masthead-journal">Stremini Research Journal</span><div style="display:flex;gap:8px;align-items:center"><span class="masthead-meta">${new Date().getFullYear()}</span><span class="masthead-badge"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Full Manuscript</span></div>`;
+  const mh = mkEl('div','paper-masthead ms');
+  mh.innerHTML = `<span class="masthead-journal">Stremini Research Journal</span><div style="display:flex;gap:8px;align-items:center"><span class="masthead-meta">${new Date().getFullYear()}</span><span class="masthead-badge"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Full Manuscript</span></div>`;
   doc.appendChild(mh);
 
-  const paperDoc=mkEl('div','paper-doc');doc.appendChild(paperDoc);
-  const inner=mkEl('div','paper-inner');paperDoc.appendChild(inner);
+  const paperDoc = mkEl('div','paper-doc');
+  doc.appendChild(paperDoc);
+  const inner = mkEl('div','paper-inner');
+  paperDoc.appendChild(inner);
 
-  // Parse the assembled manuscript for title/keywords/references
-  const assembled=data.content||'';
-  const mContent=assembled.replace(/<manuscript>/gi,'').replace(/<\/manuscript>/gi,'').trim();
-  const structure=parsePaper(mContent||'');
+  // ── Title block ──
+  const assembled = (data.content||'').replace(/<\/?manuscript>/gi,'').trim();
+  const tb = mkEl('div','paper-title-block');
+  tb.appendChild(mkEl('div','paper-title', esc(data.title||'Academic Manuscript')));
 
-  // Title block — prefer API title, fall back to parsed
-  const tb=mkEl('div','paper-title-block');
-  tb.appendChild(mkEl('div','paper-title',esc(data.title||structure.title||'Academic Manuscript')));
+  const authorMatch = assembled.match(/^Authors?:\s*(.+)$/im);
+  const dateMatch   = assembled.match(/^Date:\s*(.+)$/im);
+  const kwMatch     = assembled.match(/^Keywords?:\s*(.+)$/im);
+  const journalMatch= assembled.match(/^Target Journal:\s*(.+)$/im);
 
-  // Extract metadata from assembled content header
-  const authorMatch=mContent.match(/^Authors?:\s*(.+)$/im);
-  const dateMatch=mContent.match(/^Date:\s*(.+)$/im);
-  const kwMatch=mContent.match(/^Keywords?:\s*(.+)$/im);
-  const journalMatch=mContent.match(/^Target Journal:\s*(.+)$/im);
-  const citationMatch=mContent.match(/^Citation Style:\s*(.+)$/im);
-
-  const bylineAuthor=authorMatch?.[1]?.trim()||'Stremini Agent Research Pipeline';
-  const bylineDate=dateMatch?.[1]?.trim()||new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
-  const bylineKws=kwMatch?.[1]?.trim()||structure.keywords||'';
-
-  const byline=mkEl('div','paper-byline');
-  byline.innerHTML=esc(bylineAuthor)+'<span class="byline-sep"></span>'+esc(bylineDate);
-  if(journalMatch?.[1])byline.innerHTML+='<span class="byline-sep"></span>'+esc(journalMatch[1].trim());
+  const byline = mkEl('div','paper-byline');
+  byline.innerHTML = esc(authorMatch?.[1]?.trim()||'Stremini Agent Pipeline')
+    + '<span class="byline-sep"></span>'
+    + esc(dateMatch?.[1]?.trim()||new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'}));
+  if(journalMatch?.[1]) byline.innerHTML += '<span class="byline-sep"></span>' + esc(journalMatch[1].trim());
   tb.appendChild(byline);
 
-  if(bylineKws){
-    const kws=mkEl('div','paper-kws');
-    bylineKws.split(/[,;]/).map(k=>k.trim()).filter(Boolean).forEach(k=>{kws.appendChild(mkEl('span','kw-tag',esc(k)))});
+  // Keywords from plan key_concepts or assembled header
+  const kwRaw = kwMatch?.[1]?.trim() || (data.metadata?.plan?.key_concepts||[]).join('; ');
+  if(kwRaw){
+    const kws = mkEl('div','paper-kws');
+    kwRaw.split(/[,;]/).map(k=>k.trim()).filter(Boolean).forEach(k=>kws.appendChild(mkEl('span','kw-tag',esc(k))));
     tb.appendChild(kws);
   }
   inner.appendChild(tb);
 
-  // ── IMRAD Tabs — always built from sections object ──
-  const sections=data.sections||{};
+  // ── IMRAD Tabs ──
+  const sections = data.sections || {};
+  const tabNav = mkEl('div','imrad-nav');
+  const tabContents = mkEl('div','');
+  inner.appendChild(tabNav);
+  inner.appendChild(tabContents);
 
-  const tabNav=mkEl('div','imrad-nav');
-  const tabContents=mkEl('div','');
-  inner.appendChild(tabNav);inner.appendChild(tabContents);
-
-  let firstActive=true;
-  let totalDiagrams=0;
+  let firstActive = true;
+  let sectionIndex = 0;
 
   for(const tab of IMRAD_TAB_LABELS){
-    // Get content: prefer sections[id], fall back to parsing from assembled text
-    let sContent=sections[tab.id]||'';
+    let sContent = sections[tab.id] || '';
 
-    // If section is missing from API response, try to extract from assembled manuscript
-    if(!sContent&&mContent){
-      const secRe=new RegExp(tab.label.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'[\\s\\S]*?(?=\\n(?:Abstract|\\d+\\.|━|REFERENCES)|$)','i');
-      const m=mContent.match(secRe);
-      if(m)sContent=m[0].replace(tab.label,'').trim();
+    // Fallback: try to extract from the assembled text using section title
+    if(!sContent && assembled){
+      const titleEsc = tab.label.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+      const m = assembled.match(new RegExp(`(?:^|\\n)${titleEsc}\\s*\\n([\\s\\S]*?)(?=\\n(?:Abstract|\\d+\\.|━{3}|REFERENCES)|$)`,'i'));
+      if(m) sContent = m[1].trim();
     }
 
-    if(!sContent)continue; // skip truly empty sections
+    if(!sContent) continue;
 
-    const tabId='imrad_'+tab.id+'_'+Date.now();
-    const btn=mkEl('button','imrad-tab'+(firstActive?' active':''),esc(tab.label));
-    btn.dataset.tab=tabId;
-    btn.onclick=function(){
+    const tabId = 'imrad_' + tab.id + '_' + Date.now();
+    const btn = mkEl('button','imrad-tab'+(firstActive?' active':''), esc(tab.label));
+    btn.onclick = function(){
       tabNav.querySelectorAll('.imrad-tab').forEach(t=>t.classList.remove('active'));
       tabContents.querySelectorAll('.imrad-content').forEach(c=>c.classList.remove('active'));
       this.classList.add('active');
@@ -1145,74 +1247,87 @@ async function buildManuscriptDOM(data){
     };
     tabNav.appendChild(btn);
 
-    const contentDiv=mkEl('div','imrad-content'+(firstActive?' active':''));
-    contentDiv.id=tabId;
+    const contentDiv = mkEl('div','imrad-content'+(firstActive?' active':''));
+    contentDiv.id = tabId;
 
-    const secParts=parseContent(sContent);
-    const secDiagParts=secParts.filter(p=>p.kind==='diagram');
-    const secText=secParts.filter(p=>p.kind==='text').map(p=>p.txt).join('\n');
-    const wCount=secText.trim().split(/\s+/).filter(Boolean).length;
+    // Extract diagrams first, then pass clean text to renderer
+    const parts = parseContent(sContent);
+    const diagParts = parts.filter(p=>p.kind==='diagram');
+    const textOnly = parts.filter(p=>p.kind==='text').map(p=>p.txt).join('\n');
 
-    const sh=mkEl('div','sec-heading violet');
-    sh.innerHTML=`${esc(tab.label)}<span class="section-word-count">~${wCount.toLocaleString()} words</span>`;
+    // Word count
+    const wCount = textOnly.trim().split(/\s+/).filter(Boolean).length;
+    const sh = mkEl('div','sec-heading violet');
+    sh.innerHTML = `${esc(tab.label)}<span class="section-word-count">~${wCount.toLocaleString()} words</span>`;
     contentDiv.appendChild(sh);
 
-    // Render paragraphs — split on double newlines or single newlines for long lines
-    const paraLines=secText.split(/\n{2,}|\n(?=[A-Z])/).map(l=>l.replace(/\n/g,' ').trim()).filter(l=>l.length>15);
-    if(paraLines.length===0){
-      // Fallback: treat whole section as one block
-      const p=document.createElement('p');p.className='paper-p dropcap';p.innerHTML=renderCites(esc(secText.trim()));contentDiv.appendChild(p);
-    }else{
-      paraLines.forEach((pt,pi)=>contentDiv.appendChild(makePara(pt,pi===0)));
-    }
+    // Render section prose
+    const isAbstract = tab.id === 'abstract';
+    renderSectionContent(textOnly, isAbstract, contentDiv, firstActive);
 
-    // Render inline diagrams
-    for(const d of secDiagParts){
-      const figEl=await renderFigure(d.dtype,d.title,d.code);
-      if(figEl.tagName!=='SPAN'){contentDiv.appendChild(figEl);totalDiagrams++;}
+    // Render diagrams after prose
+    for(const d of diagParts){
+      const figEl = await renderFigure(d.dtype, d.title, d.code);
+      if(figEl.tagName !== 'SPAN') contentDiv.appendChild(figEl);
     }
 
     tabContents.appendChild(contentDiv);
-    firstActive=false;
+    firstActive = false;
+    sectionIndex++;
   }
 
-  // ── References tab — extracted from assembled manuscript ──
-  const refsStartIdx=mContent.indexOf('\nREFERENCES\n');
-  if(refsStartIdx!==-1){
-    const refsText=mContent.slice(refsStartIdx+12).trim();
+  // ── References tab ──
+  const refsIdx = assembled.search(/\nREFERENCES\s*\n/i);
+  if(refsIdx !== -1){
+    const refsText = assembled.slice(refsIdx).replace(/\nREFERENCES\s*\n/i,'').trim();
     if(refsText){
-      const tabId='imrad_refs_'+Date.now();
-      const btn=mkEl('button','imrad-tab',esc('References'));
-      btn.onclick=function(){
+      const tabId = 'imrad_refs_' + Date.now();
+      const btn = mkEl('button','imrad-tab','References');
+      btn.onclick = function(){
         tabNav.querySelectorAll('.imrad-tab').forEach(t=>t.classList.remove('active'));
         tabContents.querySelectorAll('.imrad-content').forEach(c=>c.classList.remove('active'));
-        this.classList.add('active');document.getElementById(tabId)?.classList.add('active');
+        this.classList.add('active');
+        document.getElementById(tabId)?.classList.add('active');
       };
       tabNav.appendChild(btn);
-      const contentDiv=mkEl('div','imrad-content');contentDiv.id=tabId;
-      const sh=mkEl('div','sec-heading violet','References');contentDiv.appendChild(sh);
-      const rw=mkEl('div','paper-refs');
-      const refLines=refsText.split('\n').filter(l=>l.trim());
-      const merged=[];
-      refLines.forEach(line=>{
-        const isNew=/^\[\d+\]/.test(line)||/^[A-Z][a-zA-Z]+,/.test(line)||/^\d+\./.test(line);
-        if(isNew||!merged.length)merged.push(line);else merged[merged.length-1]+=' '+line;
+
+      const contentDiv = mkEl('div','imrad-content');
+      contentDiv.id = tabId;
+      const sh = mkEl('div','sec-heading violet','References');
+      contentDiv.appendChild(sh);
+      const rw = mkEl('div','paper-refs');
+
+      // Merge multi-line refs
+      const merged = [];
+      refsText.split('\n').filter(l=>l.trim()).forEach(line=>{
+        const isNew = /^\[\d+\]/.test(line)||/^[A-Z][a-zA-Z]+,/.test(line)||/^\d+\./.test(line);
+        if(isNew||!merged.length) merged.push(line);
+        else merged[merged.length-1] += ' ' + line;
       });
-      merged.forEach((ref,idx)=>{
-        const ri=mkEl('div','ref-item');ri.appendChild(mkEl('div','ref-n',`[${idx+1}]`));
-        const body2=mkEl('div','ref-body');body2.innerHTML=ref.replace(/^\[\d+\]\s*/,'').replace(/(https?:\/\/\S+)/g,url=>`<a href="${url}" target="_blank" rel="noopener">${url}</a>`);
-        ri.appendChild(body2);rw.appendChild(ri);
+      merged.slice(0,60).forEach((ref,idx)=>{
+        const ri = mkEl('div','ref-item');
+        ri.appendChild(mkEl('div','ref-n',`[${idx+1}]`));
+        const body2 = mkEl('div','ref-body');
+        body2.innerHTML = ref.replace(/^\[\d+\]\s*/,'')
+          .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+          .replace(/(https?:\/\/\S+)/g, url=>`<a href="${url}" target="_blank" rel="noopener">${url}</a>`);
+        ri.appendChild(body2);
+        rw.appendChild(ri);
       });
-      contentDiv.appendChild(rw);tabContents.appendChild(contentDiv);
+      contentDiv.appendChild(rw);
+      tabContents.appendChild(contentDiv);
     }
   }
 
-  // If NO tabs were created at all (total failure), render assembled text as prose fallback
+  // ── Hard fallback: no tabs at all ──
   if(!tabNav.children.length){
-    const grid=mkEl('div','paper-cols');inner.appendChild(grid);
-    const fw=mkEl('div','full-w');
-    const p=document.createElement('p');p.className='paper-p';p.textContent=mContent.slice(0,5000)||'No content available.';
-    fw.appendChild(p);grid.appendChild(fw);
+    const fw = mkEl('div','full-w');
+    const sh = mkEl('div','sec-heading violet','Content');
+    fw.appendChild(sh);
+    renderSectionContent(assembled.slice(0,8000), false, fw, true);
+    const grid = mkEl('div','paper-cols');
+    grid.appendChild(fw);
+    inner.appendChild(grid);
   }
 
   return doc;
