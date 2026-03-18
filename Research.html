@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Stremini — Research Agent</title>
+<title>Stremini — Research Agent v6.0</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&family=Spectral:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet"/>
 <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
 <script src="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
@@ -13,15 +13,15 @@
 html,body{height:100%;-webkit-font-smoothing:antialiased;overflow:hidden}
 
 :root{
-  /* Palette — warm ink on cream, with deep burgundy accents */
   --ink:#1a1209;--ink2:#3d2f1e;--ink3:#7a6652;--ink4:#b0a090;
   --cream:#faf7f2;--cream2:#f4f0e8;--cream3:#ede8de;--cream4:#e2dbd0;
   --crimson:#8b1a2e;--crimson2:#b52440;--crimson-pale:rgba(139,26,46,.08);
   --gold:#c9911a;--gold2:#e8b450;--gold-pale:rgba(201,145,26,.1);
-  --teal:#1a6b7a;--teal-pale:rgba(26,107,122,.08);
+  --teal:#1a6b7a;--teal2:#22899e;--teal-pale:rgba(26,107,122,.08);
+  --violet:#5b2d8e;--violet-pale:rgba(91,45,142,.07);
   --border:rgba(26,18,9,.1);--border2:rgba(26,18,9,.18);
   --shadow:rgba(26,18,9,.08);
-  --paper-w:900px;
+  --paper-w:920px;
   --r:8px;
 }
 
@@ -32,7 +32,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink)}
 
 /* ══ SIDEBAR ══ */
 .sidebar{
-  width:260px;flex-shrink:0;
+  width:268px;flex-shrink:0;
   background:var(--ink);
   display:flex;flex-direction:column;
   border-right:1px solid rgba(255,255,255,.05);
@@ -44,7 +44,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink)}
 }
 .sb-inner{position:relative;z-index:1;display:flex;flex-direction:column;height:100%;overflow:hidden}
 
-/* Logo */
 .sb-logo{padding:22px 20px 18px;border-bottom:1px solid rgba(255,255,255,.06)}
 .logo-lockup{display:flex;align-items:center;gap:11px}
 .logo-gem{
@@ -54,9 +53,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink)}
   box-shadow:0 0 30px rgba(201,145,26,.3),0 4px 12px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,235,160,.3);
 }
 .logo-gem svg{width:18px;height:18px;color:var(--ink)}
-.logo-words{}
 .logo-name{font-family:'Playfair Display',serif;font-size:17px;color:#fff;font-weight:600;letter-spacing:.2px;line-height:1}
-.logo-tagline{font-size:9.5px;color:rgba(255,255,255,.35);letter-spacing:1.5px;text-transform:uppercase;font-weight:500;margin-top:2px}
+.logo-tagline{font-size:9px;color:rgba(255,255,255,.35);letter-spacing:1.5px;text-transform:uppercase;font-weight:500;margin-top:2px}
+.logo-version{display:inline-block;font-size:8px;background:rgba(201,145,26,.18);color:var(--gold2);border:1px solid rgba(201,145,26,.25);border-radius:4px;padding:1px 5px;margin-left:4px;font-weight:600;letter-spacing:.3px;vertical-align:middle}
 
 /* Nav */
 .sb-nav{padding:14px 12px;border-bottom:1px solid rgba(255,255,255,.06)}
@@ -71,8 +70,12 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink)}
 .nav-btn:hover{background:rgba(255,255,255,.06);color:rgba(255,255,255,.8)}
 .nav-btn.active-r{background:var(--crimson-pale);color:var(--gold2);border:1px solid rgba(201,145,26,.2)}
 .nav-btn.active-r svg{opacity:1;color:var(--gold2)}
+.nav-btn.active-ms{background:rgba(91,45,142,.14);color:rgba(180,140,255,.9);border:1px solid rgba(91,45,142,.3)}
+.nav-btn.active-ms svg{opacity:1;color:rgba(180,140,255,.9)}
 .nav-btn.active-m{background:rgba(26,107,122,.12);color:rgba(100,200,220,.9);border:1px solid rgba(26,107,122,.3)}
 .nav-btn.active-m svg{opacity:1;color:rgba(100,200,220,.9)}
+.nav-badge{font-size:8px;background:rgba(201,145,26,.22);color:var(--gold2);border-radius:4px;padding:1px 5px;font-weight:700;letter-spacing:.3px;margin-left:auto}
+.nav-badge.new-badge{background:rgba(91,45,142,.22);color:rgba(180,140,255,.9)}
 
 /* Status */
 .sb-status{padding:14px 20px;border-bottom:1px solid rgba(255,255,255,.06)}
@@ -88,25 +91,36 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink)}
 
 /* Stats */
 .sb-stats{padding:12px 20px;border-bottom:1px solid rgba(255,255,255,.06)}
-.stats-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
-.stat-cell{text-align:center;padding:9px 4px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:6px}
-.stat-n{font-family:'Playfair Display',serif;font-size:20px;color:rgba(255,255,255,.85);line-height:1}
-.stat-l{font-size:8px;color:rgba(255,255,255,.25);text-transform:uppercase;letter-spacing:.8px;margin-top:2px;font-weight:600}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}
+.stat-cell{text-align:center;padding:9px 2px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:6px}
+.stat-n{font-family:'Playfair Display',serif;font-size:18px;color:rgba(255,255,255,.85);line-height:1}
+.stat-l{font-size:7.5px;color:rgba(255,255,255,.25);text-transform:uppercase;letter-spacing:.6px;margin-top:2px;font-weight:600}
+
+/* Manuscript Options */
+.sb-ms-opts{padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.06);display:none}
+.sb-ms-opts.visible{display:block}
+.ms-opt-lbl{font-size:8.5px;font-weight:600;color:rgba(255,255,255,.25);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px}
+.ms-field{margin-bottom:8px}
+.ms-field label{display:block;font-size:10px;color:rgba(255,255,255,.35);margin-bottom:4px;font-weight:500}
+.ms-field input,.ms-field select{
+  width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);
+  border-radius:6px;padding:6px 9px;font-family:'DM Sans',sans-serif;
+  font-size:11px;color:rgba(255,255,255,.7);outline:none;
+}
+.ms-field input::placeholder{color:rgba(255,255,255,.2)}
+.ms-field select option{background:#1a1209;color:#fff}
+.ms-field input:focus,.ms-field select:focus{border-color:rgba(91,45,142,.5);background:rgba(255,255,255,.08)}
 
 /* Recent */
 .sb-recent{flex:1;overflow-y:auto;padding:14px 12px}
 .sb-recent::-webkit-scrollbar{width:3px}
 .sb-recent::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08);border-radius:2px}
 .recent-items{display:flex;flex-direction:column;gap:2px}
-.ri{
-  padding:7px 9px;border-radius:6px;font-size:11.5px;color:rgba(255,255,255,.38);
-  cursor:pointer;transition:all .15s;line-height:1.45;
-  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
-}
+.ri{padding:7px 9px;border-radius:6px;font-size:11.5px;color:rgba(255,255,255,.38);cursor:pointer;transition:all .15s;line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .ri:hover{background:rgba(255,255,255,.05);color:rgba(255,255,255,.7)}
 .ri-empty{font-size:11px;color:rgba(255,255,255,.2);font-style:italic;padding:4px 8px}
+.ri-mode{font-size:8px;background:rgba(255,255,255,.07);border-radius:3px;padding:1px 4px;margin-right:4px;vertical-align:middle;text-transform:uppercase;letter-spacing:.4px}
 
-/* New session */
 .sb-bottom{padding:14px 12px 18px}
 .new-btn{
   width:100%;padding:9px 14px;
@@ -120,7 +134,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink)}
 /* ══ MAIN ══ */
 .main{flex:1;display:flex;flex-direction:column;min-width:0;background:var(--cream);overflow:hidden}
 
-/* Top bar */
 .topbar{
   height:54px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;
   padding:0 28px;border-bottom:1px solid var(--border);
@@ -132,6 +145,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink)}
   border:1px solid rgba(139,26,46,.15);border-radius:20px;
   font-size:11.5px;font-weight:600;color:var(--crimson);letter-spacing:.2px;
 }
+.mode-badge.ms-badge{background:var(--violet-pale);border-color:rgba(91,45,142,.2);color:var(--violet)}
 .mode-badge svg{width:12px;height:12px}
 .topbar-right{display:flex;align-items:center;gap:8px}
 .tb-action{
@@ -160,29 +174,30 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink)}
   box-shadow:0 0 60px rgba(201,145,26,.25),0 8px 32px rgba(26,18,9,.12),inset 0 1px 0 rgba(255,235,160,.3);
 }
 .welcome-emblem svg{width:32px;height:32px;color:var(--ink)}
-.welcome h2{
-  font-family:'Playfair Display',serif;font-size:36px;font-weight:600;
-  color:var(--ink);letter-spacing:-.5px;margin-bottom:10px;line-height:1.2;
-}
-.welcome-sub{font-size:14px;color:var(--ink3);line-height:1.75;max-width:480px;margin-bottom:36px;font-weight:300}
-.hint-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;max-width:620px}
+.welcome h2{font-family:'Playfair Display',serif;font-size:36px;font-weight:600;color:var(--ink);letter-spacing:-.5px;margin-bottom:6px;line-height:1.2}
+.welcome-version{display:inline-flex;align-items:center;gap:6px;font-size:10px;color:var(--ink3);background:var(--cream3);border:1px solid var(--border);border-radius:20px;padding:3px 11px;margin-bottom:12px;font-weight:600;letter-spacing:.5px;text-transform:uppercase}
+.welcome-sub{font-size:14px;color:var(--ink3);line-height:1.75;max-width:520px;margin-bottom:36px;font-weight:300}
+.hint-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;width:100%;max-width:780px}
 .hint-card{
   display:flex;align-items:flex-start;gap:13px;padding:16px 18px;
   background:#fff;border:1px solid var(--border);border-radius:12px;
   cursor:pointer;transition:all .25s;text-align:left;
 }
-.hint-card:hover{
-  border-color:var(--gold);background:var(--gold-pale);
-  transform:translateY(-2px);box-shadow:0 8px 32px var(--shadow),0 0 0 3px rgba(201,145,26,.06);
-}
-.hint-icon{
-  width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;
-}
+.hint-card:hover{transform:translateY(-2px);box-shadow:0 8px 32px var(--shadow),0 0 0 3px rgba(201,145,26,.06)}
+.hint-card:hover.gold-c{border-color:var(--gold)}
+.hint-card:hover.violet-c{border-color:var(--violet);box-shadow:0 8px 32px var(--shadow),0 0 0 3px var(--violet-pale)}
+.hint-card:hover.teal-c{border-color:var(--teal)}
+.hint-icon{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
 .hint-icon.gold{background:var(--gold-pale);color:var(--gold)}
+.hint-icon.violet{background:var(--violet-pale);color:var(--violet)}
 .hint-icon.teal{background:var(--teal-pale);color:var(--teal)}
 .hint-icon svg{width:15px;height:15px}
 .hint-title{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:2px}
 .hint-desc{font-size:10.5px;color:var(--ink3)}
+.hint-mode-badge{display:inline-block;font-size:8.5px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;padding:1px 6px;border-radius:3px;margin-top:4px}
+.hint-mode-badge.r{background:var(--crimson-pale);color:var(--crimson)}
+.hint-mode-badge.ms{background:var(--violet-pale);color:var(--violet)}
+.hint-mode-badge.m{background:var(--teal-pale);color:var(--teal)}
 
 /* ══ MESSAGES ══ */
 .msg-row{display:flex;gap:14px;padding:22px 0;border-bottom:1px solid var(--border);animation:fadein .3s ease}
@@ -198,10 +213,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink)}
 .msg-content{font-size:14px;line-height:1.7;color:var(--ink)}
 
 /* ══ AGENT STEPS PANEL ══ */
-.steps-panel{
-  background:#fff;border:1px solid var(--border);border-radius:11px;
-  overflow:hidden;margin:6px 0 10px;
-}
+.steps-panel{background:#fff;border:1px solid var(--border);border-radius:11px;overflow:hidden;margin:6px 0 10px}
 .steps-header{
   display:flex;align-items:center;justify-content:space-between;
   padding:10px 15px;background:var(--cream2);border-bottom:1px solid var(--border);
@@ -212,12 +224,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink)}
 .steps-title svg{width:13px;height:13px;color:var(--ink3)}
 .steps-chevron{color:var(--ink4);transition:transform .2s}
 .steps-chevron.open{transform:rotate(180deg)}
-.steps-body{}
 .steps-body.collapsed{display:none}
-.step-row{
-  display:flex;align-items:flex-start;gap:12px;padding:10px 15px;
-  border-bottom:1px solid var(--border);font-size:12px;line-height:1.5;animation:fadein .2s ease;
-}
+.step-row{display:flex;align-items:flex-start;gap:12px;padding:10px 15px;border-bottom:1px solid var(--border);font-size:12px;line-height:1.5;animation:fadein .2s ease}
 .step-row:last-child{border-bottom:none}
 .step-ico{width:22px;height:22px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:.5px}
 .ico-wait{background:var(--cream3);border:1px solid var(--border2)}
@@ -231,15 +239,83 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink)}
 .step-label{font-weight:600;color:var(--ink)}
 .step-detail{font-size:10.5px;color:var(--ink3);margin-top:2px}
 
+/* ══ PROGRESS BAR for manuscript ══ */
+.ms-progress{margin:8px 0 4px;background:var(--cream3);border-radius:4px;height:4px;overflow:hidden}
+.ms-progress-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--violet),rgba(180,140,255,.7));transition:width .8s cubic-bezier(.4,0,.2,1)}
+.ms-progress-label{font-size:9.5px;color:var(--ink3);margin-top:4px;font-weight:500}
+
 /* ══ CONFIDENCE BAR ══ */
-.conf-bar{
-  display:flex;align-items:center;gap:12px;padding:9px 14px;
-  background:var(--gold-pale);border:1px solid rgba(201,145,26,.18);border-radius:8px;margin:6px 0 10px;
-}
+.conf-bar{display:flex;align-items:center;gap:12px;padding:9px 14px;background:var(--gold-pale);border:1px solid rgba(201,145,26,.18);border-radius:8px;margin:6px 0 6px}
 .conf-lbl{font-size:10.5px;font-weight:600;color:var(--gold);white-space:nowrap}
 .conf-track{flex:1;height:4px;background:var(--cream4);border-radius:2px;overflow:hidden}
 .conf-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2));border-radius:2px;transition:width 1s cubic-bezier(.4,0,.2,1)}
 .conf-val{font-size:11px;font-weight:700;color:var(--gold);white-space:nowrap;font-family:'Playfair Display',serif}
+
+/* ══ EVAL METRICS DASHBOARD ══ */
+.eval-dashboard{
+  background:#fff;border:1px solid var(--border);border-radius:11px;
+  overflow:hidden;margin:8px 0;
+}
+.eval-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 15px;background:linear-gradient(90deg,var(--cream2),var(--cream3));
+  border-bottom:1px solid var(--border);cursor:pointer;user-select:none;
+}
+.eval-header:hover{background:var(--cream3)}
+.eval-title{font-size:11px;font-weight:700;color:var(--ink2);letter-spacing:.3px;display:flex;align-items:center;gap:7px;text-transform:uppercase}
+.eval-title svg{width:12px;height:12px;color:var(--ink3)}
+.eval-body{padding:14px 16px;display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.eval-body.collapsed{display:none}
+.eval-cell{text-align:center;padding:12px 8px;background:var(--cream2);border:1px solid var(--border);border-radius:8px}
+.eval-n{font-family:'Playfair Display',serif;font-size:22px;color:var(--ink);line-height:1;margin-bottom:3px}
+.eval-n.good{color:#166534}
+.eval-n.warn{color:var(--gold)}
+.eval-n.bad{color:var(--crimson)}
+.eval-lbl{font-size:8.5px;color:var(--ink3);text-transform:uppercase;letter-spacing:.6px;font-weight:600}
+.eval-sub{font-size:9px;color:var(--ink4);margin-top:2px}
+.eval-bar-row{grid-column:1/-1;display:flex;flex-direction:column;gap:7px;padding:10px 14px;background:var(--cream2);border:1px solid var(--border);border-radius:8px}
+.eval-bar-item{display:flex;align-items:center;gap:10px;font-size:10.5px}
+.eval-bar-lbl{width:110px;color:var(--ink3);font-weight:500;flex-shrink:0}
+.eval-bar-track{flex:1;height:5px;background:var(--cream4);border-radius:3px;overflow:hidden}
+.eval-bar-fill{height:100%;border-radius:3px}
+.fill-green{background:linear-gradient(90deg,#22c55e,#86efac)}
+.fill-gold{background:linear-gradient(90deg,var(--gold),var(--gold2))}
+.fill-crimson{background:linear-gradient(90deg,var(--crimson),var(--crimson2))}
+.eval-bar-val{width:35px;text-align:right;font-size:10px;font-weight:600;color:var(--ink2);flex-shrink:0}
+
+/* ══ PEER REVIEW PANEL ══ */
+.peer-panel{
+  background:#fff;border:1px solid rgba(91,45,142,.2);
+  border-left:3px solid var(--violet);border-radius:0 11px 11px 0;
+  overflow:hidden;margin:8px 0;
+}
+.peer-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 16px;background:var(--violet-pale);border-bottom:1px solid rgba(91,45,142,.12);
+  cursor:pointer;user-select:none;
+}
+.peer-header:hover{background:rgba(91,45,142,.1)}
+.peer-title{font-size:11px;font-weight:700;color:var(--violet);letter-spacing:.3px;display:flex;align-items:center;gap:7px;text-transform:uppercase}
+.peer-body{padding:14px 16px;font-size:12.5px;line-height:1.75;color:var(--ink2)}
+.peer-body.collapsed{display:none}
+.peer-verdict-badge{
+  display:inline-flex;align-items:center;gap:6px;padding:4px 12px;
+  border-radius:20px;font-size:10.5px;font-weight:700;letter-spacing:.3px;
+  text-transform:uppercase;margin-bottom:10px;
+}
+.verdict-accept{background:rgba(34,197,94,.08);color:#166534;border:1px solid rgba(34,197,94,.2)}
+.verdict-minor{background:var(--gold-pale);color:var(--gold);border:1px solid rgba(201,145,26,.2)}
+.verdict-major{background:var(--crimson-pale);color:var(--crimson);border:1px solid rgba(139,26,46,.2)}
+.peer-section{margin-bottom:12px}
+.peer-section-title{font-size:9.5px;font-weight:700;color:var(--violet);text-transform:uppercase;letter-spacing:.8px;margin-bottom:7px;padding-bottom:4px;border-bottom:1px solid rgba(91,45,142,.1)}
+.peer-concern{
+  display:flex;gap:9px;padding:8px 11px;background:var(--cream2);
+  border:1px solid var(--border);border-radius:7px;margin-bottom:5px;font-size:12px;
+}
+.concern-tag{font-size:9px;font-weight:700;color:var(--crimson);background:var(--crimson-pale);border-radius:4px;padding:1px 5px;flex-shrink:0;margin-top:2px;white-space:nowrap}
+.concern-tag.minor{color:var(--gold);background:var(--gold-pale)}
+.peer-strength{padding:8px 11px;background:rgba(34,197,94,.04);border:1px solid rgba(34,197,94,.15);border-radius:7px;margin-bottom:5px;font-size:12px;display:flex;gap:9px}
+.strength-ico{color:#22c55e;flex-shrink:0;margin-top:1px}
 
 /* ══ SOURCES ROW ══ */
 .sources-row{display:flex;flex-wrap:wrap;gap:5px;margin:5px 0 9px}
@@ -253,7 +329,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink)}
 .src-pill svg{width:8px;height:8px}
 
 /* ═══════════════════════════════════════════════════════
-   PAPER BLOCK — Beautiful academic rendering
+   PAPER / MANUSCRIPT BLOCK
 ═══════════════════════════════════════════════════════ */
 .paper-block{margin:8px 0}
 
@@ -261,62 +337,44 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink)}
 .paper-masthead{
   background:linear-gradient(135deg,#1a0a08 0%,#2e1508 60%,#1a0a08 100%);
   padding:14px 36px;display:flex;align-items:center;justify-content:space-between;
-  border-bottom:2px solid var(--crimson);
-  border-radius:12px 12px 0 0;
+  border-bottom:2px solid var(--crimson);border-radius:12px 12px 0 0;
 }
-.masthead-journal{
-  font-family:'Playfair Display',serif;font-size:12px;font-weight:600;
-  color:rgba(255,215,140,.85);letter-spacing:1px;font-style:italic;
-}
+.paper-masthead.ms{border-bottom-color:var(--violet);background:linear-gradient(135deg,#0e0820 0%,#1e103a 60%,#0e0820 100%)}
+.masthead-journal{font-family:'Playfair Display',serif;font-size:12px;font-weight:600;color:rgba(255,215,140,.85);letter-spacing:1px;font-style:italic}
 .masthead-meta{font-size:9.5px;color:rgba(255,215,140,.4);letter-spacing:.7px;text-transform:uppercase;font-family:'DM Sans',sans-serif;font-weight:500}
+.masthead-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(91,45,142,.3);border:1px solid rgba(180,140,255,.2);border-radius:4px;padding:2px 8px;font-size:8.5px;color:rgba(180,140,255,.9);font-weight:700;letter-spacing:.5px;text-transform:uppercase}
 
-/* Paper document */
-.paper-doc{
-  background:var(--cream);
-  border:1px solid var(--border);border-top:none;
-  border-radius:0 0 12px 12px;
-  overflow:hidden;
-}
-
-/* Inner padding area */
+.paper-doc{background:var(--cream);border:1px solid var(--border);border-top:none;border-radius:0 0 12px 12px;overflow:hidden}
 .paper-inner{padding:44px 52px 40px}
 
-/* Title block */
 .paper-title-block{text-align:center;margin-bottom:32px;padding-bottom:28px;border-bottom:2px solid var(--cream3)}
-.paper-title{
-  font-family:'Playfair Display',serif;
-  font-size:28px;font-weight:700;line-height:1.25;
-  color:var(--ink);margin-bottom:16px;letter-spacing:-.3px;
-}
-.paper-byline{
-  display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;
-  font-family:'DM Sans',sans-serif;font-size:11px;font-weight:500;
-  color:var(--ink3);letter-spacing:.4px;text-transform:uppercase;margin-bottom:4px;
-}
+.paper-title{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;line-height:1.25;color:var(--ink);margin-bottom:16px;letter-spacing:-.3px}
+.paper-byline{display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:500;color:var(--ink3);letter-spacing:.4px;text-transform:uppercase;margin-bottom:4px}
 .byline-sep{width:3px;height:3px;background:var(--ink4);border-radius:50%}
 .paper-date{font-size:10.5px;color:var(--ink4);margin-top:4px}
 .paper-kws{margin-top:14px;display:flex;flex-wrap:wrap;gap:5px;justify-content:center}
-.kw-tag{
-  display:inline-block;padding:3px 10px;
-  background:var(--crimson-pale);border:1px solid rgba(139,26,46,.18);
-  border-radius:20px;font-size:9.5px;font-weight:600;color:var(--crimson);
-  letter-spacing:.4px;text-transform:uppercase;
-}
+.kw-tag{display:inline-block;padding:3px 10px;background:var(--crimson-pale);border:1px solid rgba(139,26,46,.18);border-radius:20px;font-size:9.5px;font-weight:600;color:var(--crimson);letter-spacing:.4px;text-transform:uppercase}
 
 /* Abstract */
-.paper-abstract{
-  background:#fff;border:1px solid var(--cream4);
-  border-left:3px solid var(--crimson);
-  padding:18px 22px;margin-bottom:32px;
+.paper-abstract{background:#fff;border:1px solid var(--cream4);border-left:3px solid var(--crimson);padding:18px 22px;margin-bottom:32px}
+.abstract-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--crimson);margin-bottom:9px;font-family:'DM Sans',sans-serif}
+.paper-abstract p{font-family:'Spectral',serif;font-size:15.5px;line-height:1.9;color:var(--ink);font-style:italic}
+
+/* IMRAD section tabs */
+.imrad-nav{display:flex;gap:0;border-bottom:2px solid var(--cream3);margin-bottom:24px;overflow-x:auto}
+.imrad-nav::-webkit-scrollbar{height:0}
+.imrad-tab{
+  padding:8px 16px;font-size:10.5px;font-weight:600;color:var(--ink3);
+  cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;
+  white-space:nowrap;transition:all .15s;letter-spacing:.2px;
+  background:transparent;border-top:none;border-left:none;border-right:none;
+  font-family:'DM Sans',sans-serif;
 }
-.abstract-label{
-  font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;
-  color:var(--crimson);margin-bottom:9px;font-family:'DM Sans',sans-serif;
-}
-.paper-abstract p{
-  font-family:'Spectral',serif;font-size:15.5px;line-height:1.9;
-  color:var(--ink);font-style:italic;
-}
+.imrad-tab:hover{color:var(--ink);background:var(--cream2)}
+.imrad-tab.active{color:var(--violet);border-bottom-color:var(--violet);background:rgba(91,45,142,.04)}
+.imrad-content{display:none}
+.imrad-content.active{display:block}
+.section-word-count{font-size:9px;color:var(--ink4);font-weight:500;float:right;margin-top:2px}
 
 /* Two-column layout */
 .paper-cols{display:grid;grid-template-columns:1fr 1fr;gap:28px}
@@ -330,62 +388,28 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink)}
   padding-bottom:6px;border-bottom:1.5px solid var(--cream4);
   display:flex;align-items:center;gap:8px;
 }
-.sec-heading::before{content:'';width:14px;height:2px;background:var(--crimson);flex-shrink:0}
+.sec-heading.violet{color:var(--violet);border-bottom-color:rgba(91,45,142,.15)}
+.sec-heading::before{content:'';width:14px;height:2px;background:currentColor;flex-shrink:0}
 .sec-num{color:var(--gold);margin-right:2px}
-.subsec-heading{
-  font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;
-  color:var(--ink);margin:16px 0 8px;letter-spacing:.1px;
-}
+.subsec-heading{font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;color:var(--ink);margin:16px 0 8px;letter-spacing:.1px}
 
-/* Body para */
-.paper-p{
-  font-family:'Spectral',serif;
-  font-size:15px;line-height:1.92;color:var(--ink);
-  margin-bottom:11px;text-align:justify;hyphens:auto;
-}
-.paper-p.dropcap::first-letter{
-  font-size:3.4em;font-weight:700;float:left;line-height:.78;
-  margin-right:6px;margin-top:5px;color:var(--crimson);
-  font-family:'Playfair Display',serif;
-}
-.cite-ref{
-  display:inline-block;font-size:8.5px;font-weight:700;
-  color:var(--crimson);vertical-align:super;line-height:1;
-  font-family:'DM Sans',sans-serif;cursor:default;
-}
+.paper-p{font-family:'Spectral',serif;font-size:15px;line-height:1.92;color:var(--ink);margin-bottom:11px;text-align:justify;hyphens:auto}
+.paper-p.dropcap::first-letter{font-size:3.4em;font-weight:700;float:left;line-height:.78;margin-right:6px;margin-top:5px;color:var(--crimson);font-family:'Playfair Display',serif}
+.cite-ref{display:inline-block;font-size:8.5px;font-weight:700;color:var(--crimson);vertical-align:super;line-height:1;font-family:'DM Sans',sans-serif;cursor:default}
 
-/* Callout blocks */
-.block-callout{
-  background:#fff;border:1px solid var(--cream4);border-left:3px solid var(--gold);
-  padding:13px 17px;margin:12px 0;border-radius:0 6px 6px 0;
-}
+.block-callout{background:#fff;border:1px solid var(--cream4);border-left:3px solid var(--gold);padding:13px 17px;margin:12px 0;border-radius:0 6px 6px 0}
 .block-callout p{font-family:'Spectral',serif;font-size:14.5px;line-height:1.8;color:var(--ink2);font-style:italic;margin:0}
-.block-rejected{
-  background:rgba(139,26,46,.03);border:1px solid rgba(139,26,46,.12);border-radius:8px;padding:13px 16px;margin:12px 0;
-}
+.block-rejected{background:rgba(139,26,46,.03);border:1px solid rgba(139,26,46,.12);border-radius:8px;padding:13px 16px;margin:12px 0}
 .block-rejected .blk-label{font-size:9px;font-weight:700;color:var(--crimson);text-transform:uppercase;letter-spacing:.9px;margin-bottom:7px}
 .block-uncert{background:rgba(201,145,26,.03);border:1px solid rgba(201,145,26,.15);border-radius:8px;padding:13px 16px;margin:12px 0}
 .block-uncert .blk-label{font-size:9px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.9px;margin-bottom:7px}
 
-/* Diagrams inside paper — silent on error */
-.paper-figure{
-  background:#fff;border:1px solid var(--cream4);border-radius:8px;
-  overflow:hidden;margin:18px 0;
-}
-.figure-bar{
-  background:linear-gradient(90deg,#f8f4ed,#f0ece3);
-  padding:8px 15px;border-bottom:1px solid var(--cream4);
-  display:flex;align-items:center;gap:7px;
-  font-size:9px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.8px;
-  font-family:'DM Sans',sans-serif;
-}
+/* Figure inside paper */
+.paper-figure{background:#fff;border:1px solid var(--cream4);border-radius:8px;overflow:hidden;margin:18px 0}
+.figure-bar{background:linear-gradient(90deg,#f8f4ed,#f0ece3);padding:8px 15px;border-bottom:1px solid var(--cream4);display:flex;align-items:center;gap:7px;font-size:9px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.8px;font-family:'DM Sans',sans-serif}
 .figure-render{padding:18px;display:flex;justify-content:center;overflow-x:auto;min-height:40px;background:#fff}
 .figure-render svg{max-width:100%;height:auto}
-.figure-caption{
-  padding:7px 15px 11px;font-family:'Spectral',serif;font-size:12.5px;
-  color:var(--ink3);font-style:italic;text-align:center;
-  background:rgba(0,0,0,.015);border-top:1px solid var(--cream4);
-}
+.figure-caption{padding:7px 15px 11px;font-family:'Spectral',serif;font-size:12.5px;color:var(--ink3);font-style:italic;text-align:center;background:rgba(0,0,0,.015);border-top:1px solid var(--cream4)}
 
 /* References */
 .paper-refs{border-top:2px solid var(--cream3);padding-top:22px;margin-top:12px}
@@ -398,29 +422,17 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink)}
 
 /* ══ DOWNLOAD ROW ══ */
 .dl-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-.dl-btn{
-  display:inline-flex;align-items:center;gap:7px;padding:8px 15px;
-  background:#fff;border:1px solid var(--border2);border-radius:8px;
-  font-family:'DM Sans',sans-serif;font-size:11.5px;font-weight:500;
-  color:var(--ink2);cursor:pointer;transition:all .15s;
-}
+.dl-btn{display:inline-flex;align-items:center;gap:7px;padding:8px 15px;background:#fff;border:1px solid var(--border2);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:11.5px;font-weight:500;color:var(--ink2);cursor:pointer;transition:all .15s}
 .dl-btn:hover{background:var(--cream2);border-color:var(--gold);color:var(--gold);transform:translateY(-1px)}
 .dl-btn svg{width:12px;height:12px}
 
 /* ══ MATH RENDERER ══ */
 .math-wrap{display:flex;flex-direction:column;gap:11px}
-.math-header-block{
-  background:linear-gradient(135deg,var(--teal-pale),rgba(26,107,122,.04));
-  border:1px solid rgba(26,107,122,.2);border-radius:11px;padding:16px 18px;
-}
+.math-header-block{background:linear-gradient(135deg,var(--teal-pale),rgba(26,107,122,.04));border:1px solid rgba(26,107,122,.2);border-radius:11px;padding:16px 18px}
 .math-kicker{font-size:9px;font-weight:700;color:var(--teal);text-transform:uppercase;letter-spacing:1.1px;margin-bottom:5px}
 .math-main-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:600;line-height:1.3;color:var(--ink)}
 .math-sec{border:1px solid var(--border);background:#fff;border-radius:10px;overflow:hidden}
-.math-sec-h{
-  display:flex;align-items:center;gap:8px;padding:10px 14px;
-  background:var(--cream2);border-bottom:1px solid var(--border);
-  font-size:10px;font-weight:700;color:var(--ink2);text-transform:uppercase;letter-spacing:.9px;
-}
+.math-sec-h{display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--cream2);border-bottom:1px solid var(--border);font-size:10px;font-weight:700;color:var(--ink2);text-transform:uppercase;letter-spacing:.9px}
 .math-sec-dot{width:7px;height:7px;border-radius:50%;background:var(--teal);flex-shrink:0}
 .math-sec-b{padding:12px 14px;display:flex;flex-direction:column;gap:9px}
 .math-p{font-size:14px;color:var(--ink);line-height:1.8;font-family:'Spectral',serif}
@@ -433,69 +445,35 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink)}
 .math-inline{font-family:'DM Mono',monospace;background:var(--teal-pale);border:1px solid rgba(26,107,122,.15);border-radius:4px;padding:1px 5px;font-size:.88em;color:var(--teal)}
 .math-list{margin:0 0 0 18px;display:flex;flex-direction:column;gap:5px}
 .math-list li{padding-left:2px;line-height:1.7;font-size:14px;font-family:'Spectral',serif;color:var(--ink)}
-
-/* Inline diag (dark context) */
 .inline-diag{margin:12px 0;background:var(--cream3);border:1px solid var(--border);border-radius:9px;overflow:hidden}
 .inline-diag-bar{display:flex;align-items:center;gap:6px;padding:7px 13px;background:var(--cream2);border-bottom:1px solid var(--border);font-size:9px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.6px}
 .inline-diag-render{padding:15px;display:flex;justify-content:center;overflow-x:auto;min-height:50px;background:#fff}
 .inline-diag-render svg{max-width:100%;height:auto}
 
 /* ══ INPUT BAR ══ */
-.input-bar{
-  padding:14px 28px 20px;border-top:1px solid var(--border);flex-shrink:0;
-  background:rgba(250,247,242,.97);backdrop-filter:blur(16px);
-}
+.input-bar{padding:14px 28px 20px;border-top:1px solid var(--border);flex-shrink:0;background:rgba(250,247,242,.97);backdrop-filter:blur(16px)}
 .input-inner{max-width:var(--paper-w);margin:0 auto}
 .file-chip-wrap{padding:0 2px 7px;display:none}
 .file-chip-wrap.visible{display:block}
-.file-chip{
-  display:inline-flex;align-items:center;gap:6px;padding:4px 11px;
-  background:var(--gold-pale);border:1px solid rgba(201,145,26,.3);
-  border-radius:20px;font-size:11px;color:var(--gold);font-weight:500;
-}
+.file-chip{display:inline-flex;align-items:center;gap:6px;padding:4px 11px;background:var(--gold-pale);border:1px solid rgba(201,145,26,.3);border-radius:20px;font-size:11px;color:var(--gold);font-weight:500}
 .file-chip button{background:none;border:none;cursor:pointer;color:var(--gold);font-size:15px;padding:0;line-height:1;margin-left:3px}
-.input-box{
-  display:flex;align-items:flex-end;gap:9px;
-  background:#fff;border:1.5px solid var(--border2);border-radius:14px;
-  padding:11px 12px;transition:all .18s;
-  box-shadow:0 4px 20px var(--shadow);
-}
-.input-box:focus-within{
-  border-color:rgba(201,145,26,.4);
-  box-shadow:0 0 0 3px rgba(201,145,26,.06),0 6px 24px var(--shadow);
-}
-.attach-btn{
-  width:33px;height:33px;flex-shrink:0;background:none;border:none;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;color:var(--ink4);
-  transition:color .15s;padding-bottom:2px;
-}
+.input-box{display:flex;align-items:flex-end;gap:9px;background:#fff;border:1.5px solid var(--border2);border-radius:14px;padding:11px 12px;transition:all .18s;box-shadow:0 4px 20px var(--shadow)}
+.input-box:focus-within{border-color:rgba(201,145,26,.4);box-shadow:0 0 0 3px rgba(201,145,26,.06),0 6px 24px var(--shadow)}
+.attach-btn{width:33px;height:33px;flex-shrink:0;background:none;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ink4);transition:color .15s;padding-bottom:2px}
 .attach-btn:hover{color:var(--ink2)}
 .attach-btn svg{width:15px;height:15px}
-textarea.ta{
-  flex:1;border:none!important;background:transparent!important;padding:2px!important;
-  box-shadow:none!important;font-family:'DM Sans',sans-serif;font-size:13.5px;
-  font-weight:400;line-height:1.65;color:var(--ink);min-height:22px;max-height:150px;
-  resize:none;overflow-y:auto;outline:none;
-}
+textarea.ta{flex:1;border:none!important;background:transparent!important;padding:2px!important;box-shadow:none!important;font-family:'DM Sans',sans-serif;font-size:13.5px;font-weight:400;line-height:1.65;color:var(--ink);min-height:22px;max-height:150px;resize:none;overflow-y:auto;outline:none}
 textarea.ta::placeholder{color:var(--ink4);font-style:italic}
-.send-btn{
-  width:38px;height:38px;flex-shrink:0;
-  background:linear-gradient(145deg,var(--crimson2),var(--crimson));
-  border:none;border-radius:10px;display:flex;align-items:center;justify-content:center;
-  cursor:pointer;transition:all .18s;
-  box-shadow:0 4px 14px rgba(139,26,46,.3),inset 0 1px 0 rgba(255,120,140,.15);
-}
-.send-btn:hover{background:linear-gradient(145deg,#c02845,#a02035);transform:scale(1.06);box-shadow:0 6px 20px rgba(139,26,46,.4)}
+.send-btn{width:38px;height:38px;flex-shrink:0;background:linear-gradient(145deg,var(--crimson2),var(--crimson));border:none;border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .18s;box-shadow:0 4px 14px rgba(139,26,46,.3),inset 0 1px 0 rgba(255,120,140,.15)}
+.send-btn.ms-send{background:linear-gradient(145deg,#7c3ab5,var(--violet));box-shadow:0 4px 14px rgba(91,45,142,.35)}
+.send-btn:hover{transform:scale(1.06)}
 .send-btn:disabled{opacity:.35;cursor:not-allowed;transform:none}
 .send-btn svg{width:15px;height:15px;color:#fff}
 .input-hint{margin-top:8px;font-size:10px;color:var(--ink4);text-align:center;opacity:.6;font-weight:500;letter-spacing:.3px}
 #fileInput{display:none}
 
 @media(max-width:768px){
-  .sidebar{display:none}
-  .paper-cols{grid-template-columns:1fr}
-  .hint-grid{grid-template-columns:1fr}
-  .paper-inner{padding:24px 20px}
+  .sidebar{display:none}.paper-cols{grid-template-columns:1fr}.hint-grid{grid-template-columns:1fr}.paper-inner{padding:24px 20px}.eval-body{grid-template-columns:1fr 1fr}
 }
 </style>
 </head>
@@ -513,7 +491,7 @@ textarea.ta::placeholder{color:var(--ink4);font-style:italic}
           </svg>
         </div>
         <div class="logo-words">
-          <div class="logo-name">Stremini</div>
+          <div class="logo-name">Stremini <span class="logo-version">v6.0</span></div>
           <div class="logo-tagline">Research Agent</div>
         </div>
       </div>
@@ -525,10 +503,43 @@ textarea.ta::placeholder{color:var(--ink4);font-style:italic}
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
         Research Paper
       </button>
+      <button class="nav-btn" id="btnMS" onclick="setMode('manuscript')" style="margin-top:3px">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        Full Manuscript
+        <span class="nav-badge new-badge">NEW</span>
+      </button>
       <button class="nav-btn" id="btnM" onclick="setMode('math')" style="margin-top:3px">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>
         Math Solver
       </button>
+    </div>
+
+    <!-- Manuscript options (shown only in manuscript mode) -->
+    <div class="sb-ms-opts" id="msOpts">
+      <div class="ms-opt-lbl">Manuscript Options</div>
+      <div class="ms-field">
+        <label>Citation Style</label>
+        <select id="msCitation">
+          <option value="APA7">APA 7th Edition</option>
+          <option value="MLA9">MLA 9th Edition</option>
+          <option value="Chicago">Chicago 17th</option>
+          <option value="Vancouver">Vancouver</option>
+          <option value="IEEE">IEEE</option>
+        </select>
+      </div>
+      <div class="ms-field">
+        <label>Target Journal (optional)</label>
+        <input id="msJournal" type="text" placeholder="e.g. Nature, PLOS ONE…"/>
+      </div>
+      <div class="ms-field">
+        <label>Target Word Count</label>
+        <select id="msWordCount">
+          <option value="5000">5,000 words</option>
+          <option value="6000" selected>6,000 words</option>
+          <option value="8000">8,000 words</option>
+          <option value="10000">10,000 words</option>
+        </select>
+      </div>
     </div>
 
     <div class="sb-status">
@@ -540,8 +551,9 @@ textarea.ta::placeholder{color:var(--ink4);font-style:italic}
       <div class="nav-label" style="padding:0;margin-bottom:9px">Session</div>
       <div class="stats-grid">
         <div class="stat-cell"><div class="stat-n" id="sPapers">0</div><div class="stat-l">Papers</div></div>
+        <div class="stat-cell"><div class="stat-n" id="sManuscripts">0</div><div class="stat-l">Docs</div></div>
         <div class="stat-cell"><div class="stat-n" id="sMath">0</div><div class="stat-l">Solved</div></div>
-        <div class="stat-cell"><div class="stat-n" id="sDiags">0</div><div class="stat-l">Figures</div></div>
+        <div class="stat-cell"><div class="stat-n" id="sDiags">0</div><div class="stat-l">Figs</div></div>
       </div>
     </div>
 
@@ -585,34 +597,58 @@ textarea.ta::placeholder{color:var(--ink4);font-style:italic}
           </svg>
         </div>
         <h2>Stremini Agent</h2>
-        <p class="welcome-sub">A multi-agent research pipeline sourcing from arXiv, Semantic Scholar & the web — delivering structured, evidence-grounded academic papers and rigorous math solutions.</p>
+        <div class="welcome-version">
+          <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+          v6.0 · Full Manuscript Engine
+        </div>
+        <p class="welcome-sub">9-agent pipeline — evidence-first research, claim-level verification, contradiction detection, peer review simulation, and full IMRAD manuscript generation.</p>
         <div class="hint-grid">
-          <div class="hint-card" onclick="hint('research','Explore the transformative impact of large language models on scientific discovery, research methodologies, and academic knowledge creation')">
+          <div class="hint-card gold-c" onclick="hint('research','Explore the transformative impact of large language models on scientific discovery, research methodologies, and academic knowledge creation')">
             <div class="hint-icon gold"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg></div>
             <div>
               <div class="hint-title">LLMs & Scientific Discovery</div>
-              <div class="hint-desc">Full paper with literature review</div>
+              <div class="hint-desc">Evidence-grounded research paper</div>
+              <div class="hint-mode-badge r">Research</div>
             </div>
           </div>
-          <div class="hint-card" onclick="hint('research','Quantum computing and its implications for post-quantum cryptographic security standards')">
-            <div class="hint-icon gold"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 010 20M12 2a15 15 0 000 20"/></svg></div>
+          <div class="hint-card violet-c" onclick="hint('manuscript','The role of neuroplasticity in adult learning: mechanisms, interventions, and educational implications')">
+            <div class="hint-icon violet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/></svg></div>
+            <div>
+              <div class="hint-title">Neuroplasticity & Learning</div>
+              <div class="hint-desc">Full IMRAD manuscript with peer review</div>
+              <div class="hint-mode-badge ms">Manuscript</div>
+            </div>
+          </div>
+          <div class="hint-card violet-c" onclick="hint('manuscript','Climate change adaptation strategies in urban infrastructure: a systematic review of policy frameworks and engineering solutions')">
+            <div class="hint-icon violet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 010 20M12 2a15 15 0 000 20"/></svg></div>
+            <div>
+              <div class="hint-title">Urban Climate Adaptation</div>
+              <div class="hint-desc">Systematic review manuscript</div>
+              <div class="hint-mode-badge ms">Manuscript</div>
+            </div>
+          </div>
+          <div class="hint-card gold-c" onclick="hint('research','Quantum computing and its implications for post-quantum cryptographic security standards')">
+            <div class="hint-icon gold"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg></div>
             <div>
               <div class="hint-title">Quantum Cryptography</div>
               <div class="hint-desc">Literature review & analysis</div>
+              <div class="hint-mode-badge r">Research</div>
             </div>
           </div>
-          <div class="hint-card" onclick="hint('math','Solve the integral of x^2 * e^x using integration by parts, showing every step with full verification')">
+          <div class="hint-card teal-c" onclick="hint('math','Solve the integral of x^2 * e^x using integration by parts, showing every step with full verification')">
             <div class="hint-icon teal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg></div>
             <div>
               <div class="hint-title">Integration by Parts</div>
               <div class="hint-desc">Step-by-step calculus solution</div>
+              <div class="hint-mode-badge m">Math</div>
             </div>
           </div>
-          <div class="hint-card" onclick="hint('math','Prove that the square root of 2 is irrational using a rigorous proof by contradiction')">
-            <div class="hint-icon teal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg></div>
+          <div class="hint-card violet-c" onclick="hint('manuscript','Artificial intelligence bias in healthcare diagnostics: sources, consequences, and mitigation frameworks')">
+            <div class="hint-icon violet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
             <div>
-              <div class="hint-title">Irrationality Proof</div>
-              <div class="hint-desc">Formal mathematical proof</div>
+              <div class="hint-title">AI Bias in Healthcare</div>
+              <div class="hint-desc">Full manuscript with 9 agents</div>
+              <div class="hint-mode-badge ms">Manuscript</div>
             </div>
           </div>
         </div>
@@ -639,7 +675,7 @@ textarea.ta::placeholder{color:var(--ink4);font-style:italic}
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
         </button>
       </div>
-      <div class="input-hint">Enter to send · Shift+Enter for newline · Upload PDF or DOCX to analyse</div>
+      <div class="input-hint" id="inputHint">Enter to send · Shift+Enter for newline · Upload PDF or DOCX to analyse</div>
     </div>
   </div>
 </div>
@@ -648,11 +684,7 @@ textarea.ta::placeholder{color:var(--ink4);font-style:italic}
 <script>
 mermaid.initialize({
   startOnLoad:false,theme:'neutral',
-  themeVariables:{
-    background:'#ffffff',primaryColor:'#f8f4ed',primaryBorderColor:'#8b1a2e',
-    lineColor:'#8b1a2e',textColor:'#1a1209',nodeTextColor:'#1a1209',
-    edgeLabelBackground:'#faf7f2',clusterBkg:'#f8f4ed',
-  },
+  themeVariables:{background:'#ffffff',primaryColor:'#f8f4ed',primaryBorderColor:'#8b1a2e',lineColor:'#8b1a2e',textColor:'#1a1209',nodeTextColor:'#1a1209',edgeLabelBackground:'#faf7f2',clusterBkg:'#f8f4ed'},
   securityLevel:'loose',fontFamily:'DM Sans, sans-serif',fontSize:12,
   flowchart:{curve:'basis',padding:16}
 });
@@ -662,7 +694,7 @@ mermaid.initialize({
 // ═══════════════════════════════════════════════════
 const API='https://agentic-research.vishwajeetadkine705.workers.dev';
 let mode='research',running=false,history=[];
-let papers=0,mathSolved=0,diagramsTotal=0,diagId=0;
+let papers=0,manuscripts=0,mathSolved=0,diagramsTotal=0,diagId=0;
 let pendingDocText=null,pendingDocName=null;
 
 const ta=document.getElementById('ta');
@@ -685,14 +717,22 @@ function sleep(ms){return new Promise(r=>setTimeout(r,ms))}
 
 function setMode(m){
   mode=m;
-  const isR=m==='research';
+  const isR=m==='research',isMS=m==='manuscript',isMath=m==='math';
   document.getElementById('btnR').className='nav-btn'+(isR?' active-r':'');
-  document.getElementById('btnM').className='nav-btn'+(isR?'':' active-m');
+  document.getElementById('btnMS').className='nav-btn'+(isMS?' active-ms':'');
+  document.getElementById('btnM').className='nav-btn'+(isMath?' active-m':'');
   const badge=document.getElementById('modeBadge');
-  badge.style.cssText=isR?'':'background:rgba(26,107,122,.08);border-color:rgba(26,107,122,.2);color:var(--teal)';
-  document.getElementById('modeTxt').textContent=isR?'Research Mode':'Math Mode';
-  ta.placeholder=isR?'Enter a research topic or question…':'Enter a math problem or proof…';
+  const opts=document.getElementById('msOpts');
+  opts.classList.toggle('visible',isMS);
+  if(isR){badge.className='mode-badge';badge.querySelector('svg').setAttribute('viewBox','0 0 24 24')}
+  else if(isMS){badge.className='mode-badge ms-badge'}
+  else{badge.className='mode-badge';badge.style.cssText='background:rgba(26,107,122,.08);border-color:rgba(26,107,122,.2);color:var(--teal)'}
+  document.getElementById('modeTxt').textContent=isR?'Research Mode':isMS?'Manuscript Mode':'Math Mode';
+  ta.placeholder=isR?'Enter a research topic or question…':isMS?'Enter your manuscript topic…':'Enter a math problem or proof…';
+  sendBtn.className='send-btn'+(isMS?' ms-send':'');
+  document.getElementById('inputHint').textContent=isMS?'Full IMRAD manuscript · Peer review · 9 agents · ~5000+ words':'Enter to send · Shift+Enter for newline · Upload PDF or DOCX to analyse';
 }
+
 function hint(m,text){setMode(m);ta.value=text;ta.style.height='auto';ta.style.height=Math.min(ta.scrollHeight,150)+'px';ta.focus()}
 
 function setStatus(type,label){
@@ -703,6 +743,7 @@ function setStatus(type,label){
 }
 function updateStats(){
   document.getElementById('sPapers').textContent=papers;
+  document.getElementById('sManuscripts').textContent=manuscripts;
   document.getElementById('sMath').textContent=mathSolved;
   document.getElementById('sDiags').textContent=diagramsTotal;
 }
@@ -710,7 +751,8 @@ function addRecent(text,m){
   const list=document.getElementById('recentItems');
   const empty=list.querySelector('.ri-empty');if(empty)empty.remove();
   const d=document.createElement('div');d.className='ri';
-  d.textContent=(text.slice(0,65)+(text.length>65?'…':''));
+  const modeLabels={research:'R',manuscript:'MS',math:'∑'};
+  d.innerHTML=`<span class="ri-mode">${modeLabels[m]||'R'}</span>${esc(text.slice(0,55)+(text.length>55?'…':''))}`;
   d.onclick=()=>hint(m,text);list.prepend(d);
   while(list.children.length>8)list.lastChild.remove();
 }
@@ -735,11 +777,12 @@ function addAgentMsg(){
 function createStepsPanel(slot){
   const panel=document.createElement('div');panel.className='steps-panel';
   const hdr=document.createElement('div');hdr.className='steps-header';
-  hdr.innerHTML=`<div class="steps-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span id="stepsTitle_${Date.now()}">Agent pipeline starting…</span></div><svg class="steps-chevron open" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="18 15 12 9 6 15"/></svg>`;
+  const tid='st_'+Date.now();
+  hdr.innerHTML=`<div class="steps-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span id="${tid}">Agent pipeline starting…</span></div><svg class="steps-chevron open" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="18 15 12 9 6 15"/></svg>`;
   const body=document.createElement('div');body.className='steps-body';
   hdr.onclick=()=>{body.classList.toggle('collapsed');hdr.querySelector('.steps-chevron').classList.toggle('open')};
   panel.appendChild(hdr);panel.appendChild(body);slot.appendChild(panel);
-  const titleEl=hdr.querySelector('[id^="stepsTitle"]');
+  const titleEl=document.getElementById(tid);
   return{
     panel,body,
     setTitle(t){titleEl.textContent=t},
@@ -772,7 +815,138 @@ function createStepsPanel(slot){
 }
 
 // ═══════════════════════════════════════════════════
-// DIAGRAM PARSER — extract <diagram> tags from content
+// MANUSCRIPT PROGRESS BAR
+// ═══════════════════════════════════════════════════
+function createProgressBar(slot,total){
+  const wrap=document.createElement('div');
+  const bar=document.createElement('div');bar.className='ms-progress';
+  const fill=document.createElement('div');fill.className='ms-progress-fill';fill.style.width='0%';
+  bar.appendChild(fill);
+  const lbl=document.createElement('div');lbl.className='ms-progress-label';lbl.textContent='Initialising manuscript pipeline…';
+  wrap.appendChild(bar);wrap.appendChild(lbl);
+  slot.appendChild(wrap);
+  let current=0;
+  return{
+    update(step,label){
+      current=step;const pct=Math.round((step/total)*100);
+      fill.style.width=pct+'%';lbl.textContent=`Step ${step}/${total} — ${label}`;
+    },
+    done(label){fill.style.width='100%';lbl.textContent=label}
+  };
+}
+
+// ═══════════════════════════════════════════════════
+// EVAL DASHBOARD
+// ═══════════════════════════════════════════════════
+function buildEvalDashboard(meta){
+  const ev=meta?.evaluation;
+  if(!ev)return null;
+  const panel=document.createElement('div');panel.className='eval-dashboard';
+  const hdr=document.createElement('div');hdr.className='eval-header';
+  const tid='ev_'+Date.now();
+  hdr.innerHTML=`<div class="eval-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Evidence Quality Dashboard</div><svg class="steps-chevron open" id="${tid}_chev" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="18 15 12 9 6 15"/></svg>`;
+  const body=document.createElement('div');body.className='eval-body';body.id=tid+'_body';
+  hdr.onclick=()=>{body.classList.toggle('collapsed');document.getElementById(tid+'_chev').classList.toggle('open')};
+
+  const pctV=ev.pct_verified||0,avgC=ev.avg_confidence_score||0,hRate=ev.hallucination_proxy_rate||0,novR=Math.round((meta.evaluation?.novelty?.novelty_ratio||0)*100);
+  const cells=[
+    {n:`${pctV}%`,l:'Claims Verified',s:`${ev.verified_claims||0}/${ev.total_claims||0} claims`,cls:pctV>=70?'good':pctV>=50?'warn':'bad'},
+    {n:`${avgC}%`,l:'Avg Confidence',s:'Per-claim score',cls:avgC>=65?'good':avgC>=45?'warn':'bad'},
+    {n:`${hRate}%`,l:'Hallucination Rate',s:'Lower is better',cls:hRate<=20?'good':hRate<=40?'warn':'bad'},
+    {n:`${novR}%`,l:'Novelty Ratio',s:'vs. source base',cls:novR>=30?'good':novR>=15?'warn':'bad'},
+  ];
+  cells.forEach(c=>{
+    const cell=document.createElement('div');cell.className='eval-cell';
+    cell.innerHTML=`<div class="eval-n ${c.cls}">${esc(c.n)}</div><div class="eval-lbl">${esc(c.l)}</div><div class="eval-sub">${esc(c.s)}</div>`;
+    body.appendChild(cell);
+  });
+
+  // Bar charts
+  const barRow=document.createElement('div');barRow.className='eval-bar-row';
+  const bars=[
+    {l:'Verified Claims',v:pctV,cls:'fill-green'},
+    {l:'Avg Confidence',v:avgC,cls:'fill-gold'},
+    {l:'Contradiction Rate',v:ev.contradiction_rate||0,cls:'fill-crimson'},
+  ];
+  bars.forEach(b=>{
+    const row=document.createElement('div');row.className='eval-bar-item';
+    row.innerHTML=`<span class="eval-bar-lbl">${esc(b.l)}</span><div class="eval-bar-track"><div class="eval-bar-fill ${b.cls}" style="width:0%"></div></div><span class="eval-bar-val">${b.v}%</span>`;
+    barRow.appendChild(row);
+    setTimeout(()=>{row.querySelector('.eval-bar-fill').style.width=Math.min(b.v,100)+'%'},100);
+  });
+  body.appendChild(barRow);
+
+  panel.appendChild(hdr);panel.appendChild(body);
+  return panel;
+}
+
+// ═══════════════════════════════════════════════════
+// PEER REVIEW PANEL
+// ═══════════════════════════════════════════════════
+function buildPeerReviewPanel(peerText){
+  if(!peerText)return null;
+  const panel=document.createElement('div');panel.className='peer-panel';
+  const hdr=document.createElement('div');hdr.className='peer-header';
+  const bid='pr_'+Date.now();
+  hdr.innerHTML=`<div class="peer-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>Peer Review Report</div><svg class="steps-chevron open" id="${bid}_chev" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="18 15 12 9 6 15"/></svg>`;
+  const body=document.createElement('div');body.className='peer-body';body.id=bid+'_body';
+  hdr.onclick=()=>{body.classList.toggle('collapsed');document.getElementById(bid+'_chev').classList.toggle('open')};
+
+  // Extract verdict
+  const verdictMatch=peerText.match(/VERDICT[:\s]+([A-Za-z\s]+?)(\n|$)/i);
+  const verdict=(verdictMatch?verdictMatch[1]:'').trim().toLowerCase();
+  if(verdict){
+    const vBadge=document.createElement('div');
+    let cls='verdict-minor',label='Minor Revision';
+    if(verdict.includes('accept'))  {cls='verdict-accept';label='Accept'}
+    else if(verdict.includes('major')){cls='verdict-major';label='Major Revision'}
+    else if(verdict.includes('reject')){cls='verdict-major';label='Reject'}
+    vBadge.className='peer-verdict-badge '+cls;
+    vBadge.innerHTML=`<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>${label}`;
+    body.appendChild(vBadge);
+  }
+
+  // Extract sections from peer review text
+  const sectionRe=/^(SUMMARY|MAJOR CONCERNS?|MINOR CONCERNS?|STRENGTHS?|VERDICT|CONFIDENCE)[:\s]*([\s\S]*?)(?=\n(?:SUMMARY|MAJOR CONCERNS?|MINOR CONCERNS?|STRENGTHS?|VERDICT|CONFIDENCE)|$)/gim;
+  let m;
+  while((m=sectionRe.exec(peerText))!==null){
+    const secName=m[1].trim().toUpperCase();
+    const secText=m[2].trim();
+    if(!secText)continue;
+    if(secName==='VERDICT'||secName==='CONFIDENCE')continue;
+    const sec=document.createElement('div');sec.className='peer-section';
+    sec.appendChild(Object.assign(document.createElement('div'),{className:'peer-section-title',textContent:secName}));
+    // Split into concern items
+    const lines=secText.split('\n').filter(l=>l.trim());
+    lines.forEach(line=>{
+      const isMajor=secName.includes('MAJOR');const isMinor=secName.includes('MINOR');const isStrength=secName.includes('STRENGTH');
+      if(isStrength){
+        const item=document.createElement('div');item.className='peer-strength';
+        item.innerHTML=`<span class="strength-ico">✓</span><span>${esc(line.replace(/^[\[M\d\]\.●\-\*\s]+/,'').trim())}</span>`;
+        sec.appendChild(item);
+      }else if(isMajor||isMinor){
+        const tagMatch=line.match(/^\[([Mm]\d+)\]/);
+        const item=document.createElement('div');item.className='peer-concern';
+        item.innerHTML=`<span class="concern-tag${isMinor?' minor':''}">${tagMatch?tagMatch[1]:(isMajor?'M':'m')}</span><span>${esc(line.replace(/^\[[Mm]\d+\]\s*/,'').trim())}</span>`;
+        sec.appendChild(item);
+      }else{
+        const p=document.createElement('p');p.style.cssText='font-size:12.5px;line-height:1.75;color:var(--ink2);margin-bottom:5px';p.textContent=line;sec.appendChild(p);
+      }
+    });
+    body.appendChild(sec);
+  }
+
+  // Fallback if regex didn't parse well
+  if(!body.querySelector('.peer-section')){
+    const p=document.createElement('p');p.style.cssText='font-size:12.5px;line-height:1.75;color:var(--ink2);white-space:pre-wrap';p.textContent=peerText.slice(0,1500);body.appendChild(p);
+  }
+
+  panel.appendChild(hdr);panel.appendChild(body);
+  return panel;
+}
+
+// ═══════════════════════════════════════════════════
+// DIAGRAM PARSER
 // ═══════════════════════════════════════════════════
 function parseContent(content){
   const parts=[];
@@ -862,17 +1036,13 @@ async function renderFigure(dtype,title,code){
   const fig=document.createElement('div');fig.className='paper-figure full-w';
   const bar=mkEl('div','figure-bar',`<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg> Figure — ${esc(title||dtype)}`);
   const render=mkEl('div','figure-render');
-  // SILENT: try to render, if it fails just hide the figure entirely
   try{
     const uid='fg'+(++diagId)+'_'+Date.now();
     const{svg}=await mermaid.render(uid,code);
     render.innerHTML=svg;
     const caption=mkEl('div','figure-caption',esc(title||'Diagram'));
     fig.appendChild(bar);fig.appendChild(render);fig.appendChild(caption);
-  }catch(e){
-    // Silent failure — return empty div so no error shows
-    return document.createElement('span');
-  }
+  }catch(e){return document.createElement('span')}
   return fig;
 }
 
@@ -883,20 +1053,145 @@ function makePara(text,isFirst){
   return p;
 }
 
-async function buildPaperDOM(structure,diagramParts){
+// ═══════════════════════════════════════════════════
+// MANUSCRIPT SECTION RENDERER — IMRAD tabs
+// ═══════════════════════════════════════════════════
+const IMRAD_TAB_LABELS=[
+  {id:'abstract',label:'Abstract'},
+  {id:'introduction',label:'1. Introduction'},
+  {id:'literature_review',label:'2. Literature'},
+  {id:'theoretical_framework',label:'3. Framework'},
+  {id:'methodology',label:'4. Methodology'},
+  {id:'analysis_1',label:'5. Analysis I'},
+  {id:'analysis_2',label:'6. Analysis II'},
+  {id:'findings',label:'7. Findings'},
+  {id:'conclusion',label:'8. Conclusion'},
+];
+
+async function buildManuscriptDOM(data){
   const doc=document.createElement('div');
 
   // Masthead
+  const mh=mkEl('div','paper-masthead ms');
+  mh.innerHTML=`<span class="masthead-journal">Stremini Research Journal</span><div style="display:flex;gap:8px;align-items:center"><span class="masthead-meta">${new Date().getFullYear()}</span><span class="masthead-badge"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Full Manuscript</span></div>`;
+  doc.appendChild(mh);
+
+  const paperDoc=mkEl('div','paper-doc');doc.appendChild(paperDoc);
+  const inner=mkEl('div','paper-inner');paperDoc.appendChild(inner);
+
+  // Parse the assembled manuscript for title/keywords
+  const assembled=data.content||'';
+  const mContent=assembled.replace(/<manuscript>/gi,'').replace(/<\/manuscript>/gi,'').trim();
+  const structure=parsePaper(mContent||'');
+
+  // Title block
+  const tb=mkEl('div','paper-title-block');
+  tb.appendChild(mkEl('div','paper-title',esc(data.title||structure.title||'Academic Manuscript')));
+  if(structure.authors||structure.date){
+    const byline=mkEl('div','paper-byline');
+    if(structure.authors)byline.innerHTML+=esc(structure.authors);
+    if(structure.authors&&structure.date)byline.innerHTML+=`<span class="byline-sep"></span>`;
+    if(structure.date)byline.innerHTML+=esc(structure.date);
+    tb.appendChild(byline);
+  }
+  if(structure.keywords){
+    const kws=mkEl('div','paper-kws');
+    structure.keywords.split(/[,;]/).map(k=>k.trim()).filter(Boolean).forEach(k=>{kws.appendChild(mkEl('span','kw-tag',esc(k)))});
+    tb.appendChild(kws);
+  }
+  inner.appendChild(tb);
+
+  // IMRAD Tab navigation
+  const sections=data.sections||{};
+  const hasTabSections=Object.keys(sections).length>0;
+
+  if(hasTabSections){
+    const tabNav=mkEl('div','imrad-nav');
+    const tabContents=mkEl('div','');
+    inner.appendChild(tabNav);inner.appendChild(tabContents);
+
+    let firstActive=true;
+    for(const tab of IMRAD_TAB_LABELS){
+      const sContent=sections[tab.id];
+      if(!sContent)continue;
+      const tabId='imrad_'+tab.id+'_'+Date.now();
+      const btn=mkEl('button','imrad-tab'+(firstActive?' active':''),esc(tab.label));
+      btn.dataset.tab=tabId;
+      btn.onclick=function(){
+        tabNav.querySelectorAll('.imrad-tab').forEach(t=>t.classList.remove('active'));
+        tabContents.querySelectorAll('.imrad-content').forEach(c=>c.classList.remove('active'));
+        this.classList.add('active');
+        document.getElementById(tabId)?.classList.add('active');
+      };
+      tabNav.appendChild(btn);
+
+      const contentDiv=mkEl('div','imrad-content'+(firstActive?' active':''));
+      contentDiv.id=tabId;
+      // Parse and render section content
+      const secParts=parseContent(sContent);
+      const secDiagParts=secParts.filter(p=>p.kind==='diagram');
+      const secText=secParts.filter(p=>p.kind==='text').map(p=>p.txt).join('\n');
+      const wCount=secText.trim().split(/\s+/).filter(Boolean).length;
+      const sh=mkEl('div','sec-heading violet');
+      sh.innerHTML=`${esc(tab.label)}<span class="section-word-count">~${wCount.toLocaleString()} words</span>`;
+      contentDiv.appendChild(sh);
+      // Render paragraphs
+      const paraLines=secText.split(/\n+/).map(l=>l.trim()).filter(l=>l.length>20);
+      paraLines.forEach((pt,pi)=>contentDiv.appendChild(makePara(pt,pi===0)));
+      // Render diagrams
+      for(const d of secDiagParts){
+        const figEl=await renderFigure(d.dtype,d.title,d.code);
+        if(figEl.tagName!=='SPAN')contentDiv.appendChild(figEl);
+      }
+      tabContents.appendChild(contentDiv);
+      firstActive=false;
+    }
+  }else{
+    // Fallback: render the assembled manuscript prose
+    const grid=mkEl('div','paper-cols');inner.appendChild(grid);
+    const parts=parseContent(mContent);
+    const diagParts=parts.filter(p=>p.kind==='diagram');
+    let diagIdx=0;
+    structure.sections.forEach((sec,si)=>{
+      const secWrap=mkEl('div','full-w');
+      const sh=mkEl('div','sec-heading violet');
+      sh.innerHTML=`<span class="sec-num">${sec.num}.</span>${esc(sec.heading)}`;
+      secWrap.appendChild(sh);
+      sec.paragraphs.forEach((pt,pi)=>secWrap.appendChild(makePara(pt,pi===0&&si===0)));
+      grid.appendChild(secWrap);
+    });
+    // Render remaining diagrams
+    for(;diagIdx<diagParts.length;diagIdx++){
+      const d=diagParts[diagIdx];
+      const figEl=await renderFigure(d.dtype,d.title,d.code);
+      if(figEl.tagName!=='SPAN'){const fw=mkEl('div','full-w');fw.appendChild(figEl);grid.appendChild(fw)}
+    }
+    // References
+    if(structure.references.length>0){
+      const rw=mkEl('div','paper-refs full-w');rw.appendChild(mkEl('div','refs-title','References'));
+      const merged=[];
+      structure.references.forEach(line=>{
+        const isNew=/^\[\d+\]/.test(line)||/^[A-Z][a-zA-Z]+,/.test(line)||/^\d+\./.test(line);
+        if(isNew||!merged.length)merged.push(line);else merged[merged.length-1]+=' '+line;
+      });
+      merged.forEach((ref,idx)=>{
+        const ri=mkEl('div','ref-item');ri.appendChild(mkEl('div','ref-n',`[${idx+1}]`));
+        const body2=mkEl('div','ref-body');body2.innerHTML=ref.replace(/(https?:\/\/\S+)/g,url=>`<a href="${url}" target="_blank" rel="noopener">${url}</a>`);
+        ri.appendChild(body2);rw.appendChild(ri);
+      });
+      grid.appendChild(rw);
+    }
+  }
+  return doc;
+}
+
+async function buildPaperDOM(structure,diagramParts){
+  const doc=document.createElement('div');
   const mh=mkEl('div','paper-masthead');
   mh.innerHTML=`<span class="masthead-journal">Stremini Research Journal</span><span class="masthead-meta">Multi-Agent Pipeline · ${new Date().getFullYear()}</span>`;
   doc.appendChild(mh);
-
-  const paperDoc=mkEl('div','paper-doc');
-  doc.appendChild(paperDoc);
-  const inner=mkEl('div','paper-inner');
-  paperDoc.appendChild(inner);
-
-  // Title block
+  const paperDoc=mkEl('div','paper-doc');doc.appendChild(paperDoc);
+  const inner=mkEl('div','paper-inner');paperDoc.appendChild(inner);
   const tb=mkEl('div','paper-title-block');
   tb.appendChild(mkEl('div','paper-title',esc(structure.title||'Research Paper')));
   if(structure.authors||structure.date){
@@ -912,178 +1207,81 @@ async function buildPaperDOM(structure,diagramParts){
     tb.appendChild(kws);
   }
   inner.appendChild(tb);
-
-  // Abstract
   if(structure.abstract.length>0){
-    const ab=mkEl('div','paper-abstract');
-    ab.appendChild(mkEl('div','abstract-label','Abstract'));
-    ab.appendChild(mkEl('p',null,renderCites(esc(structure.abstract.join(' ')))));
-    inner.appendChild(ab);
+    const ab=mkEl('div','paper-abstract');ab.appendChild(mkEl('div','abstract-label','Abstract'));
+    ab.appendChild(mkEl('p',null,renderCites(esc(structure.abstract.join(' ')))));inner.appendChild(ab);
   }
-
-  // Two-col grid
-  const grid=mkEl('div','paper-cols');
-  inner.appendChild(grid);
+  const grid=mkEl('div','paper-cols');inner.appendChild(grid);
   let dIdx=0;
-
   for(let si=0;si<structure.sections.length;si++){
     const sec=structure.sections[si];
     const secWrap=mkEl('div','full-w');
-    const sh=mkEl('div','sec-heading');
-    sh.innerHTML=`<span class="sec-num">${sec.num}.</span>${esc(sec.heading)}`;
+    const sh=mkEl('div','sec-heading');sh.innerHTML=`<span class="sec-num">${sec.num}.</span>${esc(sec.heading)}`;
     secWrap.appendChild(sh);
     sec.paragraphs.forEach((pt,pi)=>{secWrap.appendChild(makePara(pt,pi===0&&si===0))});
-
-    // Insert diagram after sections 0 and 1
     if(dIdx<diagramParts.length&&(si===0||si===1)){
-      const d=diagramParts[dIdx++];
-      const figEl=await renderFigure(d.dtype,d.title,d.code);
+      const d=diagramParts[dIdx++];const figEl=await renderFigure(d.dtype,d.title,d.code);
       if(figEl.tagName!=='SPAN')secWrap.appendChild(figEl);
     }
-
-    // Sub-sections
     for(let ssi=0;ssi<(sec.subSections||[]).length;ssi++){
-      const sub=sec.subSections[ssi];
-      const subW=mkEl('div');
+      const sub=sec.subSections[ssi];const subW=mkEl('div');
       subW.appendChild(mkEl('div','subsec-heading',`${sub.num} ${esc(sub.heading)}`));
       sub.paragraphs.forEach(pt=>subW.appendChild(makePara(pt,false)));
-      if(dIdx<diagramParts.length&&ssi===1){
-        const d=diagramParts[dIdx++];
-        const figEl=await renderFigure(d.dtype,d.title,d.code);
-        if(figEl.tagName!=='SPAN')subW.appendChild(figEl);
-      }
+      if(dIdx<diagramParts.length&&ssi===1){const d=diagramParts[dIdx++];const figEl=await renderFigure(d.dtype,d.title,d.code);if(figEl.tagName!=='SPAN')subW.appendChild(figEl)}
       secWrap.appendChild(subW);
     }
     grid.appendChild(secWrap);
   }
-
-  // Remaining diagrams
-  while(dIdx<diagramParts.length){
-    const d=diagramParts[dIdx++];
-    const figEl=await renderFigure(d.dtype,d.title,d.code);
-    if(figEl.tagName!=='SPAN'){const fw=mkEl('div','full-w');fw.appendChild(figEl);grid.appendChild(fw)}
-  }
-
-  // Rejected hypotheses
-  if(structure.rejected.length>0){
-    const rj=mkEl('div','block-rejected full-w');
-    rj.appendChild(mkEl('div','blk-label','Rejected Hypotheses'));
-    structure.rejected.forEach(t=>rj.appendChild(makePara(t,false)));
-    grid.appendChild(rj);
-  }
-  // Uncertainty
-  if(structure.uncertainty.length>0){
-    const uc=mkEl('div','block-uncert full-w');
-    uc.appendChild(mkEl('div','blk-label','Uncertainty Disclosure'));
-    structure.uncertainty.forEach(t=>uc.appendChild(makePara(t,false)));
-    grid.appendChild(uc);
-  }
-  // Bias
-  if(structure.bias){
-    const ba=mkEl('div','block-callout full-w');
-    ba.appendChild(mkEl('div','blk-label','Bias Assessment'));
-    ba.appendChild(mkEl('p',null,renderCites(esc(structure.bias))));
-    grid.appendChild(ba);
-  }
-
-  // References
+  while(dIdx<diagramParts.length){const d=diagramParts[dIdx++];const figEl=await renderFigure(d.dtype,d.title,d.code);if(figEl.tagName!=='SPAN'){const fw=mkEl('div','full-w');fw.appendChild(figEl);grid.appendChild(fw)}}
+  if(structure.rejected.length>0){const rj=mkEl('div','block-rejected full-w');rj.appendChild(mkEl('div','blk-label','Rejected Hypotheses'));structure.rejected.forEach(t=>rj.appendChild(makePara(t,false)));grid.appendChild(rj)}
+  if(structure.uncertainty.length>0){const uc=mkEl('div','block-uncert full-w');uc.appendChild(mkEl('div','blk-label','Uncertainty Disclosure'));structure.uncertainty.forEach(t=>uc.appendChild(makePara(t,false)));grid.appendChild(uc)}
+  if(structure.bias){const ba=mkEl('div','block-callout full-w');ba.appendChild(mkEl('div','blk-label','Bias Assessment'));ba.appendChild(mkEl('p',null,renderCites(esc(structure.bias))));grid.appendChild(ba)}
   if(structure.references.length>0){
-    const rw=mkEl('div','paper-refs full-w');
-    rw.appendChild(mkEl('div','refs-title','References'));
+    const rw=mkEl('div','paper-refs full-w');rw.appendChild(mkEl('div','refs-title','References'));
     const merged=[];
-    structure.references.forEach(line=>{
-      const isNew=/^\[\d+\]/.test(line)||/^[A-Z][a-zA-Z]+,/.test(line)||/^\d+\./.test(line);
-      if(isNew||!merged.length)merged.push(line);else merged[merged.length-1]+=' '+line;
-    });
-    merged.forEach((ref,idx)=>{
-      const ri=mkEl('div','ref-item');
-      ri.appendChild(mkEl('div','ref-n',`[${idx+1}]`));
-      const body=mkEl('div','ref-body');
-      body.innerHTML=ref.replace(/(https?:\/\/\S+)/g,url=>`<a href="${url}" target="_blank" rel="noopener">${url}</a>`);
-      ri.appendChild(body);rw.appendChild(ri);
-    });
+    structure.references.forEach(line=>{const isNew=/^\[\d+\]/.test(line)||/^[A-Z][a-zA-Z]+,/.test(line)||/^\d+\./.test(line);if(isNew||!merged.length)merged.push(line);else merged[merged.length-1]+=' '+line});
+    merged.forEach((ref,idx)=>{const ri=mkEl('div','ref-item');ri.appendChild(mkEl('div','ref-n',`[${idx+1}]`));const body2=mkEl('div','ref-body');body2.innerHTML=ref.replace(/(https?:\/\/\S+)/g,url=>`<a href="${url}" target="_blank" rel="noopener">${url}</a>`);ri.appendChild(body2);rw.appendChild(ri)});
     grid.appendChild(rw);
   }
-
   return doc;
 }
 
 // ═══════════════════════════════════════════════════
-// MATH RENDERER
+// MATH RENDERER (unchanged)
 // ═══════════════════════════════════════════════════
 function fmtMathInline(text){
   const frag=document.createDocumentFragment();
   const re=/(\$[^$]+\$|`[^`]+`)/g;let last=0,m;
-  while((m=re.exec(text))!==null){
-    if(m.index>last)frag.appendChild(document.createTextNode(text.slice(last,m.index)));
-    const sp=document.createElement('span');sp.className='math-inline';sp.textContent=m[0].replace(/^[$`]|[$`]$/g,'');frag.appendChild(sp);last=re.lastIndex;
-  }
-  if(last<text.length)frag.appendChild(document.createTextNode(text.slice(last)));
-  return frag;
+  while((m=re.exec(text))!==null){if(m.index>last)frag.appendChild(document.createTextNode(text.slice(last,m.index)));const sp=document.createElement('span');sp.className='math-inline';sp.textContent=m[0].replace(/^[$`]|[$`]$/g,'');frag.appendChild(sp);last=re.lastIndex}
+  if(last<text.length)frag.appendChild(document.createTextNode(text.slice(last)));return frag;
 }
-function normMathSec(raw){
-  const k=raw.toLowerCase().replace(/[^a-z\s]/g,'').trim();
-  if(!k)return'Explanation';
-  if(/(problem|question)/.test(k))return'Problem';
-  if(/(given|data|known)/.test(k))return'Given';
-  if(/(approach|plan|strategy)/.test(k))return'Approach';
-  if(/(step|solution|work|derivation)/.test(k))return'Step-by-Step';
-  if(/(check|verify)/.test(k))return'Verification';
-  if(/(final|answer|result|therefore)/.test(k))return'Final Answer';
-  if(/(note|intuition)/.test(k))return'Notes';
-  return raw.trim();
-}
-function mkMathSec(container,name){
-  const sec=document.createElement('div');sec.className='math-sec';
-  const h=document.createElement('div');h.className='math-sec-h';
-  h.innerHTML=`<span class="math-sec-dot"></span>${esc(name)}`;
-  const b=document.createElement('div');b.className='math-sec-b';
-  sec.appendChild(h);sec.appendChild(b);container.appendChild(sec);return b;
-}
+function normMathSec(raw){const k=raw.toLowerCase().replace(/[^a-z\s]/g,'').trim();if(!k)return'Explanation';if(/(problem|question)/.test(k))return'Problem';if(/(given|data|known)/.test(k))return'Given';if(/(approach|plan|strategy)/.test(k))return'Approach';if(/(step|solution|work|derivation)/.test(k))return'Step-by-Step';if(/(check|verify)/.test(k))return'Verification';if(/(final|answer|result|therefore)/.test(k))return'Final Answer';if(/(note|intuition)/.test(k))return'Notes';return raw.trim()}
+function mkMathSec(container,name){const sec=document.createElement('div');sec.className='math-sec';const h=document.createElement('div');h.className='math-sec-h';h.innerHTML=`<span class="math-sec-dot"></span>${esc(name)}`;const b=document.createElement('div');b.className='math-sec-b';sec.appendChild(h);sec.appendChild(b);container.appendChild(sec);return b}
 function appendMath(target,line,state){
   if(!line){state.list=null;return}
-  if(/^[-*•]\s+/.test(line)){
-    if(!state.list){state.list=document.createElement('ul');state.list.className='math-list';target.appendChild(state.list)}
-    const li=document.createElement('li');li.appendChild(fmtMathInline(line.replace(/^[-*•]\s+/,'')));state.list.appendChild(li);return;
-  }
+  if(/^[-*•]\s+/.test(line)){if(!state.list){state.list=document.createElement('ul');state.list.className='math-list';target.appendChild(state.list)}const li=document.createElement('li');li.appendChild(fmtMathInline(line.replace(/^[-*•]\s+/,'')));state.list.appendChild(li);return}
   state.list=null;
   const sm=/^(?:step\s*)?(\d+)[\).:-]\s+(.+)/i.exec(line);
-  if(sm){
-    const row=document.createElement('div');row.className='math-step';
-    row.innerHTML=`<span class="step-no">${sm[1]}</span>`;
-    const t=document.createElement('div');t.className='step-txt';t.appendChild(fmtMathInline(sm[2]));row.appendChild(t);target.appendChild(row);return;
-  }
-  if(/^(final answer|answer|result|therefore|hence)\s*[:\-–]/i.test(line)){
-    const f=document.createElement('div');f.className='math-final';f.appendChild(fmtMathInline(line));target.appendChild(f);return;
-  }
-  if(/^(note|tip|intuition)\s*[:\-–]/i.test(line)){
-    const n=document.createElement('div');n.className='math-note';n.appendChild(fmtMathInline(line));target.appendChild(n);return;
-  }
-  if(/[=+\-*/^∫∑√≈≠≤≥±∞]/.test(line)&&/[0-9a-zA-Zαβγδεθλπσφψω]/.test(line)&&line.length<120){
-    const eq=document.createElement('div');eq.className='math-eq';eq.textContent=line;target.appendChild(eq);return;
-  }
+  if(sm){const row=document.createElement('div');row.className='math-step';row.innerHTML=`<span class="step-no">${sm[1]}</span>`;const t=document.createElement('div');t.className='step-txt';t.appendChild(fmtMathInline(sm[2]));row.appendChild(t);target.appendChild(row);return}
+  if(/^(final answer|answer|result|therefore|hence)\s*[:\-–]/i.test(line)){const f=document.createElement('div');f.className='math-final';f.appendChild(fmtMathInline(line));target.appendChild(f);return}
+  if(/^(note|tip|intuition)\s*[:\-–]/i.test(line)){const n=document.createElement('div');n.className='math-note';n.appendChild(fmtMathInline(line));target.appendChild(n);return}
+  if(/[=+\-*/^∫∑√≈≠≤≥±∞]/.test(line)&&/[0-9a-zA-Zαβγδεθλπσφψω]/.test(line)&&line.length<120){const eq=document.createElement('div');eq.className='math-eq';eq.textContent=line;target.appendChild(eq);return}
   const p=document.createElement('div');p.className='math-p';p.appendChild(fmtMathInline(line));target.appendChild(p);
 }
 async function buildMathDOM(allParts){
   const container=document.createElement('div');container.className='math-wrap';
   const lines=[];
-  for(const p of allParts){
-    if(p.kind==='diagram')lines.push({type:'diagram',el:p.el});
-    else p.txt.split('\n').forEach(l=>lines.push({type:'line',txt:l.trim()}));
-  }
+  for(const p of allParts){if(p.kind==='diagram')lines.push({type:'diagram',el:p.el});else p.txt.split('\n').forEach(l=>lines.push({type:'line',txt:l.trim()}))}
   const firstLine=lines.find(x=>x.type==='line'&&x.txt)?.txt||'Math Solution';
   const header=document.createElement('div');header.className='math-header-block';
   header.innerHTML=`<div class="math-kicker">Step-by-Step Solution</div><div class="math-main-title"></div>`;
   header.querySelector('.math-main-title').textContent=firstLine.replace(/^#{1,3}\s*/,'').replace(/^(Solving:|Problem:)\s*/i,'');
   container.appendChild(header);
-  let secName='Explanation',secBody=mkMathSec(container,secName);
-  const state={list:null};
+  let secName='Explanation',secBody=mkMathSec(container,secName);const state={list:null};
   for(let idx=0;idx<lines.length;idx++){
     const item=lines[idx];
     if(item.type==='diagram'){state.list=null;if(item.el)secBody.appendChild(item.el);continue}
-    let line=item.txt;
-    if(!line){state.list=null;continue}
-    if(idx===0&&(line===firstLine||/^(Solving:|Problem:)/i.test(line)))continue;
+    let line=item.txt;if(!line)continue;if(idx===0&&(line===firstLine||/^(Solving:|Problem:)/i.test(line)))continue;
     const hm=/^#{1,3}\s+(.+)$/.exec(line)||/^([A-Za-z][A-Za-z\s]{1,30})\s*:\s*$/.exec(line);
     if(hm){secName=normMathSec(hm[1]);secBody=mkMathSec(container,secName);state.list=null;continue}
     const em=/^(problem|given|approach|steps?|derivation|verification|final answer|result|notes?)\s*:\s*(.+)$/i.exec(line);
@@ -1096,7 +1294,7 @@ async function buildMathDOM(allParts){
 // ═══════════════════════════════════════════════════
 // MASTER RENDER
 // ═══════════════════════════════════════════════════
-async function renderOutput(content,isMath){
+async function renderOutput(content,isMath,isManuscript,fullData){
   const parts=parseContent(content);
   const diagParts=[];
   let diagramsFound=0;
@@ -1105,12 +1303,10 @@ async function renderOutput(content,isMath){
     if(part.kind!=='diagram')continue;
     diagramsFound++;
     if(isMath){
-      // For math: render inline diagram silently
       const dw=document.createElement('div');dw.className='inline-diag';
       dw.innerHTML=`<div class="inline-diag-bar"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>${esc(part.title||part.dtype)}</div>`;
       const dr=document.createElement('div');dr.className='inline-diag-render';
-      try{const uid='mg'+(++diagId)+'_'+Date.now();const{svg}=await mermaid.render(uid,part.code);dr.innerHTML=svg}
-      catch(e){/* silent */}
+      try{const uid='mg'+(++diagId)+'_'+Date.now();const{svg}=await mermaid.render(uid,part.code);dr.innerHTML=svg}catch(e){}
       if(dr.innerHTML.trim()){dw.appendChild(dr);part.el=dw}else{part.el=null}
     }else{
       diagParts.push(part);
@@ -1120,23 +1316,20 @@ async function renderOutput(content,isMath){
   const pid='p'+Date.now();
   const block=document.createElement('div');block.className='paper-block';
 
-  if(!isMath){
-    const structure=parsePaper(content);
-    const paperDOM=await buildPaperDOM(structure,diagParts);
-    paperDOM.id=pid;
-    block.appendChild(paperDOM);
+  if(isMath){
+    const mathDOM=await buildMathDOM(parts);mathDOM.id=pid;block.appendChild(mathDOM);
+  }else if(isManuscript){
+    const msDOM=await buildManuscriptDOM(fullData);msDOM.id=pid;block.appendChild(msDOM);
   }else{
-    const mathDOM=await buildMathDOM(parts);
-    mathDOM.id=pid;
-    block.appendChild(mathDOM);
+    const structure=parsePaper(content);
+    const paperDOM=await buildPaperDOM(structure,diagParts);paperDOM.id=pid;block.appendChild(paperDOM);
   }
 
-  // Download row
   const wrap=document.createElement('div');
   const dlRow=document.createElement('div');dlRow.className='dl-row';
   const dlTxt=document.createElement('button');dlTxt.className='dl-btn';
   dlTxt.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download .txt`;
-  dlTxt.onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([document.getElementById(pid)?.innerText||''],{type:'text/plain'}));a.download=`stremini-${Date.now()}.txt`;a.click()};
+  dlTxt.onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([document.getElementById(pid)?.innerText||''],{type:'text/plain'}));a.download=`stremini-${isManuscript?'manuscript':'paper'}-${Date.now()}.txt`;a.click()};
   const cpBtn=document.createElement('button');cpBtn.className='dl-btn';
   cpBtn.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copy Text`;
   cpBtn.onclick=()=>{navigator.clipboard.writeText(document.getElementById(pid)?.innerText||'').then(()=>{cpBtn.textContent='Copied!';setTimeout(()=>{cpBtn.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copy Text`},2000)}).catch(()=>{})};
@@ -1149,54 +1342,37 @@ async function renderOutput(content,isMath){
 // FILE HANDLING
 // ═══════════════════════════════════════════════════
 function getPdfLib(){return window.pdfjsLib||window['pdfjs-dist/build/pdf']||null}
-function clearFile(){
-  pendingDocText=null;pendingDocName=null;
-  document.getElementById('fileChipWrap').classList.remove('visible');
-  document.getElementById('fileInput').value='';
-}
+function clearFile(){pendingDocText=null;pendingDocName=null;document.getElementById('fileChipWrap').classList.remove('visible');document.getElementById('fileInput').value=''}
 async function handleFileSelect(e){
   const file=e.target.files[0];if(!file)return;
   const ext=file.name.split('.').pop().toLowerCase();
-  document.getElementById('fileChipWrap').classList.add('visible');
-  document.getElementById('fileChipName').textContent='Extracting…';
+  document.getElementById('fileChipWrap').classList.add('visible');document.getElementById('fileChipName').textContent='Extracting…';
   try{
     let text='';
     if(ext==='pdf')text=await extractPDF(file);
     else if(ext==='docx'||ext==='doc')text=await extractDOCX(file);
     else{alert('Only PDF and DOCX supported.');clearFile();return}
     if(!text.trim()){alert('Could not extract text from file.');clearFile();return}
-    pendingDocText=text;pendingDocName=file.name;
-    document.getElementById('fileChipName').textContent=file.name;
+    pendingDocText=text;pendingDocName=file.name;document.getElementById('fileChipName').textContent=file.name;
   }catch(err){alert('Error reading file: '+err.message);clearFile()}
 }
 async function extractPDF(file){
-  const ab=await file.arrayBuffer();
-  let lib=getPdfLib();
-  if(!lib){
-    await new Promise((res,rej)=>{let a=0;const chk=()=>{lib=getPdfLib();if(lib)res();else if(a++<30)setTimeout(chk,100);else rej(new Error('PDF.js not loaded'))};chk()});
-  }
+  const ab=await file.arrayBuffer();let lib=getPdfLib();
+  if(!lib){await new Promise((res,rej)=>{let a=0;const chk=()=>{lib=getPdfLib();if(lib)res();else if(a++<30)setTimeout(chk,100);else rej(new Error('PDF.js not loaded'))};chk()})}
   lib.GlobalWorkerOptions.workerSrc='https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
-  const pdf=await lib.getDocument({data:ab}).promise;
-  let txt='';
-  for(let i=1;i<=pdf.numPages;i++){
-    const page=await pdf.getPage(i);
-    const content=await page.getTextContent();
-    txt+=content.items.map(item=>item.str).join(' ')+'\n';
-  }
+  const pdf=await lib.getDocument({data:ab}).promise;let txt='';
+  for(let i=1;i<=pdf.numPages;i++){const page=await pdf.getPage(i);const content=await page.getTextContent();txt+=content.items.map(item=>item.str).join(' ')+'\n'}
   return txt.trim();
 }
-async function extractDOCX(file){
-  const ab=await file.arrayBuffer();
-  const result=await mammoth.extractRawText({arrayBuffer:ab});
-  return result.value.trim();
-}
+async function extractDOCX(file){const ab=await file.arrayBuffer();const result=await mammoth.extractRawText({arrayBuffer:ab});return result.value.trim()}
 
 // ═══════════════════════════════════════════════════
 // MAIN SEND
 // ═══════════════════════════════════════════════════
 async function handleSend(){
-  const q=ta.value.trim();
-  if(!q||running)return;
+  const q=ta.value.trim();if(!q||running)return;
+  const isManuscript=mode==='manuscript';
+  const isMath=mode==='math';
 
   let finalQuery=q,displayQuery=q;
   if(pendingDocText){
@@ -1211,12 +1387,11 @@ async function handleSend(){
   history.push({role:'user',content:finalQuery});
   ta.value='';ta.style.height='auto';
   running=true;sendBtn.disabled=true;
-  setStatus('run',mode==='math'?'Solving…':'Researching…');
+  setStatus('run',isManuscript?'Generating manuscript…':isMath?'Solving…':'Researching…');
 
-  const isMath=mode==='math';
   const slot=addAgentMsg();
   const steps=createStepsPanel(slot);
-  let content='';
+  let content='',fullData=null;
   const t0=Date.now();
 
   try{
@@ -1225,22 +1400,103 @@ async function handleSend(){
       steps.addStep('p','Parsing problem','Identifying type and constraints');
       steps.addStep('s','Solving','Applying mathematical techniques step by step');
       steps.addStep('v','Verifying','Checking answer via substitution or alternative method');
-      steps.startStep('p');await sleep(250);steps.doneStep('p','Problem analysed');
-      steps.startStep('s');
+      steps.startStep('p');await sleep(250);steps.doneStep('p','Problem analysed');steps.startStep('s');
 
       const res=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({query:finalQuery,mode:'math',phase:'FULL',history,searchResults:[]})});
       const data=await res.json();
       if(!res.ok||data.status==='ERROR')throw new Error(data.message||`Request failed ${res.status}`);
 
       steps.doneStep('s',`Completed in ${((Date.now()-t0)/1000).toFixed(1)}s`);
-      steps.startStep('v');await sleep(180);steps.doneStep('v','Answer verified');
-      steps.setDone('Solution ready');
-
-      content=data.content||data.solution||'';
-      if(!content)throw new Error('Empty response from API');
+      steps.startStep('v');await sleep(180);steps.doneStep('v','Answer verified');steps.setDone('Solution ready');
+      content=data.content||data.solution||'';if(!content)throw new Error('Empty response from API');
       mathSolved++;setStatus('done','Solved');
 
+    }else if(isManuscript){
+      // ── MANUSCRIPT pipeline ──
+      const TOTAL_STEPS=11;
+      const prog=createProgressBar(slot,TOTAL_STEPS);
+      steps.setTitle('Initialising full manuscript pipeline (9 agents)…');
+      steps.addStep('cmd','Commander Agent','Building research plan & search queries');
+      steps.addStep('ev','Evidence Gathering','arXiv · Semantic Scholar · Web search');
+      steps.addStep('re','Reasoner + Claim Engine','Draft + atomic claim extraction');
+      steps.addStep('cs','Contradiction Scoring','Cross-referencing claims against sources');
+      steps.addStep('nv','Novelty Detection','Identifying potentially novel claims');
+      steps.addStep('kg','Knowledge Graph','Mapping concept relationships');
+      steps.addStep('cr','Adversarial Critic','Truth-failure detection');
+      steps.addStep('sw','Section Writer × 8','Writing each IMRAD section independently');
+      steps.addStep('ab','Abstract Agent','Generating structured abstract from section summaries');
+      steps.addStep('pr','Peer Review Agent','Simulating journal peer review');
+      steps.addStep('fa','Final Assembler','Stitching & polishing full manuscript');
+
+      steps.startStep('cmd');prog.update(1,'Commander planning research scope…');await sleep(400);
+      steps.doneStep('cmd','Research plan created');
+      steps.startStep('ev');prog.update(2,'Gathering evidence from arXiv, Semantic Scholar & web…');await sleep(600);
+      steps.doneStep('ev','Evidence corpus assembled');
+      steps.startStep('re');prog.update(3,'Reasoner building skeleton draft with claims…');await sleep(500);
+      steps.doneStep('re','Skeleton draft + claim JSON extracted');
+      steps.startStep('cs');prog.update(4,'Scoring claims against source evidence…');await sleep(300);
+      steps.doneStep('cs','Contradiction analysis complete');
+      steps.startStep('nv');prog.update(5,'Detecting novel vs. redundant claims…');await sleep(200);
+      steps.doneStep('nv','Novelty analysis complete');
+      steps.startStep('kg');prog.update(6,'Building concept knowledge graph…');await sleep(200);
+      steps.doneStep('kg','Knowledge graph built');
+      steps.startStep('cr');prog.update(7,'Adversarial Critic reviewing for truth failures…');await sleep(400);
+
+      const msOptions={
+        citation_style:document.getElementById('msCitation').value||'APA7',
+        target_journal:document.getElementById('msJournal').value||'',
+        word_count:parseInt(document.getElementById('msWordCount').value)||6000,
+      };
+
+      const res=await fetch(API,{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({query:finalQuery,mode:'manuscript',phase:'MANUSCRIPT',history,searchResults:[],manuscript_options:msOptions})
+      });
+      const data=await res.json();
+      fullData=data;
+      if(!res.ok||data.status==='ERROR')throw new Error(data.message||`Request failed ${res.status}`);
+
+      steps.doneStep('cr','Critic pass complete');
+      steps.startStep('sw');prog.update(8,'Section Writer composing 8 IMRAD sections…');await sleep(300);
+      steps.doneStep('sw',`${Object.keys(data.sections||{}).length} sections written`);
+      steps.startStep('ab');prog.update(9,'Abstract Agent summarising manuscript…');await sleep(200);
+      steps.doneStep('ab','Structured abstract generated');
+      steps.startStep('pr');prog.update(10,'Peer Review Agent evaluating manuscript…');await sleep(200);
+      steps.doneStep('pr',data.peer_review?.match(/VERDICT/i)?'Review complete with verdict':'Peer review complete');
+      steps.startStep('fa');prog.update(11,'Final Assembler stitching and polishing…');await sleep(200);
+      steps.doneStep('fa',`Manuscript complete · ${data.metadata?.sources_gathered||0} sources · ${((Date.now()-t0)/1000).toFixed(1)}s`);
+      prog.done(`Full manuscript ready · ${((Date.now()-t0)/1000).toFixed(1)}s`);
+      steps.setDone(`Manuscript complete in ${((Date.now()-t0)/1000).toFixed(1)}s`);
+
+      // Eval dashboard
+      const evalPanel=buildEvalDashboard(data.metadata);
+      if(evalPanel)slot.appendChild(evalPanel);
+
+      // Peer review panel
+      const prPanel=buildPeerReviewPanel(data.peer_review);
+      if(prPanel)slot.appendChild(prPanel);
+
+      // Sources
+      const sources=data.metadata?.sources;
+      if(sources&&sources.length>0){
+        const srcRow=document.createElement('div');srcRow.className='sources-row';
+        sources.slice(0,10).forEach(s=>{
+          if(!s.url&&!s.title)return;
+          const pill=document.createElement('a');pill.className='src-pill';pill.href=s.url||'#';pill.target='_blank';pill.rel='noopener';
+          const domain=s.url?(()=>{try{return new URL(s.url).hostname.replace('www.','')}catch{return s.source||'source'}})():(s.source||'source');
+          pill.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>${esc(domain)}`;
+          srcRow.appendChild(pill);
+        });
+        if(srcRow.children.length)slot.appendChild(srcRow);
+      }
+
+      content=data.content||'';
+      manuscripts++;setStatus('done','Manuscript ready');
+      history.push({role:'assistant',content:'[Full manuscript generated]'});
+
     }else{
+      // ── RESEARCH pipeline (legacy) ──
       steps.setTitle('Initialising multi-agent research pipeline…');
       steps.addStep('plan','Commander Agent','Planning research scope and search strategy');
       steps.startStep('plan');
@@ -1257,89 +1513,76 @@ async function handleSend(){
       steps.addStep('rf','Refiner Agent','Applying critique and strengthening argumentation');
       steps.addStep('qa','QA Agent','Bias detection, structure review & coherence check');
       steps.addStep('fw','Final Writer','Composing full publication-quality paper with diagrams');
-
       steps.startStep('ev');steps.setTitle('Gathering evidence from arXiv, Semantic Scholar & web…');await sleep(700);
-      steps.doneStep('ev','Evidence corpus assembled');
-      steps.startStep('re');steps.setTitle('Reasoner building evidence-grounded draft…');await sleep(500);
-      steps.doneStep('re','Initial draft complete');
-      steps.startStep('cr');steps.setTitle('Adversarial Critic reviewing draft for gaps and errors…');await sleep(400);
+      steps.doneStep('ev','Evidence corpus assembled');steps.startStep('re');steps.setTitle('Reasoner building evidence-grounded draft…');await sleep(500);
+      steps.doneStep('re','Initial draft complete');steps.startStep('cr');steps.setTitle('Adversarial Critic reviewing draft for gaps and errors…');await sleep(400);
 
       const fullRes=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({query:finalQuery,mode:'research',phase:'FULL',history,searchResults:[]})});
-      const fullData=await fullRes.json();
-      if(!fullRes.ok||fullData.status==='ERROR')throw new Error(fullData.message||`Request failed ${fullRes.status}`);
+      const fullData2=await fullRes.json();fullData=fullData2;
+      if(!fullRes.ok||fullData2.status==='ERROR')throw new Error(fullData2.message||`Request failed ${fullRes.status}`);
 
-      steps.doneStep('cr',`${fullData.metadata?.iterations||1} iteration(s) completed`);
-      steps.startStep('rf');steps.setTitle('Refiner Agent strengthening the draft…');await sleep(350);
-      steps.doneStep('rf','Draft refined and evidence-strengthened');
-      steps.startStep('qa');steps.setTitle('QA Agent checking bias and structure…');await sleep(280);
-      steps.doneStep('qa','Quality review complete');
+      steps.doneStep('cr',`${fullData2.metadata?.iterations||1} iteration(s) completed`);
+      steps.startStep('rf');steps.setTitle('Refiner Agent strengthening the draft…');await sleep(350);steps.doneStep('rf','Draft refined and evidence-strengthened');
+      steps.startStep('qa');steps.setTitle('QA Agent checking bias and structure…');await sleep(280);steps.doneStep('qa','Quality review complete');
       steps.startStep('fw');steps.setTitle('Final Writer composing polished paper…');await sleep(200);
-      steps.doneStep('fw',`Paper complete · ${fullData.metadata?.sources_gathered||0} sources · ${((Date.now()-t0)/1000).toFixed(1)}s`);
+      steps.doneStep('fw',`Paper complete · ${fullData2.metadata?.sources_gathered||0} sources · ${((Date.now()-t0)/1000).toFixed(1)}s`);
 
       // Confidence bar
-      if(fullData.metadata?.confidence){
-        const pct=Math.round(fullData.metadata.confidence);
+      if(fullData2.metadata?.confidence){
+        const pct=Math.round(fullData2.metadata.confidence*100);
         const cb=document.createElement('div');cb.className='conf-bar';
         cb.innerHTML=`<span class="conf-lbl">Evidence confidence</span><div class="conf-track"><div class="conf-fill" style="width:0%"></div></div><span class="conf-val">${pct}%</span>`;
-        slot.appendChild(cb);
-        setTimeout(()=>{const fill=cb.querySelector('.conf-fill');if(fill)fill.style.width=pct+'%'},50);
+        slot.appendChild(cb);setTimeout(()=>{const fill=cb.querySelector('.conf-fill');if(fill)fill.style.width=pct+'%'},50);
       }
 
-      // Source pills
-      const sources=fullData.metadata?.sources;
+      // Eval dashboard
+      const evalPanel=buildEvalDashboard(fullData2.metadata);if(evalPanel)slot.appendChild(evalPanel);
+
+      // Sources
+      const sources=fullData2.metadata?.sources;
       if(sources&&sources.length>0){
         const srcRow=document.createElement('div');srcRow.className='sources-row';
         sources.slice(0,8).forEach(s=>{
           if(!s.url&&!s.title)return;
-          const pill=document.createElement('a');pill.className='src-pill';
-          pill.href=s.url||'#';pill.target='_blank';pill.rel='noopener';
+          const pill=document.createElement('a');pill.className='src-pill';pill.href=s.url||'#';pill.target='_blank';pill.rel='noopener';
           const domain=s.url?(()=>{try{return new URL(s.url).hostname.replace('www.','')}catch{return s.source||'source'}})():(s.source||'source');
           pill.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>${esc(domain)}`;
           srcRow.appendChild(pill);
         });
         if(srcRow.children.length)slot.appendChild(srcRow);
       }
-
       steps.setDone(`Research complete in ${((Date.now()-t0)/1000).toFixed(1)}s`);
 
-      let rawContent=fullData.content||fullData.solution||fullData.paper||fullData.text||'';
+      let rawContent=fullData2.content||fullData2.solution||fullData2.paper||fullData2.text||'';
       const paperTagMatch=rawContent.match(/<paper>([\s\S]*?)(?:<\/paper>|$)/i);
       content=paperTagMatch?paperTagMatch[1].trim():rawContent.trim();
-      if(!content)throw new Error('Agent returned empty content. Response: '+JSON.stringify(fullData).slice(0,200));
-
+      if(!content)throw new Error('Agent returned empty content.');
       papers++;setStatus('done','Paper ready');
       history.push({role:'assistant',content});
     }
 
-    // Collapse steps
-    const body=slot.querySelector('.steps-body');
-    const chev=slot.querySelector('.steps-chevron');
+    // Collapse steps panel
+    const body=slot.querySelector('.steps-body');const chev=slot.querySelector('.steps-chevron');
     if(body&&chev){body.classList.add('collapsed');chev.classList.remove('open')}
 
-    const{el,diagramsFound}=await renderOutput(content,isMath);
+    const{el,diagramsFound}=await renderOutput(content,isMath,isManuscript,fullData);
     slot.appendChild(el);
     if(!isMath)diagramsTotal+=diagramsFound;
     updateStats();scrollBot();
 
   }catch(err){
     steps.setTitle('Pipeline encountered an error');
-    slot.querySelectorAll('.step-ico.ico-run').forEach(ico=>{
-      ico.className='step-ico ico-err';
-      ico.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`;
-    });
+    slot.querySelectorAll('.step-ico.ico-run').forEach(ico=>{ico.className='step-ico ico-err';ico.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`});
     const errDiv=document.createElement('div');
     errDiv.style.cssText='margin-top:8px;padding:12px 15px;background:rgba(220,50,50,.05);border:1px solid rgba(220,50,50,.15);border-radius:9px;font-size:13px;color:#991b1b;line-height:1.65';
     errDiv.textContent=err.message||'An unexpected error occurred.';
-    slot.appendChild(errDiv);
-    setStatus('err','Error');
-  }finally{
-    running=false;sendBtn.disabled=false;
-  }
+    slot.appendChild(errDiv);setStatus('err','Error');
+  }finally{running=false;sendBtn.disabled=false}
 }
 
 function clearChat(){
   msgs.innerHTML='';msgs.appendChild(welcome);welcome.style.display='';
-  history=[];papers=0;mathSolved=0;diagramsTotal=0;updateStats();
+  history=[];papers=0;manuscripts=0;mathSolved=0;diagramsTotal=0;updateStats();
   document.getElementById('recentItems').innerHTML='<div class="ri-empty">No queries yet</div>';
   setStatus('idle','Ready');running=false;sendBtn.disabled=false;
 }
