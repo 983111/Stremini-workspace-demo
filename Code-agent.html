@@ -19,6 +19,7 @@
   --violet:#7c3aed;--violet-l:#f5f3ff;--violet-b:#ddd6fe;
   --orange:#ea580c;--orange-l:#fff7ed;--orange-b:#fed7aa;
   --red:#b91c1c;--red-l:#fef2f2;--red-b:#fecaca;
+  --teal:#0f766e;--teal-l:#f0fdfa;--teal-b:#99f6e4;
   --shadow-xs:0 1px 2px rgba(0,0,0,.05);
   --shadow-sm:0 1px 4px rgba(0,0,0,.07),0 1px 2px rgba(0,0,0,.04);
   --shadow-md:0 4px 16px rgba(0,0,0,.08),0 2px 6px rgba(0,0,0,.04);
@@ -48,6 +49,7 @@ html,body{height:100%;background:var(--bg);font-family:'DM Sans',sans-serif;colo
 .mode-btn.active-explain{background:var(--violet-l);border-color:var(--violet-b);color:var(--violet)}
 .mode-btn.active-inline{background:var(--green-l);border-color:var(--green-b);color:var(--green)}
 .mode-btn.active-error_fix{background:var(--red-l);border-color:var(--red-b);color:var(--red)}
+.mode-btn.active-research{background:var(--teal-l);border-color:var(--teal-b);color:var(--teal)}
 .sb-sec{padding:12px 16px;border-bottom:1px solid var(--border2)}
 .sb-sec:last-child{border-bottom:none}
 .status-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:500}
@@ -107,6 +109,7 @@ html,body{height:100%;background:var(--bg);font-family:'DM Sans',sans-serif;colo
 .pill-explain{color:var(--violet);border-color:var(--violet-b);background:var(--violet-l)}
 .pill-inline{color:var(--green);border-color:var(--green-b);background:var(--green-l)}
 .pill-error_fix{color:var(--red);border-color:var(--red-b);background:var(--red-l)}
+.pill-research{color:var(--teal);border-color:var(--teal-b);background:var(--teal-l)}
 .repo-pill{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:10.5px;font-weight:500;background:var(--surface2);border:1px solid var(--border);color:var(--muted);cursor:default;transition:all .15s}
 .repo-pill.connected{background:var(--green-l);border-color:var(--green-b);color:var(--green)}
 .ghost-btn{display:inline-flex;align-items:center;gap:4px;padding:5px 10px;background:transparent;border:1px solid var(--border);border-radius:var(--r-sm);font-family:'DM Sans',sans-serif;font-size:11.5px;font-weight:500;color:var(--txt2);cursor:pointer;transition:all .15s;outline:none}
@@ -222,6 +225,7 @@ html,body{height:100%;background:var(--bg);font-family:'DM Sans',sans-serif;colo
 .chip-debug,.chip-error_fix{background:var(--orange-l);color:#7c2d12;border:1px solid var(--orange-b)}
 .chip-explain{background:var(--violet-l);color:#4c1d95;border:1px solid var(--violet-b)}
 .chip-inline{background:var(--green-l);color:#065f46;border:1px solid var(--green-b)}
+.chip-research{background:var(--teal-l);color:#134e4a;border:1px solid var(--teal-b)}
 .chip-err{background:var(--red-l);color:var(--red);border:1px solid var(--red-b)}
 .iter-badge{display:inline-flex;align-items:center;gap:3px;padding:1px 6px;border-radius:8px;font-size:10px;background:var(--surface2);border:1px solid var(--border2);color:var(--muted);margin-left:4px;vertical-align:middle}
 
@@ -348,6 +352,9 @@ html,body{height:100%;background:var(--bg);font-family:'DM Sans',sans-serif;colo
       </button>
       <button class="mode-btn" id="btn-error_fix" onclick="setMode('error_fix')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>Fix Error
+      </button>
+      <button class="mode-btn" id="btn-research" onclick="setMode('research')" style="grid-column:1/-1">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>Research
       </button>
     </div>
   </div>
@@ -547,6 +554,7 @@ const MODES = {
   explain:{   pillClass:"pill-explain",   pillTxt:"Explain",   desc:"Deep technical breakdown",            placeholder:"Paste code or describe a concept…",             btnClass:"active-explain",   chipClass:"chip-explain",   doneLabel:"Explanation complete",      icon:`<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>` },
   inline:{    pillClass:"pill-inline",    pillTxt:"Inline Edit",desc:"Edit selected code in-place",       placeholder:"Describe the edit (e.g. add error handling)…", btnClass:"active-inline",    chipClass:"chip-inline",    doneLabel:"Inline edit complete",      icon:`<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>` },
   error_fix:{ pillClass:"pill-error_fix", pillTxt:"Fix Error", desc:"Paste error → auto-debug + fix",     placeholder:"Describe the error or extra context…",          btnClass:"active-error_fix", chipClass:"chip-error_fix", doneLabel:"Error fixed",               icon:`<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>` },
+  research:{  pillClass:"pill-research",  pillTxt:"Research",  desc:"Deep technical research with codebase awareness", placeholder:"What do you want to research? (e.g. how does auth work in this repo, compare Redis vs Memcached…)", btnClass:"active-research", chipClass:"chip-research", doneLabel:"Research complete", icon:`<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>` },
 };
 
 /* ══════════ INIT ══════════ */
@@ -957,7 +965,7 @@ async function handleSend(){
   }
   if(data.contextFiles)renderCtxFiles(data.contextFiles);
 
-  const STATUS_MAP={CODE:"implement",REVIEW:"review",DEBUG:"debug",EXPLANATION:"explain"};
+  const STATUS_MAP={CODE:"implement",REVIEW:"review",DEBUG:"debug",EXPLANATION:"explain",RESEARCH:"research"};
   const resultMode=STATUS_MAP[data.status]||m;
 
   if(data.status==="ERROR"){
@@ -1003,6 +1011,9 @@ function buildWelcome(){
       </div>
       <div class="hint h-error" onclick="setMode('error_fix');document.getElementById('errorMsgTA').focus()">
         <div class="hint-em">🔥</div><div><strong>Fix Error</strong><small>Paste error → auto-fix</small></div>
+      </div>
+      <div class="hint" style="grid-column:1/-1;border-color:var(--teal-b)" onclick="hintClick('research','How does authentication work in this codebase? Walk me through the full flow.')">
+        <div class="hint-em">🔬</div><div><strong>Research</strong><small>Deep technical analysis — works with or without a connected repo</small></div>
       </div>
     </div>`;
   return w;
