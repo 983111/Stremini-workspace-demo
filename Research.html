@@ -1079,109 +1079,142 @@ async function buildManuscriptDOM(data){
   const paperDoc=mkEl('div','paper-doc');doc.appendChild(paperDoc);
   const inner=mkEl('div','paper-inner');paperDoc.appendChild(inner);
 
-  // Parse the assembled manuscript for title/keywords
+  // Parse the assembled manuscript for title/keywords/references
   const assembled=data.content||'';
   const mContent=assembled.replace(/<manuscript>/gi,'').replace(/<\/manuscript>/gi,'').trim();
   const structure=parsePaper(mContent||'');
 
-  // Title block
+  // Title block — prefer API title, fall back to parsed
   const tb=mkEl('div','paper-title-block');
   tb.appendChild(mkEl('div','paper-title',esc(data.title||structure.title||'Academic Manuscript')));
-  if(structure.authors||structure.date){
-    const byline=mkEl('div','paper-byline');
-    if(structure.authors)byline.innerHTML+=esc(structure.authors);
-    if(structure.authors&&structure.date)byline.innerHTML+=`<span class="byline-sep"></span>`;
-    if(structure.date)byline.innerHTML+=esc(structure.date);
-    tb.appendChild(byline);
-  }
-  if(structure.keywords){
+
+  // Extract metadata from assembled content header
+  const authorMatch=mContent.match(/^Authors?:\s*(.+)$/im);
+  const dateMatch=mContent.match(/^Date:\s*(.+)$/im);
+  const kwMatch=mContent.match(/^Keywords?:\s*(.+)$/im);
+  const journalMatch=mContent.match(/^Target Journal:\s*(.+)$/im);
+  const citationMatch=mContent.match(/^Citation Style:\s*(.+)$/im);
+
+  const bylineAuthor=authorMatch?.[1]?.trim()||'Stremini Agent Research Pipeline';
+  const bylineDate=dateMatch?.[1]?.trim()||new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+  const bylineKws=kwMatch?.[1]?.trim()||structure.keywords||'';
+
+  const byline=mkEl('div','paper-byline');
+  byline.innerHTML=esc(bylineAuthor)+'<span class="byline-sep"></span>'+esc(bylineDate);
+  if(journalMatch?.[1])byline.innerHTML+='<span class="byline-sep"></span>'+esc(journalMatch[1].trim());
+  tb.appendChild(byline);
+
+  if(bylineKws){
     const kws=mkEl('div','paper-kws');
-    structure.keywords.split(/[,;]/).map(k=>k.trim()).filter(Boolean).forEach(k=>{kws.appendChild(mkEl('span','kw-tag',esc(k)))});
+    bylineKws.split(/[,;]/).map(k=>k.trim()).filter(Boolean).forEach(k=>{kws.appendChild(mkEl('span','kw-tag',esc(k)))});
     tb.appendChild(kws);
   }
   inner.appendChild(tb);
 
-  // IMRAD Tab navigation
+  // ── IMRAD Tabs — always built from sections object ──
   const sections=data.sections||{};
-  const hasTabSections=Object.keys(sections).length>0;
 
-  if(hasTabSections){
-    const tabNav=mkEl('div','imrad-nav');
-    const tabContents=mkEl('div','');
-    inner.appendChild(tabNav);inner.appendChild(tabContents);
+  const tabNav=mkEl('div','imrad-nav');
+  const tabContents=mkEl('div','');
+  inner.appendChild(tabNav);inner.appendChild(tabContents);
 
-    let firstActive=true;
-    for(const tab of IMRAD_TAB_LABELS){
-      const sContent=sections[tab.id];
-      if(!sContent)continue;
-      const tabId='imrad_'+tab.id+'_'+Date.now();
-      const btn=mkEl('button','imrad-tab'+(firstActive?' active':''),esc(tab.label));
-      btn.dataset.tab=tabId;
+  let firstActive=true;
+  let totalDiagrams=0;
+
+  for(const tab of IMRAD_TAB_LABELS){
+    // Get content: prefer sections[id], fall back to parsing from assembled text
+    let sContent=sections[tab.id]||'';
+
+    // If section is missing from API response, try to extract from assembled manuscript
+    if(!sContent&&mContent){
+      const secRe=new RegExp(tab.label.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'[\\s\\S]*?(?=\\n(?:Abstract|\\d+\\.|━|REFERENCES)|$)','i');
+      const m=mContent.match(secRe);
+      if(m)sContent=m[0].replace(tab.label,'').trim();
+    }
+
+    if(!sContent)continue; // skip truly empty sections
+
+    const tabId='imrad_'+tab.id+'_'+Date.now();
+    const btn=mkEl('button','imrad-tab'+(firstActive?' active':''),esc(tab.label));
+    btn.dataset.tab=tabId;
+    btn.onclick=function(){
+      tabNav.querySelectorAll('.imrad-tab').forEach(t=>t.classList.remove('active'));
+      tabContents.querySelectorAll('.imrad-content').forEach(c=>c.classList.remove('active'));
+      this.classList.add('active');
+      document.getElementById(tabId)?.classList.add('active');
+    };
+    tabNav.appendChild(btn);
+
+    const contentDiv=mkEl('div','imrad-content'+(firstActive?' active':''));
+    contentDiv.id=tabId;
+
+    const secParts=parseContent(sContent);
+    const secDiagParts=secParts.filter(p=>p.kind==='diagram');
+    const secText=secParts.filter(p=>p.kind==='text').map(p=>p.txt).join('\n');
+    const wCount=secText.trim().split(/\s+/).filter(Boolean).length;
+
+    const sh=mkEl('div','sec-heading violet');
+    sh.innerHTML=`${esc(tab.label)}<span class="section-word-count">~${wCount.toLocaleString()} words</span>`;
+    contentDiv.appendChild(sh);
+
+    // Render paragraphs — split on double newlines or single newlines for long lines
+    const paraLines=secText.split(/\n{2,}|\n(?=[A-Z])/).map(l=>l.replace(/\n/g,' ').trim()).filter(l=>l.length>15);
+    if(paraLines.length===0){
+      // Fallback: treat whole section as one block
+      const p=document.createElement('p');p.className='paper-p dropcap';p.innerHTML=renderCites(esc(secText.trim()));contentDiv.appendChild(p);
+    }else{
+      paraLines.forEach((pt,pi)=>contentDiv.appendChild(makePara(pt,pi===0)));
+    }
+
+    // Render inline diagrams
+    for(const d of secDiagParts){
+      const figEl=await renderFigure(d.dtype,d.title,d.code);
+      if(figEl.tagName!=='SPAN'){contentDiv.appendChild(figEl);totalDiagrams++;}
+    }
+
+    tabContents.appendChild(contentDiv);
+    firstActive=false;
+  }
+
+  // ── References tab — extracted from assembled manuscript ──
+  const refsStartIdx=mContent.indexOf('\nREFERENCES\n');
+  if(refsStartIdx!==-1){
+    const refsText=mContent.slice(refsStartIdx+12).trim();
+    if(refsText){
+      const tabId='imrad_refs_'+Date.now();
+      const btn=mkEl('button','imrad-tab',esc('References'));
       btn.onclick=function(){
         tabNav.querySelectorAll('.imrad-tab').forEach(t=>t.classList.remove('active'));
         tabContents.querySelectorAll('.imrad-content').forEach(c=>c.classList.remove('active'));
-        this.classList.add('active');
-        document.getElementById(tabId)?.classList.add('active');
+        this.classList.add('active');document.getElementById(tabId)?.classList.add('active');
       };
       tabNav.appendChild(btn);
-
-      const contentDiv=mkEl('div','imrad-content'+(firstActive?' active':''));
-      contentDiv.id=tabId;
-      // Parse and render section content
-      const secParts=parseContent(sContent);
-      const secDiagParts=secParts.filter(p=>p.kind==='diagram');
-      const secText=secParts.filter(p=>p.kind==='text').map(p=>p.txt).join('\n');
-      const wCount=secText.trim().split(/\s+/).filter(Boolean).length;
-      const sh=mkEl('div','sec-heading violet');
-      sh.innerHTML=`${esc(tab.label)}<span class="section-word-count">~${wCount.toLocaleString()} words</span>`;
-      contentDiv.appendChild(sh);
-      // Render paragraphs
-      const paraLines=secText.split(/\n+/).map(l=>l.trim()).filter(l=>l.length>20);
-      paraLines.forEach((pt,pi)=>contentDiv.appendChild(makePara(pt,pi===0)));
-      // Render diagrams
-      for(const d of secDiagParts){
-        const figEl=await renderFigure(d.dtype,d.title,d.code);
-        if(figEl.tagName!=='SPAN')contentDiv.appendChild(figEl);
-      }
-      tabContents.appendChild(contentDiv);
-      firstActive=false;
-    }
-  }else{
-    // Fallback: render the assembled manuscript prose
-    const grid=mkEl('div','paper-cols');inner.appendChild(grid);
-    const parts=parseContent(mContent);
-    const diagParts=parts.filter(p=>p.kind==='diagram');
-    let diagIdx=0;
-    structure.sections.forEach((sec,si)=>{
-      const secWrap=mkEl('div','full-w');
-      const sh=mkEl('div','sec-heading violet');
-      sh.innerHTML=`<span class="sec-num">${sec.num}.</span>${esc(sec.heading)}`;
-      secWrap.appendChild(sh);
-      sec.paragraphs.forEach((pt,pi)=>secWrap.appendChild(makePara(pt,pi===0&&si===0)));
-      grid.appendChild(secWrap);
-    });
-    // Render remaining diagrams
-    for(;diagIdx<diagParts.length;diagIdx++){
-      const d=diagParts[diagIdx];
-      const figEl=await renderFigure(d.dtype,d.title,d.code);
-      if(figEl.tagName!=='SPAN'){const fw=mkEl('div','full-w');fw.appendChild(figEl);grid.appendChild(fw)}
-    }
-    // References
-    if(structure.references.length>0){
-      const rw=mkEl('div','paper-refs full-w');rw.appendChild(mkEl('div','refs-title','References'));
+      const contentDiv=mkEl('div','imrad-content');contentDiv.id=tabId;
+      const sh=mkEl('div','sec-heading violet','References');contentDiv.appendChild(sh);
+      const rw=mkEl('div','paper-refs');
+      const refLines=refsText.split('\n').filter(l=>l.trim());
       const merged=[];
-      structure.references.forEach(line=>{
+      refLines.forEach(line=>{
         const isNew=/^\[\d+\]/.test(line)||/^[A-Z][a-zA-Z]+,/.test(line)||/^\d+\./.test(line);
         if(isNew||!merged.length)merged.push(line);else merged[merged.length-1]+=' '+line;
       });
       merged.forEach((ref,idx)=>{
         const ri=mkEl('div','ref-item');ri.appendChild(mkEl('div','ref-n',`[${idx+1}]`));
-        const body2=mkEl('div','ref-body');body2.innerHTML=ref.replace(/(https?:\/\/\S+)/g,url=>`<a href="${url}" target="_blank" rel="noopener">${url}</a>`);
+        const body2=mkEl('div','ref-body');body2.innerHTML=ref.replace(/^\[\d+\]\s*/,'').replace(/(https?:\/\/\S+)/g,url=>`<a href="${url}" target="_blank" rel="noopener">${url}</a>`);
         ri.appendChild(body2);rw.appendChild(ri);
       });
-      grid.appendChild(rw);
+      contentDiv.appendChild(rw);tabContents.appendChild(contentDiv);
     }
   }
+
+  // If NO tabs were created at all (total failure), render assembled text as prose fallback
+  if(!tabNav.children.length){
+    const grid=mkEl('div','paper-cols');inner.appendChild(grid);
+    const fw=mkEl('div','full-w');
+    const p=document.createElement('p');p.className='paper-p';p.textContent=mContent.slice(0,5000)||'No content available.';
+    fw.appendChild(p);grid.appendChild(fw);
+  }
+
   return doc;
 }
 
@@ -1426,7 +1459,7 @@ async function handleSend(){
       steps.addStep('sw','Section Writer × 8','Writing each IMRAD section independently');
       steps.addStep('ab','Abstract Agent','Generating structured abstract from section summaries');
       steps.addStep('pr','Peer Review Agent','Simulating journal peer review');
-      steps.addStep('fa','Final Assembler','Stitching & polishing full manuscript');
+      steps.addStep('fa','References Agent','Formatting citations · stitching manuscript');
 
       steps.startStep('cmd');prog.update(1,'Commander planning research scope…');await sleep(400);
       steps.doneStep('cmd','Research plan created');
@@ -1465,7 +1498,7 @@ async function handleSend(){
       steps.startStep('pr');prog.update(10,'Peer Review Agent evaluating manuscript…');await sleep(200);
       steps.doneStep('pr',data.peer_review?.match(/VERDICT/i)?'Review complete with verdict':'Peer review complete');
       steps.startStep('fa');prog.update(11,'Final Assembler stitching and polishing…');await sleep(200);
-      steps.doneStep('fa',`Manuscript complete · ${data.metadata?.sources_gathered||0} sources · ${((Date.now()-t0)/1000).toFixed(1)}s`);
+      steps.doneStep('fa',`References formatted · manuscript stitched · ${((Date.now()-t0)/1000).toFixed(1)}s`);
       prog.done(`Full manuscript ready · ${((Date.now()-t0)/1000).toFixed(1)}s`);
       steps.setDone(`Manuscript complete in ${((Date.now()-t0)/1000).toFixed(1)}s`);
 
