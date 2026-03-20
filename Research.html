@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Stremini — Research Agent v6.0</title>
+<title>Stremini — Research Agent v6.1</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&family=Spectral:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet"/>
 <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
 <script src="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
@@ -31,41 +31,21 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink)}
 .layout{display:flex;height:100vh;overflow:hidden}
 
 /* ══ SIDEBAR ══ */
-.sidebar{
-  width:268px;flex-shrink:0;
-  background:var(--ink);
-  display:flex;flex-direction:column;
-  border-right:1px solid rgba(255,255,255,.05);
-  position:relative;overflow:hidden;
-}
-.sidebar::before{
-  content:'';position:absolute;inset:0;pointer-events:none;
-  background:radial-gradient(ellipse 300px 400px at 50% -10%,rgba(201,145,26,.08) 0%,transparent 70%);
-}
+.sidebar{width:268px;flex-shrink:0;background:var(--ink);display:flex;flex-direction:column;border-right:1px solid rgba(255,255,255,.05);position:relative;overflow:hidden}
+.sidebar::before{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 300px 400px at 50% -10%,rgba(201,145,26,.08) 0%,transparent 70%)}
 .sb-inner{position:relative;z-index:1;display:flex;flex-direction:column;height:100%;overflow:hidden}
 
 .sb-logo{padding:22px 20px 18px;border-bottom:1px solid rgba(255,255,255,.06)}
 .logo-lockup{display:flex;align-items:center;gap:11px}
-.logo-gem{
-  width:38px;height:38px;border-radius:10px;flex-shrink:0;
-  background:linear-gradient(145deg,var(--gold2),var(--gold));
-  display:flex;align-items:center;justify-content:center;
-  box-shadow:0 0 30px rgba(201,145,26,.3),0 4px 12px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,235,160,.3);
-}
+.logo-gem{width:38px;height:38px;border-radius:10px;flex-shrink:0;background:linear-gradient(145deg,var(--gold2),var(--gold));display:flex;align-items:center;justify-content:center;box-shadow:0 0 30px rgba(201,145,26,.3),0 4px 12px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,235,160,.3)}
 .logo-gem svg{width:18px;height:18px;color:var(--ink)}
 .logo-name{font-family:'Playfair Display',serif;font-size:17px;color:#fff;font-weight:600;letter-spacing:.2px;line-height:1}
 .logo-tagline{font-size:9px;color:rgba(255,255,255,.35);letter-spacing:1.5px;text-transform:uppercase;font-weight:500;margin-top:2px}
 .logo-version{display:inline-block;font-size:8px;background:rgba(201,145,26,.18);color:var(--gold2);border:1px solid rgba(201,145,26,.25);border-radius:4px;padding:1px 5px;margin-left:4px;font-weight:600;letter-spacing:.3px;vertical-align:middle}
 
-/* Nav */
 .sb-nav{padding:14px 12px;border-bottom:1px solid rgba(255,255,255,.06)}
 .nav-label{font-size:8.5px;font-weight:600;color:rgba(255,255,255,.25);letter-spacing:1.6px;text-transform:uppercase;padding:0 8px;margin-bottom:7px}
-.nav-btn{
-  display:flex;align-items:center;gap:10px;width:100%;padding:9px 10px;
-  background:transparent;border:none;border-radius:7px;
-  font-family:'DM Sans',sans-serif;font-size:12.5px;font-weight:500;color:rgba(255,255,255,.5);
-  cursor:pointer;transition:all .18s;text-align:left;letter-spacing:.1px;
-}
+.nav-btn{display:flex;align-items:center;gap:10px;width:100%;padding:9px 10px;background:transparent;border:none;border-radius:7px;font-family:'DM Sans',sans-serif;font-size:12.5px;font-weight:500;color:rgba(255,255,255,.5);cursor:pointer;transition:all .18s;text-align:left;letter-spacing:.1px}
 .nav-btn svg{width:14px;height:14px;flex-shrink:0;opacity:.7}
 .nav-btn:hover{background:rgba(255,255,255,.06);color:rgba(255,255,255,.8)}
 .nav-btn.active-r{background:var(--crimson-pale);color:var(--gold2);border:1px solid rgba(201,145,26,.2)}
@@ -74,10 +54,12 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink)}
 .nav-btn.active-ms svg{opacity:1;color:rgba(180,140,255,.9)}
 .nav-btn.active-m{background:rgba(26,107,122,.12);color:rgba(100,200,220,.9);border:1px solid rgba(26,107,122,.3)}
 .nav-btn.active-m svg{opacity:1;color:rgba(100,200,220,.9)}
+.nav-btn.active-d{background:rgba(16,140,120,.14);color:rgba(80,230,200,.9);border:1px solid rgba(16,140,120,.35)}
+.nav-btn.active-d svg{opacity:1;color:rgba(80,230,200,.9)}
 .nav-badge{font-size:8px;background:rgba(201,145,26,.22);color:var(--gold2);border-radius:4px;padding:1px 5px;font-weight:700;letter-spacing:.3px;margin-left:auto}
 .nav-badge.new-badge{background:rgba(91,45,142,.22);color:rgba(180,140,255,.9)}
+.nav-badge.disc-badge{background:rgba(16,140,120,.22);color:rgba(80,230,200,.9)}
 
-/* Status */
 .sb-status{padding:14px 20px;border-bottom:1px solid rgba(255,255,255,.06)}
 .status-label{font-size:8.5px;font-weight:600;color:rgba(255,255,255,.25);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px}
 .status-pill{display:inline-flex;align-items:center;gap:7px;padding:5px 11px 5px 8px;border-radius:20px;font-size:11px;font-weight:500}
@@ -89,29 +71,22 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink)}
 .s-run .s-dot{animation:pulse 1.5s ease-in-out infinite}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.2;transform:scale(.8)}}
 
-/* Stats */
 .sb-stats{padding:12px 20px;border-bottom:1px solid rgba(255,255,255,.06)}
 .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}
 .stat-cell{text-align:center;padding:9px 2px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:6px}
 .stat-n{font-family:'Playfair Display',serif;font-size:18px;color:rgba(255,255,255,.85);line-height:1}
 .stat-l{font-size:7.5px;color:rgba(255,255,255,.25);text-transform:uppercase;letter-spacing:.6px;margin-top:2px;font-weight:600}
 
-/* Manuscript Options */
 .sb-ms-opts{padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.06);display:none}
 .sb-ms-opts.visible{display:block}
 .ms-opt-lbl{font-size:8.5px;font-weight:600;color:rgba(255,255,255,.25);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px}
 .ms-field{margin-bottom:8px}
 .ms-field label{display:block;font-size:10px;color:rgba(255,255,255,.35);margin-bottom:4px;font-weight:500}
-.ms-field input,.ms-field select{
-  width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);
-  border-radius:6px;padding:6px 9px;font-family:'DM Sans',sans-serif;
-  font-size:11px;color:rgba(255,255,255,.7);outline:none;
-}
+.ms-field input,.ms-field select{width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:6px;padding:6px 9px;font-family:'DM Sans',sans-serif;font-size:11px;color:rgba(255,255,255,.7);outline:none}
 .ms-field input::placeholder{color:rgba(255,255,255,.2)}
 .ms-field select option{background:#1a1209;color:#fff}
 .ms-field input:focus,.ms-field select:focus{border-color:rgba(91,45,142,.5);background:rgba(255,255,255,.08)}
 
-/* Recent */
 .sb-recent{flex:1;overflow-y:auto;padding:14px 12px}
 .sb-recent::-webkit-scrollbar{width:3px}
 .sb-recent::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08);border-radius:2px}
@@ -122,67 +97,34 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink)}
 .ri-mode{font-size:8px;background:rgba(255,255,255,.07);border-radius:3px;padding:1px 4px;margin-right:4px;vertical-align:middle;text-transform:uppercase;letter-spacing:.4px}
 
 .sb-bottom{padding:14px 12px 18px}
-.new-btn{
-  width:100%;padding:9px 14px;
-  background:rgba(255,255,255,.04);border:1px dashed rgba(255,255,255,.1);
-  border-radius:8px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;
-  color:rgba(255,255,255,.35);cursor:pointer;transition:all .2s;
-  display:flex;align-items:center;justify-content:center;gap:7px;
-}
+.new-btn{width:100%;padding:9px 14px;background:rgba(255,255,255,.04);border:1px dashed rgba(255,255,255,.1);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;color:rgba(255,255,255,.35);cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:7px}
 .new-btn:hover{background:rgba(201,145,26,.08);border-color:rgba(201,145,26,.3);color:var(--gold2)}
 
 /* ══ MAIN ══ */
 .main{flex:1;display:flex;flex-direction:column;min-width:0;background:var(--cream);overflow:hidden}
-
-.topbar{
-  height:54px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;
-  padding:0 28px;border-bottom:1px solid var(--border);
-  background:rgba(250,247,242,.96);backdrop-filter:blur(16px);
-}
-.mode-badge{
-  display:inline-flex;align-items:center;gap:8px;
-  padding:5px 13px 5px 10px;background:var(--crimson-pale);
-  border:1px solid rgba(139,26,46,.15);border-radius:20px;
-  font-size:11.5px;font-weight:600;color:var(--crimson);letter-spacing:.2px;
-}
+.topbar{height:54px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;padding:0 28px;border-bottom:1px solid var(--border);background:rgba(250,247,242,.96);backdrop-filter:blur(16px)}
+.mode-badge{display:inline-flex;align-items:center;gap:8px;padding:5px 13px 5px 10px;background:var(--crimson-pale);border:1px solid rgba(139,26,46,.15);border-radius:20px;font-size:11.5px;font-weight:600;color:var(--crimson);letter-spacing:.2px}
 .mode-badge.ms-badge{background:var(--violet-pale);border-color:rgba(91,45,142,.2);color:var(--violet)}
+.mode-badge.d-badge{background:rgba(16,140,120,.08);border-color:rgba(16,140,120,.25);color:#0f7a6a}
 .mode-badge svg{width:12px;height:12px}
 .topbar-right{display:flex;align-items:center;gap:8px}
-.tb-action{
-  display:inline-flex;align-items:center;gap:6px;padding:6px 14px;
-  background:transparent;border:1px solid var(--border2);border-radius:7px;
-  font-family:'DM Sans',sans-serif;font-size:11.5px;font-weight:500;color:var(--ink3);
-  cursor:pointer;transition:all .15s;
-}
+.tb-action{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:transparent;border:1px solid var(--border2);border-radius:7px;font-family:'DM Sans',sans-serif;font-size:11.5px;font-weight:500;color:var(--ink3);cursor:pointer;transition:all .15s}
 .tb-action:hover{background:var(--cream3);color:var(--ink)}
 
-/* Scroll container */
 .msgs-wrap{flex:1;overflow-y:auto;scroll-behavior:smooth}
 .msgs-wrap::-webkit-scrollbar{width:5px}
 .msgs-wrap::-webkit-scrollbar-thumb{background:var(--cream4);border-radius:3px}
 .msgs{max-width:var(--paper-w);margin:0 auto;padding:32px 36px;display:flex;flex-direction:column;gap:0}
 
 /* ══ WELCOME ══ */
-.welcome{
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  min-height:calc(100vh - 160px);text-align:center;padding:0 0 32px;
-}
-.welcome-emblem{
-  width:72px;height:72px;border-radius:18px;
-  background:linear-gradient(145deg,var(--gold2),var(--gold));
-  display:flex;align-items:center;justify-content:center;margin-bottom:24px;
-  box-shadow:0 0 60px rgba(201,145,26,.25),0 8px 32px rgba(26,18,9,.12),inset 0 1px 0 rgba(255,235,160,.3);
-}
+.welcome{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:calc(100vh - 160px);text-align:center;padding:0 0 32px}
+.welcome-emblem{width:72px;height:72px;border-radius:18px;background:linear-gradient(145deg,var(--gold2),var(--gold));display:flex;align-items:center;justify-content:center;margin-bottom:24px;box-shadow:0 0 60px rgba(201,145,26,.25),0 8px 32px rgba(26,18,9,.12),inset 0 1px 0 rgba(255,235,160,.3)}
 .welcome-emblem svg{width:32px;height:32px;color:var(--ink)}
 .welcome h2{font-family:'Playfair Display',serif;font-size:36px;font-weight:600;color:var(--ink);letter-spacing:-.5px;margin-bottom:6px;line-height:1.2}
 .welcome-version{display:inline-flex;align-items:center;gap:6px;font-size:10px;color:var(--ink3);background:var(--cream3);border:1px solid var(--border);border-radius:20px;padding:3px 11px;margin-bottom:12px;font-weight:600;letter-spacing:.5px;text-transform:uppercase}
-.welcome-sub{font-size:14px;color:var(--ink3);line-height:1.75;max-width:520px;margin-bottom:36px;font-weight:300}
-.hint-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;width:100%;max-width:780px}
-.hint-card{
-  display:flex;align-items:flex-start;gap:13px;padding:16px 18px;
-  background:#fff;border:1px solid var(--border);border-radius:12px;
-  cursor:pointer;transition:all .25s;text-align:left;
-}
+.welcome-sub{font-size:14px;color:var(--ink3);line-height:1.75;max-width:540px;margin-bottom:36px;font-weight:300}
+.hint-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;width:100%;max-width:840px}
+.hint-card{display:flex;align-items:flex-start;gap:13px;padding:16px 18px;background:#fff;border:1px solid var(--border);border-radius:12px;cursor:pointer;transition:all .25s;text-align:left}
 .hint-card:hover{transform:translateY(-2px);box-shadow:0 8px 32px var(--shadow),0 0 0 3px rgba(201,145,26,.06)}
 .hint-card:hover.gold-c{border-color:var(--gold)}
 .hint-card:hover.violet-c{border-color:var(--violet);box-shadow:0 8px 32px var(--shadow),0 0 0 3px var(--violet-pale)}
@@ -198,6 +140,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink)}
 .hint-mode-badge.r{background:var(--crimson-pale);color:var(--crimson)}
 .hint-mode-badge.ms{background:var(--violet-pale);color:var(--violet)}
 .hint-mode-badge.m{background:var(--teal-pale);color:var(--teal)}
+.hint-mode-badge.d{background:rgba(16,140,120,.1);color:#0f7a6a}
 
 /* ══ MESSAGES ══ */
 .msg-row{display:flex;gap:14px;padding:22px 0;border-bottom:1px solid var(--border);animation:fadein .3s ease}
@@ -214,11 +157,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink)}
 
 /* ══ AGENT STEPS PANEL ══ */
 .steps-panel{background:#fff;border:1px solid var(--border);border-radius:11px;overflow:hidden;margin:6px 0 10px}
-.steps-header{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:10px 15px;background:var(--cream2);border-bottom:1px solid var(--border);
-  cursor:pointer;user-select:none;transition:background .15s;
-}
+.steps-header{display:flex;align-items:center;justify-content:space-between;padding:10px 15px;background:var(--cream2);border-bottom:1px solid var(--border);cursor:pointer;user-select:none;transition:background .15s}
 .steps-header:hover{background:var(--cream3)}
 .steps-title{display:flex;align-items:center;gap:8px;font-size:11.5px;font-weight:600;color:var(--ink2);letter-spacing:.2px}
 .steps-title svg{width:13px;height:13px;color:var(--ink3)}
@@ -239,9 +178,10 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink)}
 .step-label{font-weight:600;color:var(--ink)}
 .step-detail{font-size:10.5px;color:var(--ink3);margin-top:2px}
 
-/* ══ PROGRESS BAR for manuscript ══ */
+/* ══ PROGRESS BAR ══ */
 .ms-progress{margin:8px 0 4px;background:var(--cream3);border-radius:4px;height:4px;overflow:hidden}
 .ms-progress-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--violet),rgba(180,140,255,.7));transition:width .8s cubic-bezier(.4,0,.2,1)}
+.ms-progress-fill.disc{background:linear-gradient(90deg,var(--teal),rgba(80,230,200,.7))}
 .ms-progress-label{font-size:9.5px;color:var(--ink3);margin-top:4px;font-weight:500}
 
 /* ══ CONFIDENCE BAR ══ */
@@ -252,15 +192,8 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink)}
 .conf-val{font-size:11px;font-weight:700;color:var(--gold);white-space:nowrap;font-family:'Playfair Display',serif}
 
 /* ══ EVAL METRICS DASHBOARD ══ */
-.eval-dashboard{
-  background:#fff;border:1px solid var(--border);border-radius:11px;
-  overflow:hidden;margin:8px 0;
-}
-.eval-header{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:10px 15px;background:linear-gradient(90deg,var(--cream2),var(--cream3));
-  border-bottom:1px solid var(--border);cursor:pointer;user-select:none;
-}
+.eval-dashboard{background:#fff;border:1px solid var(--border);border-radius:11px;overflow:hidden;margin:8px 0}
+.eval-header{display:flex;align-items:center;justify-content:space-between;padding:10px 15px;background:linear-gradient(90deg,var(--cream2),var(--cream3));border-bottom:1px solid var(--border);cursor:pointer;user-select:none}
 .eval-header:hover{background:var(--cream3)}
 .eval-title{font-size:11px;font-weight:700;color:var(--ink2);letter-spacing:.3px;display:flex;align-items:center;gap:7px;text-transform:uppercase}
 .eval-title svg{width:12px;height:12px;color:var(--ink3)}
@@ -268,9 +201,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink)}
 .eval-body.collapsed{display:none}
 .eval-cell{text-align:center;padding:12px 8px;background:var(--cream2);border:1px solid var(--border);border-radius:8px}
 .eval-n{font-family:'Playfair Display',serif;font-size:22px;color:var(--ink);line-height:1;margin-bottom:3px}
-.eval-n.good{color:#166534}
-.eval-n.warn{color:var(--gold)}
-.eval-n.bad{color:var(--crimson)}
+.eval-n.good{color:#166534}.eval-n.warn{color:var(--gold)}.eval-n.bad{color:var(--crimson)}
 .eval-lbl{font-size:8.5px;color:var(--ink3);text-transform:uppercase;letter-spacing:.6px;font-weight:600}
 .eval-sub{font-size:9px;color:var(--ink4);margin-top:2px}
 .eval-bar-row{grid-column:1/-1;display:flex;flex-direction:column;gap:7px;padding:10px 14px;background:var(--cream2);border:1px solid var(--border);border-radius:8px}
@@ -281,37 +212,23 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink)}
 .fill-green{background:linear-gradient(90deg,#22c55e,#86efac)}
 .fill-gold{background:linear-gradient(90deg,var(--gold),var(--gold2))}
 .fill-crimson{background:linear-gradient(90deg,var(--crimson),var(--crimson2))}
+.fill-teal{background:linear-gradient(90deg,var(--teal),var(--teal2))}
 .eval-bar-val{width:35px;text-align:right;font-size:10px;font-weight:600;color:var(--ink2);flex-shrink:0}
 
 /* ══ PEER REVIEW PANEL ══ */
-.peer-panel{
-  background:#fff;border:1px solid rgba(91,45,142,.2);
-  border-left:3px solid var(--violet);border-radius:0 11px 11px 0;
-  overflow:hidden;margin:8px 0;
-}
-.peer-header{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:10px 16px;background:var(--violet-pale);border-bottom:1px solid rgba(91,45,142,.12);
-  cursor:pointer;user-select:none;
-}
+.peer-panel{background:#fff;border:1px solid rgba(91,45,142,.2);border-left:3px solid var(--violet);border-radius:0 11px 11px 0;overflow:hidden;margin:8px 0}
+.peer-header{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:var(--violet-pale);border-bottom:1px solid rgba(91,45,142,.12);cursor:pointer;user-select:none}
 .peer-header:hover{background:rgba(91,45,142,.1)}
 .peer-title{font-size:11px;font-weight:700;color:var(--violet);letter-spacing:.3px;display:flex;align-items:center;gap:7px;text-transform:uppercase}
 .peer-body{padding:14px 16px;font-size:12.5px;line-height:1.75;color:var(--ink2)}
 .peer-body.collapsed{display:none}
-.peer-verdict-badge{
-  display:inline-flex;align-items:center;gap:6px;padding:4px 12px;
-  border-radius:20px;font-size:10.5px;font-weight:700;letter-spacing:.3px;
-  text-transform:uppercase;margin-bottom:10px;
-}
+.peer-verdict-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;font-size:10.5px;font-weight:700;letter-spacing:.3px;text-transform:uppercase;margin-bottom:10px}
 .verdict-accept{background:rgba(34,197,94,.08);color:#166534;border:1px solid rgba(34,197,94,.2)}
 .verdict-minor{background:var(--gold-pale);color:var(--gold);border:1px solid rgba(201,145,26,.2)}
 .verdict-major{background:var(--crimson-pale);color:var(--crimson);border:1px solid rgba(139,26,46,.2)}
 .peer-section{margin-bottom:12px}
 .peer-section-title{font-size:9.5px;font-weight:700;color:var(--violet);text-transform:uppercase;letter-spacing:.8px;margin-bottom:7px;padding-bottom:4px;border-bottom:1px solid rgba(91,45,142,.1)}
-.peer-concern{
-  display:flex;gap:9px;padding:8px 11px;background:var(--cream2);
-  border:1px solid var(--border);border-radius:7px;margin-bottom:5px;font-size:12px;
-}
+.peer-concern{display:flex;gap:9px;padding:8px 11px;background:var(--cream2);border:1px solid var(--border);border-radius:7px;margin-bottom:5px;font-size:12px}
 .concern-tag{font-size:9px;font-weight:700;color:var(--crimson);background:var(--crimson-pale);border-radius:4px;padding:1px 5px;flex-shrink:0;margin-top:2px;white-space:nowrap}
 .concern-tag.minor{color:var(--gold);background:var(--gold-pale)}
 .peer-strength{padding:8px 11px;background:rgba(34,197,94,.04);border:1px solid rgba(34,197,94,.15);border-radius:7px;margin-bottom:5px;font-size:12px;display:flex;gap:9px}
@@ -319,26 +236,64 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink)}
 
 /* ══ SOURCES ROW ══ */
 .sources-row{display:flex;flex-wrap:wrap;gap:5px;margin:5px 0 9px}
-.src-pill{
-  display:inline-flex;align-items:center;gap:5px;padding:3px 10px;
-  background:var(--cream2);border:1px solid var(--border);border-radius:20px;
-  font-size:10px;color:var(--ink3);cursor:pointer;text-decoration:none;
-  transition:all .15s;font-weight:500;letter-spacing:.2px;
-}
+.src-pill{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;background:var(--cream2);border:1px solid var(--border);border-radius:20px;font-size:10px;color:var(--ink3);cursor:pointer;text-decoration:none;transition:all .15s;font-weight:500;letter-spacing:.2px}
 .src-pill:hover{border-color:var(--crimson);color:var(--crimson)}
 .src-pill svg{width:8px;height:8px}
 
-/* ═══════════════════════════════════════════════════════
-   PAPER / MANUSCRIPT BLOCK
-═══════════════════════════════════════════════════════ */
-.paper-block{margin:8px 0}
+/* ══ DISCOVERY MODE STYLES ══ */
+.discovery-block{margin:8px 0}
+.disc-masthead{background:linear-gradient(135deg,#071a1a 0%,#0d2e2e 60%,#071a1a 100%);padding:14px 36px;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid var(--teal);border-radius:12px 12px 0 0}
+.disc-doc{background:var(--cream);border:1px solid var(--border);border-top:none;border-radius:0 0 12px 12px;overflow:hidden}
+.disc-inner{padding:36px 44px 32px}
+.disc-title{font-family:'Playfair Display',serif;font-size:26px;font-weight:700;line-height:1.25;color:var(--ink);margin-bottom:20px;border-bottom:2px solid var(--cream3);padding-bottom:16px}
+.disc-section{margin-bottom:28px}
+.disc-section-heading{font-family:'DM Sans',sans-serif;font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:1.3px;color:#0f7a6a;margin-bottom:12px;padding-bottom:6px;border-bottom:1.5px solid rgba(26,107,122,.15);display:flex;align-items:center;gap:8px}
+.disc-section-heading::before{content:'';width:14px;height:2px;background:#0f7a6a;flex-shrink:0}
+.disc-p{font-family:'Spectral',serif;font-size:15px;line-height:1.9;color:var(--ink);margin-bottom:10px}
 
-/* Journal masthead */
-.paper-masthead{
-  background:linear-gradient(135deg,#1a0a08 0%,#2e1508 60%,#1a0a08 100%);
-  padding:14px 36px;display:flex;align-items:center;justify-content:space-between;
-  border-bottom:2px solid var(--crimson);border-radius:12px 12px 0 0;
-}
+/* Hypothesis cards */
+.hyp-grid{display:flex;flex-direction:column;gap:10px;margin-top:8px}
+.hyp-card{background:#fff;border:1px solid var(--border);border-left:3px solid #0f7a6a;border-radius:0 9px 9px 0;padding:14px 18px}
+.hyp-id{font-size:8.5px;font-weight:700;color:#0f7a6a;text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px;font-family:'DM Sans',sans-serif}
+.hyp-statement{font-family:'Spectral',serif;font-size:14px;line-height:1.75;color:var(--ink);font-style:italic;margin-bottom:8px}
+.hyp-meta{display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+.hyp-tag{font-size:9px;font-weight:600;padding:2px 8px;border-radius:4px;text-transform:uppercase;letter-spacing:.4px;font-family:'DM Sans',sans-serif}
+.hyp-tag.novelty-high{background:rgba(34,197,94,.08);color:#166534;border:1px solid rgba(34,197,94,.2)}
+.hyp-tag.novelty-medium{background:var(--gold-pale);color:var(--gold);border:1px solid rgba(201,145,26,.2)}
+.hyp-tag.novelty-low{background:var(--cream3);color:var(--ink3);border:1px solid var(--border)}
+.hyp-tag.test{background:rgba(26,107,122,.08);color:var(--teal);border:1px solid rgba(26,107,122,.2)}
+.hyp-priority{font-size:9px;color:#0f7a6a;font-weight:700;background:rgba(15,122,106,.06);border-radius:4px;padding:2px 7px;border:1px solid rgba(15,122,106,.15);font-family:'DM Sans',sans-serif;margin-left:auto}
+.hyp-rationale{font-size:11.5px;color:var(--ink3);line-height:1.6;margin-top:8px;padding-top:8px;border-top:1px solid var(--border);font-family:'DM Sans',sans-serif}
+
+/* Experiment cards */
+.exp-grid{display:flex;flex-direction:column;gap:10px;margin-top:8px}
+.exp-card{background:#fff;border:1px solid var(--border);border-radius:9px;overflow:hidden}
+.exp-header{display:flex;align-items:center;gap:10px;padding:11px 16px;background:var(--cream2);border-bottom:1px solid var(--border)}
+.exp-name{font-size:12.5px;font-weight:600;color:var(--ink);font-family:'DM Sans',sans-serif;flex:1}
+.exp-type-tag{font-size:8.5px;font-weight:700;padding:2px 8px;border-radius:4px;background:rgba(26,107,122,.08);color:var(--teal);border:1px solid rgba(26,107,122,.2);text-transform:uppercase;letter-spacing:.4px;font-family:'DM Sans',sans-serif;white-space:nowrap}
+.exp-feasibility{font-size:8.5px;font-weight:700;padding:2px 8px;border-radius:4px;font-family:'DM Sans',sans-serif;text-transform:uppercase;letter-spacing:.3px;white-space:nowrap}
+.feas-high{background:rgba(34,197,94,.08);color:#166534;border:1px solid rgba(34,197,94,.2)}
+.feas-medium{background:var(--gold-pale);color:var(--gold);border:1px solid rgba(201,145,26,.2)}
+.feas-low{background:var(--crimson-pale);color:var(--crimson);border:1px solid rgba(139,26,46,.2)}
+.exp-body{padding:12px 16px;display:flex;flex-direction:column;gap:7px;font-size:12.5px;line-height:1.65;color:var(--ink2)}
+.exp-row{display:flex;gap:8px;align-items:flex-start}
+.exp-label{font-size:9.5px;font-weight:700;color:#0f7a6a;text-transform:uppercase;letter-spacing:.5px;min-width:110px;flex-shrink:0;font-family:'DM Sans',sans-serif;margin-top:2px}
+.exp-val{flex:1;font-family:'Spectral',serif}
+
+/* Discovery summary metrics */
+.disc-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0 14px}
+.dm-cell{text-align:center;padding:12px 4px;background:rgba(26,107,122,.06);border:1px solid rgba(26,107,122,.15);border-radius:8px}
+.dm-n{font-family:'Playfair Display',serif;font-size:22px;color:#0f7a6a;line-height:1}
+.dm-l{font-size:8px;color:var(--ink3);text-transform:uppercase;letter-spacing:.6px;font-weight:600;margin-top:3px}
+
+/* Gap list */
+.gap-list{display:flex;flex-direction:column;gap:5px;margin-top:6px}
+.gap-item{display:flex;gap:9px;align-items:flex-start;padding:8px 12px;background:#fff;border:1px solid rgba(26,107,122,.15);border-radius:7px;font-size:12.5px;color:var(--ink2)}
+.gap-dot{width:7px;height:7px;border-radius:50%;background:#0f7a6a;flex-shrink:0;margin-top:5px}
+
+/* ══ PAPER / MANUSCRIPT BLOCK ══ */
+.paper-block{margin:8px 0}
+.paper-masthead{background:linear-gradient(135deg,#1a0a08 0%,#2e1508 60%,#1a0a08 100%);padding:14px 36px;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid var(--crimson);border-radius:12px 12px 0 0}
 .paper-masthead.ms{border-bottom-color:var(--violet);background:linear-gradient(135deg,#0e0820 0%,#1e103a 60%,#0e0820 100%)}
 .masthead-journal{font-family:'Playfair Display',serif;font-size:12px;font-weight:600;color:rgba(255,215,140,.85);letter-spacing:1px;font-style:italic}
 .masthead-meta{font-size:9.5px;color:rgba(255,215,140,.4);letter-spacing:.7px;text-transform:uppercase;font-family:'DM Sans',sans-serif;font-weight:500}
@@ -355,39 +310,23 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink)}
 .paper-kws{margin-top:14px;display:flex;flex-wrap:wrap;gap:5px;justify-content:center}
 .kw-tag{display:inline-block;padding:3px 10px;background:var(--crimson-pale);border:1px solid rgba(139,26,46,.18);border-radius:20px;font-size:9.5px;font-weight:600;color:var(--crimson);letter-spacing:.4px;text-transform:uppercase}
 
-/* Abstract */
 .paper-abstract{background:#fff;border:1px solid var(--cream4);border-left:3px solid var(--crimson);padding:18px 22px;margin-bottom:32px}
 .abstract-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--crimson);margin-bottom:9px;font-family:'DM Sans',sans-serif}
 .paper-abstract p{font-family:'Spectral',serif;font-size:15.5px;line-height:1.9;color:var(--ink);font-style:italic}
 
-/* IMRAD section tabs */
 .imrad-nav{display:flex;gap:0;border-bottom:2px solid var(--cream3);margin-bottom:24px;overflow-x:auto}
 .imrad-nav::-webkit-scrollbar{height:0}
-.imrad-tab{
-  padding:8px 16px;font-size:10.5px;font-weight:600;color:var(--ink3);
-  cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;
-  white-space:nowrap;transition:all .15s;letter-spacing:.2px;
-  background:transparent;border-top:none;border-left:none;border-right:none;
-  font-family:'DM Sans',sans-serif;
-}
+.imrad-tab{padding:8px 16px;font-size:10.5px;font-weight:600;color:var(--ink3);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;white-space:nowrap;transition:all .15s;letter-spacing:.2px;background:transparent;border-top:none;border-left:none;border-right:none;font-family:'DM Sans',sans-serif}
 .imrad-tab:hover{color:var(--ink);background:var(--cream2)}
 .imrad-tab.active{color:var(--violet);border-bottom-color:var(--violet);background:rgba(91,45,142,.04)}
 .imrad-content{display:none}
 .imrad-content.active{display:block}
 .section-word-count{font-size:9px;color:var(--ink4);font-weight:500;float:right;margin-top:2px}
 
-/* Two-column layout */
 .paper-cols{display:grid;grid-template-columns:1fr 1fr;gap:28px}
 .full-w{grid-column:1/-1}
 
-/* Section heading */
-.sec-heading{
-  font-family:'DM Sans',sans-serif;font-size:9.5px;font-weight:700;
-  text-transform:uppercase;letter-spacing:1.3px;color:var(--crimson);
-  margin-bottom:12px;margin-top:24px;
-  padding-bottom:6px;border-bottom:1.5px solid var(--cream4);
-  display:flex;align-items:center;gap:8px;
-}
+.sec-heading{font-family:'DM Sans',sans-serif;font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:1.3px;color:var(--crimson);margin-bottom:12px;margin-top:24px;padding-bottom:6px;border-bottom:1.5px solid var(--cream4);display:flex;align-items:center;gap:8px}
 .sec-heading.violet{color:var(--violet);border-bottom-color:rgba(91,45,142,.15)}
 .sec-heading::before{content:'';width:14px;height:2px;background:currentColor;flex-shrink:0}
 .sec-num{color:var(--gold);margin-right:2px}
@@ -404,14 +343,12 @@ body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink)}
 .block-uncert{background:rgba(201,145,26,.03);border:1px solid rgba(201,145,26,.15);border-radius:8px;padding:13px 16px;margin:12px 0}
 .block-uncert .blk-label{font-size:9px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.9px;margin-bottom:7px}
 
-/* Figure inside paper */
 .paper-figure{background:#fff;border:1px solid var(--cream4);border-radius:8px;overflow:hidden;margin:18px 0}
 .figure-bar{background:linear-gradient(90deg,#f8f4ed,#f0ece3);padding:8px 15px;border-bottom:1px solid var(--cream4);display:flex;align-items:center;gap:7px;font-size:9px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.8px;font-family:'DM Sans',sans-serif}
 .figure-render{padding:18px;display:flex;justify-content:center;overflow-x:auto;min-height:40px;background:#fff}
 .figure-render svg{max-width:100%;height:auto}
 .figure-caption{padding:7px 15px 11px;font-family:'Spectral',serif;font-size:12.5px;color:var(--ink3);font-style:italic;text-align:center;background:rgba(0,0,0,.015);border-top:1px solid var(--cream4)}
 
-/* References */
 .paper-refs{border-top:2px solid var(--cream3);padding-top:22px;margin-top:12px}
 .refs-title{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:1.3px;color:var(--ink);margin-bottom:16px;font-family:'DM Sans',sans-serif}
 .ref-item{display:flex;gap:11px;font-family:'Spectral',serif;font-size:13.5px;line-height:1.7;color:var(--ink2);margin-bottom:9px;padding-bottom:9px;border-bottom:1px solid var(--cream3)}
@@ -466,6 +403,7 @@ textarea.ta{flex:1;border:none!important;background:transparent!important;paddin
 textarea.ta::placeholder{color:var(--ink4);font-style:italic}
 .send-btn{width:38px;height:38px;flex-shrink:0;background:linear-gradient(145deg,var(--crimson2),var(--crimson));border:none;border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .18s;box-shadow:0 4px 14px rgba(139,26,46,.3),inset 0 1px 0 rgba(255,120,140,.15)}
 .send-btn.ms-send{background:linear-gradient(145deg,#7c3ab5,var(--violet));box-shadow:0 4px 14px rgba(91,45,142,.35)}
+.send-btn.d-send{background:linear-gradient(145deg,#0f8f7a,#0f7a6a);box-shadow:0 4px 14px rgba(15,122,106,.35)}
 .send-btn:hover{transform:scale(1.06)}
 .send-btn:disabled{opacity:.35;cursor:not-allowed;transform:none}
 .send-btn svg{width:15px;height:15px;color:#fff}
@@ -473,7 +411,7 @@ textarea.ta::placeholder{color:var(--ink4);font-style:italic}
 #fileInput{display:none}
 
 @media(max-width:768px){
-  .sidebar{display:none}.paper-cols{grid-template-columns:1fr}.hint-grid{grid-template-columns:1fr}.paper-inner{padding:24px 20px}.eval-body{grid-template-columns:1fr 1fr}
+  .sidebar{display:none}.paper-cols{grid-template-columns:1fr}.hint-grid{grid-template-columns:1fr}.paper-inner{padding:24px 20px}.eval-body{grid-template-columns:1fr 1fr}.disc-inner{padding:24px 20px}.disc-metrics{grid-template-columns:1fr 1fr}
 }
 </style>
 </head>
@@ -491,7 +429,7 @@ textarea.ta::placeholder{color:var(--ink4);font-style:italic}
           </svg>
         </div>
         <div class="logo-words">
-          <div class="logo-name">Stremini <span class="logo-version">v6.0</span></div>
+          <div class="logo-name">Stremini <span class="logo-version">v6.1</span></div>
           <div class="logo-tagline">Research Agent</div>
         </div>
       </div>
@@ -508,13 +446,18 @@ textarea.ta::placeholder{color:var(--ink4);font-style:italic}
         Full Manuscript
         <span class="nav-badge new-badge">NEW</span>
       </button>
+      <button class="nav-btn" id="btnD" onclick="setMode('discovery')" style="margin-top:3px">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M3 12h3M18 12h3M12 3v3M12 18v3M5.64 5.64l2.12 2.12M16.24 16.24l2.12 2.12M5.64 18.36l2.12-2.12M16.24 7.76l2.12-2.12"/></svg>
+        Discovery AI
+        <span class="nav-badge disc-badge">NEW</span>
+      </button>
       <button class="nav-btn" id="btnM" onclick="setMode('math')" style="margin-top:3px">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>
         Math Solver
       </button>
     </div>
 
-    <!-- Manuscript options (shown only in manuscript mode) -->
+    <!-- Manuscript options -->
     <div class="sb-ms-opts" id="msOpts">
       <div class="ms-opt-lbl">Manuscript Options</div>
       <div class="ms-field">
@@ -552,8 +495,8 @@ textarea.ta::placeholder{color:var(--ink4);font-style:italic}
       <div class="stats-grid">
         <div class="stat-cell"><div class="stat-n" id="sPapers">0</div><div class="stat-l">Papers</div></div>
         <div class="stat-cell"><div class="stat-n" id="sManuscripts">0</div><div class="stat-l">Docs</div></div>
+        <div class="stat-cell"><div class="stat-n" id="sDiscoveries">0</div><div class="stat-l">Discovered</div></div>
         <div class="stat-cell"><div class="stat-n" id="sMath">0</div><div class="stat-l">Solved</div></div>
-        <div class="stat-cell"><div class="stat-n" id="sDiags">0</div><div class="stat-l">Figs</div></div>
       </div>
     </div>
 
@@ -599,9 +542,9 @@ textarea.ta::placeholder{color:var(--ink4);font-style:italic}
         <h2>Stremini Agent</h2>
         <div class="welcome-version">
           <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
-          v6.0 · Full Manuscript Engine
+          v6.1 · Scientific Discovery Engine
         </div>
-        <p class="welcome-sub">9-agent pipeline — evidence-first research, claim-level verification, contradiction detection, peer review simulation, and full IMRAD manuscript generation.</p>
+        <p class="welcome-sub">10-agent pipeline — evidence-first research, full IMRAD manuscripts, peer review, and now: human-level scientific discovery with hypothesis generation and experiment design.</p>
         <div class="hint-grid">
           <div class="hint-card gold-c" onclick="hint('research','Explore the transformative impact of large language models on scientific discovery, research methodologies, and academic knowledge creation')">
             <div class="hint-icon gold"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg></div>
@@ -612,19 +555,27 @@ textarea.ta::placeholder{color:var(--ink4);font-style:italic}
             </div>
           </div>
           <div class="hint-card violet-c" onclick="hint('manuscript','The role of neuroplasticity in adult learning: mechanisms, interventions, and educational implications')">
-            <div class="hint-icon violet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/></svg></div>
+            <div class="hint-icon violet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
             <div>
               <div class="hint-title">Neuroplasticity & Learning</div>
               <div class="hint-desc">Full IMRAD manuscript with peer review</div>
               <div class="hint-mode-badge ms">Manuscript</div>
             </div>
           </div>
-          <div class="hint-card violet-c" onclick="hint('manuscript','Climate change adaptation strategies in urban infrastructure: a systematic review of policy frameworks and engineering solutions')">
-            <div class="hint-icon violet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 010 20M12 2a15 15 0 000 20"/></svg></div>
+          <div class="hint-card teal-c" onclick="hint('discovery','Investigate the open questions in CRISPR-Cas9 off-target editing: gaps in knowledge, novel hypotheses, and experimental roadmap toward single-base precision in human gene therapy')">
+            <div class="hint-icon teal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M3 12h3M18 12h3M12 3v3M12 18v3M5.64 5.64l2.12 2.12M16.24 7.76l2.12-2.12"/></svg></div>
             <div>
-              <div class="hint-title">Urban Climate Adaptation</div>
-              <div class="hint-desc">Systematic review manuscript</div>
-              <div class="hint-mode-badge ms">Manuscript</div>
+              <div class="hint-title">CRISPR Discovery Report</div>
+              <div class="hint-desc">Hypotheses + experiment design</div>
+              <div class="hint-mode-badge d">Discovery</div>
+            </div>
+          </div>
+          <div class="hint-card teal-c" onclick="hint('discovery','What are the most critical unsolved problems in protein folding dynamics beyond AlphaFold predictions? Generate hypotheses and experiments to understand intrinsically disordered regions.')">
+            <div class="hint-icon teal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+            <div>
+              <div class="hint-title">Protein Folding Frontiers</div>
+              <div class="hint-desc">Gap analysis + novel hypotheses</div>
+              <div class="hint-mode-badge d">Discovery</div>
             </div>
           </div>
           <div class="hint-card gold-c" onclick="hint('research','Quantum computing and its implications for post-quantum cryptographic security standards')">
@@ -635,20 +586,12 @@ textarea.ta::placeholder{color:var(--ink4);font-style:italic}
               <div class="hint-mode-badge r">Research</div>
             </div>
           </div>
-          <div class="hint-card teal-c" onclick="hint('math','Solve the integral of x^2 * e^x using integration by parts, showing every step with full verification')">
-            <div class="hint-icon teal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg></div>
+          <div class="hint-card teal-c" onclick="hint('discovery','Explore the open questions in neuroinflammation and Alzheimer disease: what mechanisms remain unresolved, what novel hypotheses could explain tau propagation, and what experiments could test them')">
+            <div class="hint-icon teal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3M12 17h.01"/></svg></div>
             <div>
-              <div class="hint-title">Integration by Parts</div>
-              <div class="hint-desc">Step-by-step calculus solution</div>
-              <div class="hint-mode-badge m">Math</div>
-            </div>
-          </div>
-          <div class="hint-card violet-c" onclick="hint('manuscript','Artificial intelligence bias in healthcare diagnostics: sources, consequences, and mitigation frameworks')">
-            <div class="hint-icon violet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
-            <div>
-              <div class="hint-title">AI Bias in Healthcare</div>
-              <div class="hint-desc">Full manuscript with 9 agents</div>
-              <div class="hint-mode-badge ms">Manuscript</div>
+              <div class="hint-title">Alzheimer's Discovery</div>
+              <div class="hint-desc">Tau propagation hypotheses</div>
+              <div class="hint-mode-badge d">Discovery</div>
             </div>
           </div>
         </div>
@@ -670,7 +613,7 @@ textarea.ta::placeholder{color:var(--ink4);font-style:italic}
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
         </button>
         <input type="file" id="fileInput" accept=".pdf,.doc,.docx" onchange="handleFileSelect(event)"/>
-        <textarea id="ta" class="ta" rows="1" placeholder="Enter a research topic or math problem…"></textarea>
+        <textarea id="ta" class="ta" rows="1" placeholder="Enter a research topic, scientific field to explore, or math problem…"></textarea>
         <button class="send-btn" id="sendBtn" onclick="handleSend()">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
         </button>
@@ -689,12 +632,9 @@ mermaid.initialize({
   flowchart:{curve:'basis',padding:16}
 });
 
-// ═══════════════════════════════════════════════════
-// STATE
-// ═══════════════════════════════════════════════════
 const API='https://agentic-research.vishwajeetadkine705.workers.dev';
 let mode='research',running=false,history=[];
-let papers=0,manuscripts=0,mathSolved=0,diagramsTotal=0,diagId=0;
+let papers=0,manuscripts=0,mathSolved=0,discoveries=0,diagId=0;
 let pendingDocText=null,pendingDocName=null;
 
 const ta=document.getElementById('ta');
@@ -706,9 +646,6 @@ const msgsWrap=document.getElementById('msgsWrap');
 ta.addEventListener('input',function(){this.style.height='auto';this.style.height=Math.min(this.scrollHeight,150)+'px'});
 ta.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();handleSend()}});
 
-// ═══════════════════════════════════════════════════
-// UI HELPERS
-// ═══════════════════════════════════════════════════
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
 function now(){return new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}
 function scrollBot(){msgsWrap.scrollTop=msgsWrap.scrollHeight}
@@ -717,20 +654,19 @@ function sleep(ms){return new Promise(r=>setTimeout(r,ms))}
 
 function setMode(m){
   mode=m;
-  const isR=m==='research',isMS=m==='manuscript',isMath=m==='math';
+  const isR=m==='research',isMS=m==='manuscript',isMath=m==='math',isD=m==='discovery';
   document.getElementById('btnR').className='nav-btn'+(isR?' active-r':'');
   document.getElementById('btnMS').className='nav-btn'+(isMS?' active-ms':'');
   document.getElementById('btnM').className='nav-btn'+(isMath?' active-m':'');
+  document.getElementById('btnD').className='nav-btn'+(isD?' active-d':'');
   const badge=document.getElementById('modeBadge');
   const opts=document.getElementById('msOpts');
   opts.classList.toggle('visible',isMS);
-  if(isR){badge.className='mode-badge';badge.querySelector('svg').setAttribute('viewBox','0 0 24 24')}
-  else if(isMS){badge.className='mode-badge ms-badge'}
-  else{badge.className='mode-badge';badge.style.cssText='background:rgba(26,107,122,.08);border-color:rgba(26,107,122,.2);color:var(--teal)'}
-  document.getElementById('modeTxt').textContent=isR?'Research Mode':isMS?'Manuscript Mode':'Math Mode';
-  ta.placeholder=isR?'Enter a research topic or question…':isMS?'Enter your manuscript topic…':'Enter a math problem or proof…';
-  sendBtn.className='send-btn'+(isMS?' ms-send':'');
-  document.getElementById('inputHint').textContent=isMS?'Full IMRAD manuscript · Peer review · 9 agents · ~5000+ words':'Enter to send · Shift+Enter for newline · Upload PDF or DOCX to analyse';
+  badge.className='mode-badge'+(isMS?' ms-badge':isD?' d-badge':'');
+  document.getElementById('modeTxt').textContent=isR?'Research Mode':isMS?'Manuscript Mode':isD?'Discovery Mode':'Math Mode';
+  ta.placeholder=isR?'Enter a research topic or question…':isMS?'Enter your manuscript topic…':isD?'Enter a scientific field or problem to investigate…':'Enter a math problem or proof…';
+  sendBtn.className='send-btn'+(isMS?' ms-send':isD?' d-send':'');
+  document.getElementById('inputHint').textContent=isD?'Literature scan → hypothesis generation → experiment design · 4 Discovery Agents':isMS?'Full IMRAD manuscript · Peer review · 9 agents · ~5000+ words':'Enter to send · Shift+Enter for newline · Upload PDF or DOCX to analyse';
 }
 
 function hint(m,text){setMode(m);ta.value=text;ta.style.height='auto';ta.style.height=Math.min(ta.scrollHeight,150)+'px';ta.focus()}
@@ -741,17 +677,19 @@ function setStatus(type,label){
   pill.className='status-pill '+(cls[type]||'s-idle');
   document.getElementById('statusTxt').textContent=label;
 }
+
 function updateStats(){
   document.getElementById('sPapers').textContent=papers;
   document.getElementById('sManuscripts').textContent=manuscripts;
+  document.getElementById('sDiscoveries').textContent=discoveries;
   document.getElementById('sMath').textContent=mathSolved;
-  document.getElementById('sDiags').textContent=diagramsTotal;
 }
+
 function addRecent(text,m){
   const list=document.getElementById('recentItems');
   const empty=list.querySelector('.ri-empty');if(empty)empty.remove();
   const d=document.createElement('div');d.className='ri';
-  const modeLabels={research:'R',manuscript:'MS',math:'∑'};
+  const modeLabels={research:'R',manuscript:'MS',math:'∑',discovery:'🔬'};
   d.innerHTML=`<span class="ri-mode">${modeLabels[m]||'R'}</span>${esc(text.slice(0,55)+(text.length>55?'…':''))}`;
   d.onclick=()=>hint(m,text);list.prepend(d);
   while(list.children.length>8)list.lastChild.remove();
@@ -763,6 +701,7 @@ function addUserMsg(html){
   row.innerHTML=`<div class="av av-user">Y</div><div class="msg-body"><div class="msg-who">You <span class="msg-time">${now()}</span></div><div class="msg-content">${html}</div></div>`;
   msgs.appendChild(row);scrollBot();
 }
+
 function addAgentMsg(){
   hideWelcome();
   const row=document.createElement('div');row.className='msg-row';
@@ -771,9 +710,7 @@ function addAgentMsg(){
   return row.querySelector('[id^="agentSlot"]');
 }
 
-// ═══════════════════════════════════════════════════
-// STEPS PANEL
-// ═══════════════════════════════════════════════════
+// ══ STEPS PANEL ══
 function createStepsPanel(slot){
   const panel=document.createElement('div');panel.className='steps-panel';
   const hdr=document.createElement('div');hdr.className='steps-header';
@@ -786,7 +723,7 @@ function createStepsPanel(slot){
   return{
     panel,body,
     setTitle(t){titleEl.textContent=t},
-    setDone(t){titleEl.innerHTML=`<span style="color:var(--crimson)">✓</span> ${esc(t)}`},
+    setDone(t){titleEl.innerHTML=`<span style="color:var(--teal)">✓</span> ${esc(t)}`},
     addStep(id,label,detail=''){
       const row=document.createElement('div');row.className='step-row';row.id='sr-'+id;
       row.innerHTML=`<div class="step-ico ico-wait"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="5"/></svg></div><div class="step-text"><span class="step-label">${esc(label)}</span>${detail?`<div class="step-detail">${esc(detail)}</div>`:''}</div>`;
@@ -814,40 +751,28 @@ function createStepsPanel(slot){
   };
 }
 
-// ═══════════════════════════════════════════════════
-// MANUSCRIPT PROGRESS BAR
-// ═══════════════════════════════════════════════════
-function createProgressBar(slot,total){
+function createProgressBar(slot,total,isDisc){
   const wrap=document.createElement('div');
   const bar=document.createElement('div');bar.className='ms-progress';
-  const fill=document.createElement('div');fill.className='ms-progress-fill';fill.style.width='0%';
+  const fill=document.createElement('div');fill.className='ms-progress-fill'+(isDisc?' disc':'');fill.style.width='0%';
   bar.appendChild(fill);
-  const lbl=document.createElement('div');lbl.className='ms-progress-label';lbl.textContent='Initialising manuscript pipeline…';
-  wrap.appendChild(bar);wrap.appendChild(lbl);
-  slot.appendChild(wrap);
-  let current=0;
+  const lbl=document.createElement('div');lbl.className='ms-progress-label';lbl.textContent='Initialising pipeline…';
+  wrap.appendChild(bar);wrap.appendChild(lbl);slot.appendChild(wrap);
   return{
-    update(step,label){
-      current=step;const pct=Math.round((step/total)*100);
-      fill.style.width=pct+'%';lbl.textContent=`Step ${step}/${total} — ${label}`;
-    },
+    update(step,label){const pct=Math.round((step/total)*100);fill.style.width=pct+'%';lbl.textContent=`Step ${step}/${total} — ${label}`},
     done(label){fill.style.width='100%';lbl.textContent=label}
   };
 }
 
-// ═══════════════════════════════════════════════════
-// EVAL DASHBOARD
-// ═══════════════════════════════════════════════════
+// ══ EVAL DASHBOARD ══
 function buildEvalDashboard(meta){
-  const ev=meta?.evaluation;
-  if(!ev)return null;
+  const ev=meta?.evaluation;if(!ev)return null;
   const panel=document.createElement('div');panel.className='eval-dashboard';
   const hdr=document.createElement('div');hdr.className='eval-header';
   const tid='ev_'+Date.now();
   hdr.innerHTML=`<div class="eval-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Evidence Quality Dashboard</div><svg class="steps-chevron open" id="${tid}_chev" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="18 15 12 9 6 15"/></svg>`;
   const body=document.createElement('div');body.className='eval-body';body.id=tid+'_body';
   hdr.onclick=()=>{body.classList.toggle('collapsed');document.getElementById(tid+'_chev').classList.toggle('open')};
-
   const pctV=ev.pct_verified||0,avgC=ev.avg_confidence_score||0,hRate=ev.hallucination_proxy_rate||0,novR=Math.round((meta.evaluation?.novelty?.novelty_ratio||0)*100);
   const cells=[
     {n:`${pctV}%`,l:'Claims Verified',s:`${ev.verified_claims||0}/${ev.total_claims||0} claims`,cls:pctV>=70?'good':pctV>=50?'warn':'bad'},
@@ -855,34 +780,14 @@ function buildEvalDashboard(meta){
     {n:`${hRate}%`,l:'Hallucination Rate',s:'Lower is better',cls:hRate<=20?'good':hRate<=40?'warn':'bad'},
     {n:`${novR}%`,l:'Novelty Ratio',s:'vs. source base',cls:novR>=30?'good':novR>=15?'warn':'bad'},
   ];
-  cells.forEach(c=>{
-    const cell=document.createElement('div');cell.className='eval-cell';
-    cell.innerHTML=`<div class="eval-n ${c.cls}">${esc(c.n)}</div><div class="eval-lbl">${esc(c.l)}</div><div class="eval-sub">${esc(c.s)}</div>`;
-    body.appendChild(cell);
-  });
-
-  // Bar charts
+  cells.forEach(c=>{const cell=document.createElement('div');cell.className='eval-cell';cell.innerHTML=`<div class="eval-n ${c.cls}">${esc(c.n)}</div><div class="eval-lbl">${esc(c.l)}</div><div class="eval-sub">${esc(c.s)}</div>`;body.appendChild(cell)});
   const barRow=document.createElement('div');barRow.className='eval-bar-row';
-  const bars=[
-    {l:'Verified Claims',v:pctV,cls:'fill-green'},
-    {l:'Avg Confidence',v:avgC,cls:'fill-gold'},
-    {l:'Contradiction Rate',v:ev.contradiction_rate||0,cls:'fill-crimson'},
-  ];
-  bars.forEach(b=>{
-    const row=document.createElement('div');row.className='eval-bar-item';
-    row.innerHTML=`<span class="eval-bar-lbl">${esc(b.l)}</span><div class="eval-bar-track"><div class="eval-bar-fill ${b.cls}" style="width:0%"></div></div><span class="eval-bar-val">${b.v}%</span>`;
-    barRow.appendChild(row);
-    setTimeout(()=>{row.querySelector('.eval-bar-fill').style.width=Math.min(b.v,100)+'%'},100);
-  });
-  body.appendChild(barRow);
-
-  panel.appendChild(hdr);panel.appendChild(body);
-  return panel;
+  const bars=[{l:'Verified Claims',v:pctV,cls:'fill-green'},{l:'Avg Confidence',v:avgC,cls:'fill-gold'},{l:'Contradiction Rate',v:ev.contradiction_rate||0,cls:'fill-crimson'}];
+  bars.forEach(b=>{const row=document.createElement('div');row.className='eval-bar-item';row.innerHTML=`<span class="eval-bar-lbl">${esc(b.l)}</span><div class="eval-bar-track"><div class="eval-bar-fill ${b.cls}" style="width:0%"></div></div><span class="eval-bar-val">${b.v}%</span>`;barRow.appendChild(row);setTimeout(()=>{row.querySelector('.eval-bar-fill').style.width=Math.min(b.v,100)+'%'},100)});
+  body.appendChild(barRow);panel.appendChild(hdr);panel.appendChild(body);return panel;
 }
 
-// ═══════════════════════════════════════════════════
-// PEER REVIEW PANEL
-// ═══════════════════════════════════════════════════
+// ══ PEER REVIEW PANEL ══
 function buildPeerReviewPanel(peerText){
   if(!peerText)return null;
   const panel=document.createElement('div');panel.className='peer-panel';
@@ -891,144 +796,190 @@ function buildPeerReviewPanel(peerText){
   hdr.innerHTML=`<div class="peer-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>Peer Review Report</div><svg class="steps-chevron open" id="${bid}_chev" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="18 15 12 9 6 15"/></svg>`;
   const body=document.createElement('div');body.className='peer-body';body.id=bid+'_body';
   hdr.onclick=()=>{body.classList.toggle('collapsed');document.getElementById(bid+'_chev').classList.toggle('open')};
-
-  // Extract verdict
   const verdictMatch=peerText.match(/VERDICT[:\s]+([A-Za-z\s]+?)(\n|$)/i);
   const verdict=(verdictMatch?verdictMatch[1]:'').trim().toLowerCase();
   if(verdict){
     const vBadge=document.createElement('div');
     let cls='verdict-minor',label='Minor Revision';
-    if(verdict.includes('accept'))  {cls='verdict-accept';label='Accept'}
+    if(verdict.includes('accept')){cls='verdict-accept';label='Accept'}
     else if(verdict.includes('major')){cls='verdict-major';label='Major Revision'}
     else if(verdict.includes('reject')){cls='verdict-major';label='Reject'}
     vBadge.className='peer-verdict-badge '+cls;
     vBadge.innerHTML=`<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>${label}`;
     body.appendChild(vBadge);
   }
-
-  // Extract sections from peer review text
   const sectionRe=/^(SUMMARY|MAJOR CONCERNS?|MINOR CONCERNS?|STRENGTHS?|VERDICT|CONFIDENCE)[:\s]*([\s\S]*?)(?=\n(?:SUMMARY|MAJOR CONCERNS?|MINOR CONCERNS?|STRENGTHS?|VERDICT|CONFIDENCE)|$)/gim;
   let m;
   while((m=sectionRe.exec(peerText))!==null){
-    const secName=m[1].trim().toUpperCase();
-    const secText=m[2].trim();
-    if(!secText)continue;
-    if(secName==='VERDICT'||secName==='CONFIDENCE')continue;
+    const secName=m[1].trim().toUpperCase();const secText=m[2].trim();
+    if(!secText||secName==='VERDICT'||secName==='CONFIDENCE')continue;
     const sec=document.createElement('div');sec.className='peer-section';
     sec.appendChild(Object.assign(document.createElement('div'),{className:'peer-section-title',textContent:secName}));
-    // Split into concern items
     const lines=secText.split('\n').filter(l=>l.trim());
     lines.forEach(line=>{
       const isMajor=secName.includes('MAJOR');const isMinor=secName.includes('MINOR');const isStrength=secName.includes('STRENGTH');
-      if(isStrength){
-        const item=document.createElement('div');item.className='peer-strength';
-        item.innerHTML=`<span class="strength-ico">✓</span><span>${esc(line.replace(/^[\[M\d\]\.●\-\*\s]+/,'').trim())}</span>`;
-        sec.appendChild(item);
-      }else if(isMajor||isMinor){
-        const tagMatch=line.match(/^\[([Mm]\d+)\]/);
-        const item=document.createElement('div');item.className='peer-concern';
-        item.innerHTML=`<span class="concern-tag${isMinor?' minor':''}">${tagMatch?tagMatch[1]:(isMajor?'M':'m')}</span><span>${esc(line.replace(/^\[[Mm]\d+\]\s*/,'').trim())}</span>`;
-        sec.appendChild(item);
-      }else{
-        const p=document.createElement('p');p.style.cssText='font-size:12.5px;line-height:1.75;color:var(--ink2);margin-bottom:5px';p.textContent=line;sec.appendChild(p);
-      }
+      if(isStrength){const item=document.createElement('div');item.className='peer-strength';item.innerHTML=`<span class="strength-ico">✓</span><span>${esc(line.replace(/^[\[M\d\]\.●\-\*\s]+/,'').trim())}</span>`;sec.appendChild(item)}
+      else if(isMajor||isMinor){const tagMatch=line.match(/^\[([Mm]\d+)\]/);const item=document.createElement('div');item.className='peer-concern';item.innerHTML=`<span class="concern-tag${isMinor?' minor':''}">${tagMatch?tagMatch[1]:(isMajor?'M':'m')}</span><span>${esc(line.replace(/^\[[Mm]\d+\]\s*/,'').trim())}</span>`;sec.appendChild(item)}
+      else{const p=document.createElement('p');p.style.cssText='font-size:12.5px;line-height:1.75;color:var(--ink2);margin-bottom:5px';p.textContent=line;sec.appendChild(p)}
     });
     body.appendChild(sec);
   }
-
-  // Fallback if regex didn't parse well
-  if(!body.querySelector('.peer-section')){
-    const p=document.createElement('p');p.style.cssText='font-size:12.5px;line-height:1.75;color:var(--ink2);white-space:pre-wrap';p.textContent=peerText.slice(0,1500);body.appendChild(p);
-  }
-
-  panel.appendChild(hdr);panel.appendChild(body);
-  return panel;
+  if(!body.querySelector('.peer-section')){const p=document.createElement('p');p.style.cssText='font-size:12.5px;line-height:1.75;color:var(--ink2);white-space:pre-wrap';p.textContent=peerText.slice(0,1500);body.appendChild(p)}
+  panel.appendChild(hdr);panel.appendChild(body);return panel;
 }
 
-// ═══════════════════════════════════════════════════
-// DIAGRAM PARSER
-// ═══════════════════════════════════════════════════
+// ══ DISCOVERY DOM RENDERER ══
+async function buildDiscoveryDOM(data){
+  const container=document.createElement('div');container.className='discovery-block';
+  // Masthead
+  const mh=document.createElement('div');mh.className='disc-masthead';
+  mh.innerHTML=`<span style="font-family:'Playfair Display',serif;font-size:12px;color:rgba(100,220,180,.85);letter-spacing:1px;font-style:italic">Stremini Discovery Engine</span><span style="font-size:8.5px;background:rgba(16,140,120,.3);border:1px solid rgba(80,230,200,.2);border-radius:4px;padding:2px 8px;color:rgba(80,230,200,.9);font-weight:700;letter-spacing:.5px;text-transform:uppercase">Scientific Discovery Report</span>`;
+  container.appendChild(mh);
+
+  const doc=document.createElement('div');doc.className='disc-doc';
+  const inner=document.createElement('div');inner.className='disc-inner';
+  doc.appendChild(inner);container.appendChild(doc);
+
+  // Title
+  const title=document.createElement('div');title.className='disc-title';
+  title.textContent=data.title||'Scientific Discovery Report';
+  inner.appendChild(title);
+
+  // Metrics
+  const meta=data.metadata||{};
+  const metrics=document.createElement('div');metrics.className='disc-metrics';
+  const mcells=[
+    {n:meta.sources_gathered||0,l:'Sources Read'},
+    {n:meta.hypotheses_count||0,l:'Hypotheses'},
+    {n:meta.novel_hypotheses||0,l:'Novel'},
+    {n:meta.experiments_designed||0,l:'Experiments'},
+  ];
+  mcells.forEach(c=>{const cell=document.createElement('div');cell.className='dm-cell';cell.innerHTML=`<div class="dm-n">${c.n}</div><div class="dm-l">${c.l}</div>`;metrics.appendChild(cell)});
+  inner.appendChild(metrics);
+
+  // Render the prose content (discovery report)
+  const content=data.content||'';
+  if(content){
+    const parts=parseContent(content);
+    const textOnly=parts.filter(p=>p.kind==='text').map(p=>p.txt).join('\n');
+    const diagParts=parts.filter(p=>p.kind==='diagram');
+
+    // Section-by-section rendering
+    const sections=textOnly.split(/\n(?=[A-Z][A-Z\s]+\n)/);
+    const SECTION_NAMES=['EXECUTIVE SUMMARY','LITERATURE STATE','IDENTIFIED GAPS','NOVEL HYPOTHESES','EXPERIMENTAL ROADMAP','PREDICTED DISCOVERIES','RISK ASSESSMENT','DISCOVERY TIMELINE','CONCLUSION','REFERENCES'];
+
+    let rendered=false;
+    for(const name of SECTION_NAMES){
+      const re=new RegExp(`${name}\\s*\\n([\\s\\S]*?)(?=\\n(?:${SECTION_NAMES.join('|')})|$)`,'i');
+      const m=textOnly.match(re);
+      if(!m)continue;
+      const secEl=document.createElement('div');secEl.className='disc-section';
+      const heading=document.createElement('div');heading.className='disc-section-heading';heading.textContent=name;
+      secEl.appendChild(heading);
+      const secText=m[1].trim();
+      secText.split('\n\n').filter(b=>b.trim()).forEach(block=>{
+        const p=document.createElement('p');p.className='disc-p';
+        p.innerHTML=block.trim().replace(/\[S?(\d+)\]/g,'<sup class="cite-ref">[$1]</sup>').replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>');
+        secEl.appendChild(p);
+      });
+      inner.appendChild(secEl);rendered=true;
+    }
+
+    // Fallback: render full text as paragraphs
+    if(!rendered){
+      const secEl=document.createElement('div');secEl.className='disc-section';
+      textOnly.split('\n\n').filter(b=>b.trim()).slice(0,40).forEach(block=>{
+        const p=document.createElement('p');p.className='disc-p';p.textContent=block.trim();secEl.appendChild(p);
+      });
+      inner.appendChild(secEl);
+    }
+
+    // Render diagrams
+    for(const d of diagParts){
+      const dw=document.createElement('div');dw.className='inline-diag';
+      dw.innerHTML=`<div class="inline-diag-bar">${esc(d.title||d.dtype)}</div>`;
+      const dr=document.createElement('div');dr.className='inline-diag-render';
+      try{const uid='dsc'+(++diagId)+'_'+Date.now();const{svg}=await mermaid.render(uid,d.code);dr.innerHTML=svg}catch(_){}
+      if(dr.innerHTML.trim()){dw.appendChild(dr);inner.appendChild(dw)}
+    }
+  }
+
+  // Hypotheses panel
+  const hyps=data.hypotheses||[];
+  if(hyps.length>0){
+    const secEl=document.createElement('div');secEl.className='disc-section';
+    const heading=document.createElement('div');heading.className='disc-section-heading';heading.textContent='Hypotheses Ranked by Priority';
+    secEl.appendChild(heading);
+    const grid=document.createElement('div');grid.className='hyp-grid';
+    hyps.slice(0,7).forEach(h=>{
+      const card=document.createElement('div');card.className='hyp-card';
+      const idEl=document.createElement('div');idEl.className='hyp-id';idEl.textContent=`${h.id||'H?'} — ${h.type||'hypothesis'}`;
+      const stmt=document.createElement('div');stmt.className='hyp-statement';stmt.textContent=h.statement||'';
+      const meta2=document.createElement('div');meta2.className='hyp-meta';
+      const novCls='novelty-'+(h.novelty||'low');
+      meta2.innerHTML=`<span class="hyp-tag ${novCls}">Novelty: ${h.novelty||'?'}</span><span class="hyp-tag test">Testability: ${h.testability||'?'}</span>${h.priority_score!==undefined?`<span class="hyp-priority">Priority: ${Math.round((h.priority_score||0)*100)}%</span>`:''}`;
+      card.appendChild(idEl);card.appendChild(stmt);card.appendChild(meta2);
+      if(h.rationale){const rat=document.createElement('div');rat.className='hyp-rationale';rat.textContent=h.rationale;card.appendChild(rat)}
+      grid.appendChild(card);
+    });
+    secEl.appendChild(grid);inner.appendChild(secEl);
+  }
+
+  // Experiments panel
+  const exps=data.experiments||[];
+  if(exps.length>0){
+    const secEl=document.createElement('div');secEl.className='disc-section';
+    const heading=document.createElement('div');heading.className='disc-section-heading';heading.textContent='Experimental Roadmap';
+    secEl.appendChild(heading);
+    const grid=document.createElement('div');grid.className='exp-grid';
+    exps.slice(0,5).forEach(e=>{
+      const card=document.createElement('div');card.className='exp-card';
+      const feasCls='feas-'+(e.feasibility||'medium');
+      const hdr2=document.createElement('div');hdr2.className='exp-header';
+      hdr2.innerHTML=`<span class="exp-name">${esc(e.experiment_name||'Experiment')}</span><span class="exp-type-tag">${esc(e.design_type||'study')}</span><span class="exp-feasibility ${feasCls}">${esc(e.feasibility||'?')}</span>`;
+      card.appendChild(hdr2);
+      const body2=document.createElement('div');body2.className='exp-body';
+      const rows=[
+        {l:'Objective',v:e.objective},
+        {l:'Linked Hypothesis',v:e.hypothesis_id},
+        {l:'Analysis Plan',v:e.analysis_plan},
+        {l:'Success Criteria',v:e.success_criteria},
+        {l:'Duration',v:e.expected_duration},
+        {l:'Cost',v:e.estimated_cost},
+      ].filter(r=>r.v);
+      rows.forEach(r=>{const row=document.createElement('div');row.className='exp-row';row.innerHTML=`<span class="exp-label">${esc(r.l)}</span><span class="exp-val">${esc(String(r.v))}</span>`;body2.appendChild(row)});
+      card.appendChild(body2);grid.appendChild(card);
+    });
+    secEl.appendChild(grid);inner.appendChild(secEl);
+  }
+
+  return container;
+}
+
+// ══ DIAGRAM PARSER ══
 function parseContent(content){
-  const parts=[];
-  const re=/<diagram\s+type=["']?(\w+)["']?\s+title=["']?([^"'>]*)["']?\s*>([\s\S]*?)<\/diagram>/gi;
+  const parts=[];const re=/<diagram\s+type=["']?(\w+)["']?\s+title=["']?([^"'>]*)["']?\s*>([\s\S]*?)<\/diagram>/gi;
   let last=0,m;
-  while((m=re.exec(content))!==null){
-    if(m.index>last)parts.push({kind:'text',txt:content.slice(last,m.index)});
-    parts.push({kind:'diagram',dtype:m[1],title:m[2],code:m[3].trim()});
-    last=m.index+m[0].length;
-  }
-  if(last<content.length)parts.push({kind:'text',txt:content.slice(last)});
-  return parts;
+  while((m=re.exec(content))!==null){if(m.index>last)parts.push({kind:'text',txt:content.slice(last,m.index)});parts.push({kind:'diagram',dtype:m[1],title:m[2],code:m[3].trim()});last=m.index+m[0].length}
+  if(last<content.length)parts.push({kind:'text',txt:content.slice(last)});return parts;
 }
 
-// ═══════════════════════════════════════════════════
-// PAPER PARSER
-// ═══════════════════════════════════════════════════
-function cleanRaw(raw){
-  return raw
-    .replace(/<diagram[\s\S]*?<\/diagram>/gi,'')
-    .replace(/\[UNVERIFIED\]/gi,'').replace(/\[NEEDS VERIFICATION\]/gi,'')
-    .replace(/\[REMOVED[^\]]*\]/gi,'')
-    .replace(/^Overall confidence:.*$/gim,'').replace(/^Evidence confidence:.*$/gim,'')
-    .replace(/^API:.*$/gim,'').trim();
-}
-
+// ══ PAPER PARSER ══
+function cleanRaw(raw){return raw.replace(/<diagram[\s\S]*?<\/diagram>/gi,'').replace(/\[UNVERIFIED\]/gi,'').replace(/\[NEEDS VERIFICATION\]/gi,'').replace(/\[REMOVED[^\]]*\]/gi,'').replace(/^Overall confidence:.*$/gim,'').replace(/^Evidence confidence:.*$/gim,'').replace(/^API:.*$/gim,'').trim()}
 function parsePaper(rawText){
-  const text=cleanRaw(rawText);
-  const result={title:'',authors:'',date:'',keywords:'',abstract:[],sections:[],references:[],rejected:[],uncertainty:[],bias:''};
-  const lines=text.split('\n').map(l=>l.trim());
-  let i=0;
+  const text=cleanRaw(rawText);const result={title:'',authors:'',date:'',keywords:'',abstract:[],sections:[],references:[],rejected:[],uncertainty:[],bias:''};
+  const lines=text.split('\n').map(l=>l.trim());let i=0;
   while(i<lines.length&&(!lines[i]||/^[━─=\-─]{3,}$/.test(lines[i])))i++;
   if(i<lines.length&&lines[i]&&!/^(authors|date|abstract|keywords):/i.test(lines[i])){result.title=lines[i];i++}
   const he=Math.min(i+12,lines.length);
-  for(let j=i;j<he;j++){
-    const l=lines[j];
-    if(/^authors?:\s*/i.test(l)){result.authors=l.replace(/^authors?:\s*/i,'').trim();i=j+1}
-    else if(/^date:\s*/i.test(l)){result.date=l.replace(/^date:\s*/i,'').trim();i=j+1}
-    else if(/^keywords?:\s*/i.test(l)){result.keywords=l.replace(/^keywords?:\s*/i,'').trim();i=j+1}
-    else if(/^[━─=\-─]{3,}$/.test(l)){i=j+1}
-  }
+  for(let j=i;j<he;j++){const l=lines[j];if(/^authors?:\s*/i.test(l)){result.authors=l.replace(/^authors?:\s*/i,'').trim();i=j+1}else if(/^date:\s*/i.test(l)){result.date=l.replace(/^date:\s*/i,'').trim();i=j+1}else if(/^keywords?:\s*/i.test(l)){result.keywords=l.replace(/^keywords?:\s*/i,'').trim();i=j+1}else if(/^[━─=\-─]{3,}$/.test(l)){i=j+1}}
   let currentSection=null,currentSub=null,mode2='preamble',buf=[];
-  function target(){
-    if(mode2==='abstract')return result.abstract;
-    if(mode2==='rejected')return result.rejected;
-    if(mode2==='uncertainty')return result.uncertainty;
-    if(mode2==='section')return currentSub?currentSub.paragraphs:currentSection?currentSection.paragraphs:null;
-    return null;
-  }
-  function flush(){
-    if(!buf.length)return;
-    const j2=buf.join(' ').trim();buf=[];
-    if(!j2)return;
-    const t=target();
-    if(t)t.push(j2);
-    else if(mode2==='bias')result.bias+=(result.bias?' ':'')+j2;
-  }
-  for(;i<lines.length;i++){
-    const l=lines[i];
-    if(!l){flush();continue}
-    if(/^[━─=\-─]{4,}$/.test(l)){flush();continue}
-    if(/^references\s*$/i.test(l)){flush();mode2='refs';currentSection=null;currentSub=null;continue}
-    if(mode2==='refs'){if(l)result.references.push(l);continue}
-    if(/^rejected hypotheses?\s*$/i.test(l)){flush();mode2='rejected';continue}
-    if(/^uncertainty disclosure\s*$/i.test(l)){flush();mode2='uncertainty';continue}
-    if(/^bias assessment\s*$/i.test(l)){flush();mode2='bias';continue}
-    if(/^abstract\s*$/i.test(l)){flush();mode2='abstract';currentSection=null;currentSub=null;continue}
-    if(/^keywords?:\s*/i.test(l)){flush();result.keywords=l.replace(/^keywords?:\s*/i,'').trim();continue}
-    const mj=/^(\d+)\.\s+(.+)$/.exec(l);
-    if(mj&&!/^\d+\.\d+/.test(l)){flush();mode2='section';currentSection={num:mj[1],heading:mj[2],paragraphs:[],subSections:[]};currentSub=null;result.sections.push(currentSection);continue}
-    const sb=/^(\d+\.\d+)\.?\s+(.+)$/.exec(l);
-    if(sb&&currentSection){flush();currentSub={num:sb[1],heading:sb[2],paragraphs:[]};currentSection.subSections.push(currentSub);continue}
-    buf.push(l);
-  }
-  flush();
-  if(result.sections.length===0&&result.abstract.length===0){
-    const all=text.replace(/^[^\n]*\n/,'').trim();
-    if(all)result.sections.push({num:'',heading:'Content',paragraphs:[all],subSections:[]});
-  }
+  function target(){if(mode2==='abstract')return result.abstract;if(mode2==='rejected')return result.rejected;if(mode2==='uncertainty')return result.uncertainty;if(mode2==='section')return currentSub?currentSub.paragraphs:currentSection?currentSection.paragraphs:null;return null}
+  function flush(){if(!buf.length)return;const j2=buf.join(' ').trim();buf=[];if(!j2)return;const t=target();if(t)t.push(j2);else if(mode2==='bias')result.bias+=(result.bias?' ':'')+j2}
+  for(;i<lines.length;i++){const l=lines[i];if(!l){flush();continue}if(/^[━─=\-─]{4,}$/.test(l)){flush();continue}if(/^references\s*$/i.test(l)){flush();mode2='refs';currentSection=null;currentSub=null;continue}if(mode2==='refs'){if(l)result.references.push(l);continue}if(/^rejected hypotheses?\s*$/i.test(l)){flush();mode2='rejected';continue}if(/^uncertainty disclosure\s*$/i.test(l)){flush();mode2='uncertainty';continue}if(/^bias assessment\s*$/i.test(l)){flush();mode2='bias';continue}if(/^abstract\s*$/i.test(l)){flush();mode2='abstract';currentSection=null;currentSub=null;continue}if(/^keywords?:\s*/i.test(l)){flush();result.keywords=l.replace(/^keywords?:\s*/i,'').trim();continue}const mj=/^(\d+)\.\s+(.+)$/.exec(l);if(mj&&!/^\d+\.\d+/.test(l)){flush();mode2='section';currentSection={num:mj[1],heading:mj[2],paragraphs:[],subSections:[]};currentSub=null;result.sections.push(currentSection);continue}const sb=/^(\d+\.\d+)\.?\s+(.+)$/.exec(l);if(sb&&currentSection){flush();currentSub={num:sb[1],heading:sb[2],paragraphs:[]};currentSection.subSections.push(currentSub);continue}buf.push(l)}
+  flush();if(result.sections.length===0&&result.abstract.length===0){const all=text.replace(/^[^\n]*\n/,'').trim();if(all)result.sections.push({num:'',heading:'Content',paragraphs:[all],subSections:[]})}
   return result;
 }
-
 function renderCites(text){return text.replace(/\[S?(\d+)\]/g,(_,n)=>`<sup class="cite-ref">[${n}]</sup>`)}
 function mkEl(tag,cls,html){const e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e}
 
@@ -1036,533 +987,179 @@ async function renderFigure(dtype,title,code){
   const fig=document.createElement('div');fig.className='paper-figure full-w';
   const bar=mkEl('div','figure-bar',`<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg> Figure — ${esc(title||dtype)}`);
   const render=mkEl('div','figure-render');
-  try{
-    const uid='fg'+(++diagId)+'_'+Date.now();
-    const{svg}=await mermaid.render(uid,code);
-    render.innerHTML=svg;
-    const caption=mkEl('div','figure-caption',esc(title||'Diagram'));
-    fig.appendChild(bar);fig.appendChild(render);fig.appendChild(caption);
-  }catch(e){return document.createElement('span')}
+  try{const uid='fg'+(++diagId)+'_'+Date.now();const{svg}=await mermaid.render(uid,code);render.innerHTML=svg;const caption=mkEl('div','figure-caption',esc(title||'Diagram'));fig.appendChild(bar);fig.appendChild(render);fig.appendChild(caption)}
+  catch(e){return document.createElement('span')}
   return fig;
 }
+function makePara(text,isFirst){const p=document.createElement('p');p.className='paper-p'+(isFirst?' dropcap':'');p.innerHTML=renderCites(esc(text));return p}
 
-function makePara(text,isFirst){
-  const p=document.createElement('p');
-  p.className='paper-p'+(isFirst?' dropcap':'');
-  p.innerHTML=renderCites(esc(text));
-  return p;
-}
+// ══ MANUSCRIPT SECTION RENDERER ══
+const IMRAD_TAB_LABELS=[{id:'abstract',label:'Abstract'},{id:'introduction',label:'1. Introduction'},{id:'literature_review',label:'2. Literature'},{id:'theoretical_framework',label:'3. Framework'},{id:'methodology',label:'4. Methodology'},{id:'analysis_1',label:'5. Analysis I'},{id:'analysis_2',label:'6. Analysis II'},{id:'findings',label:'7. Findings'},{id:'conclusion',label:'8. Conclusion'}];
 
-// ═══════════════════════════════════════════════════
-// MANUSCRIPT SECTION RENDERER — IMRAD tabs
-// ═══════════════════════════════════════════════════
-const IMRAD_TAB_LABELS=[
-  {id:'abstract',label:'Abstract'},
-  {id:'introduction',label:'1. Introduction'},
-  {id:'literature_review',label:'2. Literature'},
-  {id:'theoretical_framework',label:'3. Framework'},
-  {id:'methodology',label:'4. Methodology'},
-  {id:'analysis_1',label:'5. Analysis I'},
-  {id:'analysis_2',label:'6. Analysis II'},
-  {id:'findings',label:'7. Findings'},
-  {id:'conclusion',label:'8. Conclusion'},
-];
-
-// ═══════════════════════════════════════════════════
-// SECTION CONTENT RENDERER
-// Handles: markdown bold **label:**, heading lines, citation tags,
-// subsection headings, single/double newlines, diagram tags
-// ═══════════════════════════════════════════════════
-function renderMdInline(text){
-  // Convert **text** → <strong>, *text* → <em>, [Sn]/[n] → cite superscript
-  return text
-    .replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>')
-    .replace(/\*([^*]+)\*/g,'<em>$1</em>')
-    .replace(/\[S?(\d+)\]/g,'<sup class="cite-ref">[$1]</sup>');
-}
-
-function renderSectionContent(rawText, isAbstract, containerEl, isFirstSection){
-  // Step 1: strip diagram tags (already extracted separately), normalise \r
-  const stripped = rawText.replace(/\r\n/g,'\n').replace(/\r/g,'\n');
-
-  // Step 2: split into lines
-  const lines = stripped.split('\n');
-
-  // Step 3: group into blocks separated by blank lines
-  // Also detect subsection headings (e.g. "4.1 Title" or "### Title" or "**Title**")
-  const blocks = [];
-  let current = [];
-
-  for(const raw of lines){
-    const line = raw.trim();
-
-    if(!line){
-      if(current.length) blocks.push(current.join(' ').trim());
-      current = [];
-      continue;
-    }
-
-    // Subsection heading detection
-    const isSubheading =
-      /^#{2,4}\s/.test(line) ||                          // ## Markdown heading
-      /^\d+\.\d+\.?\s+[A-Z]/.test(line) ||              // 4.1 Title
-      /^\*\*[^*]{3,60}\*\*\s*$/.test(line) ||           // **Title** alone on line
-      (/^[A-Z][A-Za-z\s]{3,50}:?\s*$/.test(line) && line.length < 60 && !/^(The|This|These|A |An |In |On |By |For |With |While |Although |However |Moreover |Furthermore |Therefore )/.test(line));
-
-    if(isSubheading){
-      if(current.length){ blocks.push(current.join(' ').trim()); current=[]; }
-      blocks.push({type:'subheading', text: line.replace(/^#{2,4}\s+/,'').replace(/^\*\*|\*\*$/g,'').replace(/:$/,'')});
-    } else {
-      current.push(line);
-    }
-  }
-  if(current.length) blocks.push(current.join(' ').trim());
-
-  // Step 4: render each block
-  let paraIdx = 0;
-  for(const block of blocks){
-    if(!block) continue;
-
-    // Subheading object
-    if(typeof block === 'object' && block.type === 'subheading'){
-      const h = document.createElement('div');
-      h.className = 'subsec-heading';
-      h.textContent = block.text;
-      containerEl.appendChild(h);
-      continue;
-    }
-
-    const text = block.trim();
-    if(!text) continue;
-
-    // Abstract structured label (e.g. "**Background:** text...")
-    if(isAbstract && /^\*\*[A-Za-z]+(?:\s[A-Za-z]+)?:?\*\*/.test(text)){
-      const div = document.createElement('div');
-      div.className = 'paper-p';
-      div.innerHTML = renderMdInline(esc(text));
-      containerEl.appendChild(div);
-      paraIdx++;
-      continue;
-    }
-
-    // Keywords line
-    if(/^\*\*Keywords?:?\*\*/.test(text) || /^Keywords?:/i.test(text)){
-      const div = document.createElement('div');
-      div.style.cssText = 'font-size:12px;color:var(--ink3);margin-top:10px;font-family:"DM Sans",sans-serif;';
-      div.innerHTML = '<strong>Keywords:</strong> ' + esc(text.replace(/^\*\*Keywords?:?\*\*\s*/,'').replace(/^Keywords?:\s*/i,''));
-      containerEl.appendChild(div);
-      continue;
-    }
-
-    // Skip lines that are just the section title repeated
-    if(text.length < 80 && /^(\d+\.\s+|Abstract|Introduction|Literature|Theoretical|Methodology|Analysis|Findings|Conclusion)/i.test(text) && text.split(' ').length < 8){
-      continue;
-    }
-
-    // Normal paragraph
-    const p = document.createElement('p');
-    p.className = 'paper-p' + (paraIdx === 0 && isFirstSection ? ' dropcap' : '');
-    p.innerHTML = renderMdInline(esc(text));
-    containerEl.appendChild(p);
-    paraIdx++;
-  }
-
-  // Safety fallback: if nothing was rendered, dump raw text
-  if(paraIdx === 0 && !containerEl.querySelector('.subsec-heading')){
-    const p = document.createElement('p');
-    p.className = 'paper-p';
-    p.innerHTML = renderMdInline(esc(stripped.slice(0, 4000)));
-    containerEl.appendChild(p);
-  }
+function renderMdInline(text){return text.replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>').replace(/\*([^*]+)\*/g,'<em>$1</em>').replace(/\[S?(\d+)\]/g,'<sup class="cite-ref">[$1]</sup>')}
+function renderSectionContent(rawText,isAbstract,containerEl,isFirstSection){
+  const stripped=rawText.replace(/\r\n/g,'\n').replace(/\r/g,'\n');const lines=stripped.split('\n');const blocks=[];let current=[];
+  for(const raw of lines){const line=raw.trim();if(!line){if(current.length)blocks.push(current.join(' ').trim());current=[];continue}
+  const isSubheading=/^#{2,4}\s/.test(line)||/^\d+\.\d+\.?\s+[A-Z]/.test(line)||/^\*\*[^*]{3,60}\*\*\s*$/.test(line)||(/^[A-Z][A-Za-z\s]{3,50}:?\s*$/.test(line)&&line.length<60&&!/^(The|This|These|A |An |In |On |By |For |With |While |Although |However |Moreover |Furthermore |Therefore )/.test(line));
+  if(isSubheading){if(current.length){blocks.push(current.join(' ').trim());current=[]}blocks.push({type:'subheading',text:line.replace(/^#{2,4}\s+/,'').replace(/^\*\*|\*\*$/g,'').replace(/:$/,'')})}else{current.push(line)}}
+  if(current.length)blocks.push(current.join(' ').trim());
+  let paraIdx=0;
+  for(const block of blocks){if(!block)continue;
+  if(typeof block==='object'&&block.type==='subheading'){const h=document.createElement('div');h.className='subsec-heading';h.textContent=block.text;containerEl.appendChild(h);continue}
+  const text=block.trim();if(!text)continue;
+  if(isAbstract&&/^\*\*[A-Za-z]+(?:\s[A-Za-z]+)?:?\*\*/.test(text)){const div=document.createElement('div');div.className='paper-p';div.innerHTML=renderMdInline(esc(text));containerEl.appendChild(div);paraIdx++;continue}
+  if(/^\*\*Keywords?:?\*\*/.test(text)||/^Keywords?:/i.test(text)){const div=document.createElement('div');div.style.cssText='font-size:12px;color:var(--ink3);margin-top:10px;font-family:"DM Sans",sans-serif;';div.innerHTML='<strong>Keywords:</strong> '+esc(text.replace(/^\*\*Keywords?:?\*\*\s*/,'').replace(/^Keywords?:\s*/i,''));containerEl.appendChild(div);continue}
+  if(text.length<80&&/^(\d+\.\s+|Abstract|Introduction|Literature|Theoretical|Methodology|Analysis|Findings|Conclusion)/i.test(text)&&text.split(' ').length<8)continue;
+  const p=document.createElement('p');p.className='paper-p'+(paraIdx===0&&isFirstSection?' dropcap':'');p.innerHTML=renderMdInline(esc(text));containerEl.appendChild(p);paraIdx++}
+  if(paraIdx===0&&!containerEl.querySelector('.subsec-heading')){const p=document.createElement('p');p.className='paper-p';p.innerHTML=renderMdInline(esc(stripped.slice(0,4000)));containerEl.appendChild(p)}
 }
 
 async function buildManuscriptDOM(data){
-  const doc = document.createElement('div');
-
-  // Masthead
-  const mh = mkEl('div','paper-masthead ms');
-  mh.innerHTML = `<span class="masthead-journal">Stremini Research Journal</span><div style="display:flex;gap:8px;align-items:center"><span class="masthead-meta">${new Date().getFullYear()}</span><span class="masthead-badge"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Full Manuscript</span></div>`;
-  doc.appendChild(mh);
-
-  const paperDoc = mkEl('div','paper-doc');
-  doc.appendChild(paperDoc);
-  const inner = mkEl('div','paper-inner');
-  paperDoc.appendChild(inner);
-
-  // ── Title block ──
-  const assembled = (data.content||'').replace(/<\/?manuscript>/gi,'').trim();
-  const tb = mkEl('div','paper-title-block');
-  tb.appendChild(mkEl('div','paper-title', esc(data.title||'Academic Manuscript')));
-
-  const authorMatch = assembled.match(/^Authors?:\s*(.+)$/im);
-  const dateMatch   = assembled.match(/^Date:\s*(.+)$/im);
-  const kwMatch     = assembled.match(/^Keywords?:\s*(.+)$/im);
-  const journalMatch= assembled.match(/^Target Journal:\s*(.+)$/im);
-
-  const byline = mkEl('div','paper-byline');
-  byline.innerHTML = esc(authorMatch?.[1]?.trim()||'Stremini Agent Pipeline')
-    + '<span class="byline-sep"></span>'
-    + esc(dateMatch?.[1]?.trim()||new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'}));
-  if(journalMatch?.[1]) byline.innerHTML += '<span class="byline-sep"></span>' + esc(journalMatch[1].trim());
-  tb.appendChild(byline);
-
-  // Keywords from plan key_concepts or assembled header
-  const kwRaw = kwMatch?.[1]?.trim() || (data.metadata?.plan?.key_concepts||[]).join('; ');
-  if(kwRaw){
-    const kws = mkEl('div','paper-kws');
-    kwRaw.split(/[,;]/).map(k=>k.trim()).filter(Boolean).forEach(k=>kws.appendChild(mkEl('span','kw-tag',esc(k))));
-    tb.appendChild(kws);
-  }
+  const doc=document.createElement('div');const mh=mkEl('div','paper-masthead ms');
+  mh.innerHTML=`<span class="masthead-journal">Stremini Research Journal</span><div style="display:flex;gap:8px;align-items:center"><span class="masthead-meta">${new Date().getFullYear()}</span><span class="masthead-badge"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>Full Manuscript</span></div>`;
+  doc.appendChild(mh);const paperDoc=mkEl('div','paper-doc');doc.appendChild(paperDoc);const inner=mkEl('div','paper-inner');paperDoc.appendChild(inner);
+  const assembled=(data.content||'').replace(/<\/?manuscript>/gi,'').trim();
+  const tb=mkEl('div','paper-title-block');tb.appendChild(mkEl('div','paper-title',esc(data.title||'Academic Manuscript')));
+  const authorMatch=assembled.match(/^Authors?:\s*(.+)$/im);const dateMatch=assembled.match(/^Date:\s*(.+)$/im);const kwMatch=assembled.match(/^Keywords?:\s*(.+)$/im);const journalMatch=assembled.match(/^Target Journal:\s*(.+)$/im);
+  const byline=mkEl('div','paper-byline');byline.innerHTML=esc(authorMatch?.[1]?.trim()||'Stremini Agent Pipeline')+'<span class="byline-sep"></span>'+esc(dateMatch?.[1]?.trim()||new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'}));
+  if(journalMatch?.[1])byline.innerHTML+='<span class="byline-sep"></span>'+esc(journalMatch[1].trim());tb.appendChild(byline);
+  const kwRaw=kwMatch?.[1]?.trim()||(data.metadata?.plan?.key_concepts||[]).join('; ');
+  if(kwRaw){const kws=mkEl('div','paper-kws');kwRaw.split(/[,;]/).map(k=>k.trim()).filter(Boolean).forEach(k=>kws.appendChild(mkEl('span','kw-tag',esc(k))));tb.appendChild(kws)}
   inner.appendChild(tb);
-
-  // ── IMRAD Tabs ──
-  const sections = data.sections || {};
-  const tabNav = mkEl('div','imrad-nav');
-  const tabContents = mkEl('div','');
-  inner.appendChild(tabNav);
-  inner.appendChild(tabContents);
-
-  let firstActive = true;
-  let sectionIndex = 0;
-
+  const sections=data.sections||{};const tabNav=mkEl('div','imrad-nav');const tabContents=mkEl('div','');inner.appendChild(tabNav);inner.appendChild(tabContents);
+  let firstActive=true;
   for(const tab of IMRAD_TAB_LABELS){
-    let sContent = sections[tab.id] || '';
-
-    // Fallback: try to extract from the assembled text using section title
-    if(!sContent && assembled){
-      const titleEsc = tab.label.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
-      const m = assembled.match(new RegExp(`(?:^|\\n)${titleEsc}\\s*\\n([\\s\\S]*?)(?=\\n(?:Abstract|\\d+\\.|━{3}|REFERENCES)|$)`,'i'));
-      if(m) sContent = m[1].trim();
-    }
-
-    if(!sContent) continue;
-
-    const tabId = 'imrad_' + tab.id + '_' + Date.now();
-    const btn = mkEl('button','imrad-tab'+(firstActive?' active':''), esc(tab.label));
-    btn.onclick = function(){
-      tabNav.querySelectorAll('.imrad-tab').forEach(t=>t.classList.remove('active'));
-      tabContents.querySelectorAll('.imrad-content').forEach(c=>c.classList.remove('active'));
-      this.classList.add('active');
-      document.getElementById(tabId)?.classList.add('active');
-    };
+    let sContent=sections[tab.id]||'';
+    if(!sContent&&assembled){const titleEsc=tab.label.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');const m=assembled.match(new RegExp(`(?:^|\\n)${titleEsc}\\s*\\n([\\s\\S]*?)(?=\\n(?:Abstract|\\d+\\.|━{3}|REFERENCES)|$)`,'i'));if(m)sContent=m[1].trim()}
+    if(!sContent)continue;
+    const tabId='imrad_'+tab.id+'_'+Date.now();
+    const btn=mkEl('button','imrad-tab'+(firstActive?' active':''),esc(tab.label));
+    btn.onclick=function(){tabNav.querySelectorAll('.imrad-tab').forEach(t=>t.classList.remove('active'));tabContents.querySelectorAll('.imrad-content').forEach(c=>c.classList.remove('active'));this.classList.add('active');document.getElementById(tabId)?.classList.add('active')};
     tabNav.appendChild(btn);
-
-    const contentDiv = mkEl('div','imrad-content'+(firstActive?' active':''));
-    contentDiv.id = tabId;
-
-    // Extract diagrams first, then pass clean text to renderer
-    const parts = parseContent(sContent);
-    const diagParts = parts.filter(p=>p.kind==='diagram');
-    const textOnly = parts.filter(p=>p.kind==='text').map(p=>p.txt).join('\n');
-
-    // Word count
-    const wCount = textOnly.trim().split(/\s+/).filter(Boolean).length;
-    const sh = mkEl('div','sec-heading violet');
-    sh.innerHTML = `${esc(tab.label)}<span class="section-word-count">~${wCount.toLocaleString()} words</span>`;
-    contentDiv.appendChild(sh);
-
-    // Render section prose
-    const isAbstract = tab.id === 'abstract';
-    renderSectionContent(textOnly, isAbstract, contentDiv, firstActive);
-
-    // Render diagrams after prose
-    for(const d of diagParts){
-      const figEl = await renderFigure(d.dtype, d.title, d.code);
-      if(figEl.tagName !== 'SPAN') contentDiv.appendChild(figEl);
-    }
-
-    tabContents.appendChild(contentDiv);
-    firstActive = false;
-    sectionIndex++;
+    const contentDiv=mkEl('div','imrad-content'+(firstActive?' active':''));contentDiv.id=tabId;
+    const parts=parseContent(sContent);const diagParts=parts.filter(p=>p.kind==='diagram');const textOnly=parts.filter(p=>p.kind==='text').map(p=>p.txt).join('\n');
+    const wCount=textOnly.trim().split(/\s+/).filter(Boolean).length;
+    const sh=mkEl('div','sec-heading violet');sh.innerHTML=`${esc(tab.label)}<span class="section-word-count">~${wCount.toLocaleString()} words</span>`;contentDiv.appendChild(sh);
+    renderSectionContent(textOnly,tab.id==='abstract',contentDiv,firstActive);
+    for(const d of diagParts){const figEl=await renderFigure(d.dtype,d.title,d.code);if(figEl.tagName!=='SPAN')contentDiv.appendChild(figEl)}
+    tabContents.appendChild(contentDiv);firstActive=false;
   }
-
-  // ── References tab ──
-  const refsIdx = assembled.search(/\nREFERENCES\s*\n/i);
-  if(refsIdx !== -1){
-    const refsText = assembled.slice(refsIdx).replace(/\nREFERENCES\s*\n/i,'').trim();
-    if(refsText){
-      const tabId = 'imrad_refs_' + Date.now();
-      const btn = mkEl('button','imrad-tab','References');
-      btn.onclick = function(){
-        tabNav.querySelectorAll('.imrad-tab').forEach(t=>t.classList.remove('active'));
-        tabContents.querySelectorAll('.imrad-content').forEach(c=>c.classList.remove('active'));
-        this.classList.add('active');
-        document.getElementById(tabId)?.classList.add('active');
-      };
-      tabNav.appendChild(btn);
-
-      const contentDiv = mkEl('div','imrad-content');
-      contentDiv.id = tabId;
-      const sh = mkEl('div','sec-heading violet','References');
-      contentDiv.appendChild(sh);
-      const rw = mkEl('div','paper-refs');
-
-      // Merge multi-line refs
-      const merged = [];
-      refsText.split('\n').filter(l=>l.trim()).forEach(line=>{
-        const isNew = /^\[\d+\]/.test(line)||/^[A-Z][a-zA-Z]+,/.test(line)||/^\d+\./.test(line);
-        if(isNew||!merged.length) merged.push(line);
-        else merged[merged.length-1] += ' ' + line;
-      });
-      merged.slice(0,60).forEach((ref,idx)=>{
-        const ri = mkEl('div','ref-item');
-        ri.appendChild(mkEl('div','ref-n',`[${idx+1}]`));
-        const body2 = mkEl('div','ref-body');
-        body2.innerHTML = ref.replace(/^\[\d+\]\s*/,'')
-          .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-          .replace(/(https?:\/\/\S+)/g, url=>`<a href="${url}" target="_blank" rel="noopener">${url}</a>`);
-        ri.appendChild(body2);
-        rw.appendChild(ri);
-      });
-      contentDiv.appendChild(rw);
-      tabContents.appendChild(contentDiv);
-    }
-  }
-
-  // ── Hard fallback: no tabs at all ──
-  if(!tabNav.children.length){
-    const fw = mkEl('div','full-w');
-    const sh = mkEl('div','sec-heading violet','Content');
-    fw.appendChild(sh);
-    renderSectionContent(assembled.slice(0,8000), false, fw, true);
-    const grid = mkEl('div','paper-cols');
-    grid.appendChild(fw);
-    inner.appendChild(grid);
-  }
-
+  const refsIdx=assembled.search(/\nREFERENCES\s*\n/i);
+  if(refsIdx!==-1){const refsText=assembled.slice(refsIdx).replace(/\nREFERENCES\s*\n/i,'').trim();if(refsText){const tabId='imrad_refs_'+Date.now();const btn=mkEl('button','imrad-tab','References');btn.onclick=function(){tabNav.querySelectorAll('.imrad-tab').forEach(t=>t.classList.remove('active'));tabContents.querySelectorAll('.imrad-content').forEach(c=>c.classList.remove('active'));this.classList.add('active');document.getElementById(tabId)?.classList.add('active')};tabNav.appendChild(btn);const contentDiv=mkEl('div','imrad-content');contentDiv.id=tabId;const sh=mkEl('div','sec-heading violet','References');contentDiv.appendChild(sh);const rw=mkEl('div','paper-refs');const merged=[];refsText.split('\n').filter(l=>l.trim()).forEach(line=>{const isNew=/^\[\d+\]/.test(line)||/^[A-Z][a-zA-Z]+,/.test(line)||/^\d+\./.test(line);if(isNew||!merged.length)merged.push(line);else merged[merged.length-1]+=' '+line});merged.slice(0,60).forEach((ref,idx)=>{const ri=mkEl('div','ref-item');ri.appendChild(mkEl('div','ref-n',`[${idx+1}]`));const body2=mkEl('div','ref-body');body2.innerHTML=ref.replace(/^\[\d+\]\s*/,'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/(https?:\/\/\S+)/g,url=>`<a href="${url}" target="_blank" rel="noopener">${url}</a>`);ri.appendChild(body2);rw.appendChild(ri)});contentDiv.appendChild(rw);tabContents.appendChild(contentDiv)}}
+  if(!tabNav.children.length){const fw=mkEl('div','full-w');const sh=mkEl('div','sec-heading violet','Content');fw.appendChild(sh);renderSectionContent(assembled.slice(0,8000),false,fw,true);const grid=mkEl('div','paper-cols');grid.appendChild(fw);inner.appendChild(grid)}
   return doc;
 }
 
 async function buildPaperDOM(structure,diagramParts){
-  const doc=document.createElement('div');
-  const mh=mkEl('div','paper-masthead');
-  mh.innerHTML=`<span class="masthead-journal">Stremini Research Journal</span><span class="masthead-meta">Multi-Agent Pipeline · ${new Date().getFullYear()}</span>`;
-  doc.appendChild(mh);
-  const paperDoc=mkEl('div','paper-doc');doc.appendChild(paperDoc);
-  const inner=mkEl('div','paper-inner');paperDoc.appendChild(inner);
-  const tb=mkEl('div','paper-title-block');
-  tb.appendChild(mkEl('div','paper-title',esc(structure.title||'Research Paper')));
-  if(structure.authors||structure.date){
-    const byline=mkEl('div','paper-byline');
-    if(structure.authors)byline.innerHTML+=esc(structure.authors);
-    if(structure.authors&&structure.date)byline.innerHTML+=`<span class="byline-sep"></span>`;
-    if(structure.date)byline.innerHTML+=esc(structure.date);
-    tb.appendChild(byline);
-  }
-  if(structure.keywords){
-    const kws=mkEl('div','paper-kws');
-    structure.keywords.split(/[,;]/).map(k=>k.trim()).filter(Boolean).forEach(k=>{kws.appendChild(mkEl('span','kw-tag',esc(k)))});
-    tb.appendChild(kws);
-  }
-  inner.appendChild(tb);
-  if(structure.abstract.length>0){
-    const ab=mkEl('div','paper-abstract');ab.appendChild(mkEl('div','abstract-label','Abstract'));
-    ab.appendChild(mkEl('p',null,renderCites(esc(structure.abstract.join(' ')))));inner.appendChild(ab);
-  }
-  const grid=mkEl('div','paper-cols');inner.appendChild(grid);
-  let dIdx=0;
-  for(let si=0;si<structure.sections.length;si++){
-    const sec=structure.sections[si];
-    const secWrap=mkEl('div','full-w');
-    const sh=mkEl('div','sec-heading');sh.innerHTML=`<span class="sec-num">${sec.num}.</span>${esc(sec.heading)}`;
-    secWrap.appendChild(sh);
-    sec.paragraphs.forEach((pt,pi)=>{secWrap.appendChild(makePara(pt,pi===0&&si===0))});
-    if(dIdx<diagramParts.length&&(si===0||si===1)){
-      const d=diagramParts[dIdx++];const figEl=await renderFigure(d.dtype,d.title,d.code);
-      if(figEl.tagName!=='SPAN')secWrap.appendChild(figEl);
-    }
-    for(let ssi=0;ssi<(sec.subSections||[]).length;ssi++){
-      const sub=sec.subSections[ssi];const subW=mkEl('div');
-      subW.appendChild(mkEl('div','subsec-heading',`${sub.num} ${esc(sub.heading)}`));
-      sub.paragraphs.forEach(pt=>subW.appendChild(makePara(pt,false)));
-      if(dIdx<diagramParts.length&&ssi===1){const d=diagramParts[dIdx++];const figEl=await renderFigure(d.dtype,d.title,d.code);if(figEl.tagName!=='SPAN')subW.appendChild(figEl)}
-      secWrap.appendChild(subW);
-    }
-    grid.appendChild(secWrap);
-  }
-  while(dIdx<diagramParts.length){const d=diagramParts[dIdx++];const figEl=await renderFigure(d.dtype,d.title,d.code);if(figEl.tagName!=='SPAN'){const fw=mkEl('div','full-w');fw.appendChild(figEl);grid.appendChild(fw)}}
-  if(structure.rejected.length>0){const rj=mkEl('div','block-rejected full-w');rj.appendChild(mkEl('div','blk-label','Rejected Hypotheses'));structure.rejected.forEach(t=>rj.appendChild(makePara(t,false)));grid.appendChild(rj)}
-  if(structure.uncertainty.length>0){const uc=mkEl('div','block-uncert full-w');uc.appendChild(mkEl('div','blk-label','Uncertainty Disclosure'));structure.uncertainty.forEach(t=>uc.appendChild(makePara(t,false)));grid.appendChild(uc)}
-  if(structure.bias){const ba=mkEl('div','block-callout full-w');ba.appendChild(mkEl('div','blk-label','Bias Assessment'));ba.appendChild(mkEl('p',null,renderCites(esc(structure.bias))));grid.appendChild(ba)}
-  if(structure.references.length>0){
-    const rw=mkEl('div','paper-refs full-w');rw.appendChild(mkEl('div','refs-title','References'));
-    const merged=[];
-    structure.references.forEach(line=>{const isNew=/^\[\d+\]/.test(line)||/^[A-Z][a-zA-Z]+,/.test(line)||/^\d+\./.test(line);if(isNew||!merged.length)merged.push(line);else merged[merged.length-1]+=' '+line});
-    merged.forEach((ref,idx)=>{const ri=mkEl('div','ref-item');ri.appendChild(mkEl('div','ref-n',`[${idx+1}]`));const body2=mkEl('div','ref-body');body2.innerHTML=ref.replace(/(https?:\/\/\S+)/g,url=>`<a href="${url}" target="_blank" rel="noopener">${url}</a>`);ri.appendChild(body2);rw.appendChild(ri)});
-    grid.appendChild(rw);
-  }
-  return doc;
+  const doc=document.createElement('div');const mh=mkEl('div','paper-masthead');mh.innerHTML=`<span class="masthead-journal">Stremini Research Journal</span><span class="masthead-meta">Multi-Agent Pipeline · ${new Date().getFullYear()}</span>`;doc.appendChild(mh);const paperDoc=mkEl('div','paper-doc');doc.appendChild(paperDoc);const inner=mkEl('div','paper-inner');paperDoc.appendChild(inner);const tb=mkEl('div','paper-title-block');tb.appendChild(mkEl('div','paper-title',esc(structure.title||'Research Paper')));if(structure.authors||structure.date){const byline=mkEl('div','paper-byline');if(structure.authors)byline.innerHTML+=esc(structure.authors);if(structure.authors&&structure.date)byline.innerHTML+=`<span class="byline-sep"></span>`;if(structure.date)byline.innerHTML+=esc(structure.date);tb.appendChild(byline)}if(structure.keywords){const kws=mkEl('div','paper-kws');structure.keywords.split(/[,;]/).map(k=>k.trim()).filter(Boolean).forEach(k=>{kws.appendChild(mkEl('span','kw-tag',esc(k)))});tb.appendChild(kws)}inner.appendChild(tb);if(structure.abstract.length>0){const ab=mkEl('div','paper-abstract');ab.appendChild(mkEl('div','abstract-label','Abstract'));ab.appendChild(mkEl('p',null,renderCites(esc(structure.abstract.join(' ')))));inner.appendChild(ab)}const grid=mkEl('div','paper-cols');inner.appendChild(grid);let dIdx=0;for(let si=0;si<structure.sections.length;si++){const sec=structure.sections[si];const secWrap=mkEl('div','full-w');const sh=mkEl('div','sec-heading');sh.innerHTML=`<span class="sec-num">${sec.num}.</span>${esc(sec.heading)}`;secWrap.appendChild(sh);sec.paragraphs.forEach((pt,pi)=>{secWrap.appendChild(makePara(pt,pi===0&&si===0))});if(dIdx<diagramParts.length&&(si===0||si===1)){const d=diagramParts[dIdx++];const figEl=await renderFigure(d.dtype,d.title,d.code);if(figEl.tagName!=='SPAN')secWrap.appendChild(figEl)}for(let ssi=0;ssi<(sec.subSections||[]).length;ssi++){const sub=sec.subSections[ssi];const subW=mkEl('div');subW.appendChild(mkEl('div','subsec-heading',`${sub.num} ${esc(sub.heading)}`));sub.paragraphs.forEach(pt=>subW.appendChild(makePara(pt,false)));if(dIdx<diagramParts.length&&ssi===1){const d=diagramParts[dIdx++];const figEl=await renderFigure(d.dtype,d.title,d.code);if(figEl.tagName!=='SPAN')subW.appendChild(figEl)}secWrap.appendChild(subW)}grid.appendChild(secWrap)}while(dIdx<diagramParts.length){const d=diagramParts[dIdx++];const figEl=await renderFigure(d.dtype,d.title,d.code);if(figEl.tagName!=='SPAN'){const fw=mkEl('div','full-w');fw.appendChild(figEl);grid.appendChild(fw)}}if(structure.rejected.length>0){const rj=mkEl('div','block-rejected full-w');rj.appendChild(mkEl('div','blk-label','Rejected Hypotheses'));structure.rejected.forEach(t=>rj.appendChild(makePara(t,false)));grid.appendChild(rj)}if(structure.uncertainty.length>0){const uc=mkEl('div','block-uncert full-w');uc.appendChild(mkEl('div','blk-label','Uncertainty Disclosure'));structure.uncertainty.forEach(t=>uc.appendChild(makePara(t,false)));grid.appendChild(uc)}if(structure.bias){const ba=mkEl('div','block-callout full-w');ba.appendChild(mkEl('div','blk-label','Bias Assessment'));ba.appendChild(mkEl('p',null,renderCites(esc(structure.bias))));grid.appendChild(ba)}if(structure.references.length>0){const rw=mkEl('div','paper-refs full-w');rw.appendChild(mkEl('div','refs-title','References'));const merged=[];structure.references.forEach(line=>{const isNew=/^\[\d+\]/.test(line)||/^[A-Z][a-zA-Z]+,/.test(line)||/^\d+\./.test(line);if(isNew||!merged.length)merged.push(line);else merged[merged.length-1]+=' '+line});merged.forEach((ref,idx)=>{const ri=mkEl('div','ref-item');ri.appendChild(mkEl('div','ref-n',`[${idx+1}]`));const body2=mkEl('div','ref-body');body2.innerHTML=ref.replace(/(https?:\/\/\S+)/g,url=>`<a href="${url}" target="_blank" rel="noopener">${url}</a>`);ri.appendChild(body2);rw.appendChild(ri)});grid.appendChild(rw)}return doc;
 }
 
-// ═══════════════════════════════════════════════════
-// MATH RENDERER (unchanged)
-// ═══════════════════════════════════════════════════
-function fmtMathInline(text){
-  const frag=document.createDocumentFragment();
-  const re=/(\$[^$]+\$|`[^`]+`)/g;let last=0,m;
-  while((m=re.exec(text))!==null){if(m.index>last)frag.appendChild(document.createTextNode(text.slice(last,m.index)));const sp=document.createElement('span');sp.className='math-inline';sp.textContent=m[0].replace(/^[$`]|[$`]$/g,'');frag.appendChild(sp);last=re.lastIndex}
-  if(last<text.length)frag.appendChild(document.createTextNode(text.slice(last)));return frag;
-}
+// ══ MATH RENDERER ══
+function fmtMathInline(text){const frag=document.createDocumentFragment();const re=/(\$[^$]+\$|`[^`]+`)/g;let last=0,m;while((m=re.exec(text))!==null){if(m.index>last)frag.appendChild(document.createTextNode(text.slice(last,m.index)));const sp=document.createElement('span');sp.className='math-inline';sp.textContent=m[0].replace(/^[$`]|[$`]$/g,'');frag.appendChild(sp);last=re.lastIndex}if(last<text.length)frag.appendChild(document.createTextNode(text.slice(last)));return frag}
 function normMathSec(raw){const k=raw.toLowerCase().replace(/[^a-z\s]/g,'').trim();if(!k)return'Explanation';if(/(problem|question)/.test(k))return'Problem';if(/(given|data|known)/.test(k))return'Given';if(/(approach|plan|strategy)/.test(k))return'Approach';if(/(step|solution|work|derivation)/.test(k))return'Step-by-Step';if(/(check|verify)/.test(k))return'Verification';if(/(final|answer|result|therefore)/.test(k))return'Final Answer';if(/(note|intuition)/.test(k))return'Notes';return raw.trim()}
 function mkMathSec(container,name){const sec=document.createElement('div');sec.className='math-sec';const h=document.createElement('div');h.className='math-sec-h';h.innerHTML=`<span class="math-sec-dot"></span>${esc(name)}`;const b=document.createElement('div');b.className='math-sec-b';sec.appendChild(h);sec.appendChild(b);container.appendChild(sec);return b}
-function appendMath(target,line,state){
-  if(!line){state.list=null;return}
-  if(/^[-*•]\s+/.test(line)){if(!state.list){state.list=document.createElement('ul');state.list.className='math-list';target.appendChild(state.list)}const li=document.createElement('li');li.appendChild(fmtMathInline(line.replace(/^[-*•]\s+/,'')));state.list.appendChild(li);return}
-  state.list=null;
-  const sm=/^(?:step\s*)?(\d+)[\).:-]\s+(.+)/i.exec(line);
-  if(sm){const row=document.createElement('div');row.className='math-step';row.innerHTML=`<span class="step-no">${sm[1]}</span>`;const t=document.createElement('div');t.className='step-txt';t.appendChild(fmtMathInline(sm[2]));row.appendChild(t);target.appendChild(row);return}
-  if(/^(final answer|answer|result|therefore|hence)\s*[:\-–]/i.test(line)){const f=document.createElement('div');f.className='math-final';f.appendChild(fmtMathInline(line));target.appendChild(f);return}
-  if(/^(note|tip|intuition)\s*[:\-–]/i.test(line)){const n=document.createElement('div');n.className='math-note';n.appendChild(fmtMathInline(line));target.appendChild(n);return}
-  if(/[=+\-*/^∫∑√≈≠≤≥±∞]/.test(line)&&/[0-9a-zA-Zαβγδεθλπσφψω]/.test(line)&&line.length<120){const eq=document.createElement('div');eq.className='math-eq';eq.textContent=line;target.appendChild(eq);return}
-  const p=document.createElement('div');p.className='math-p';p.appendChild(fmtMathInline(line));target.appendChild(p);
-}
-async function buildMathDOM(allParts){
-  const container=document.createElement('div');container.className='math-wrap';
-  const lines=[];
-  for(const p of allParts){if(p.kind==='diagram')lines.push({type:'diagram',el:p.el});else p.txt.split('\n').forEach(l=>lines.push({type:'line',txt:l.trim()}))}
-  const firstLine=lines.find(x=>x.type==='line'&&x.txt)?.txt||'Math Solution';
-  const header=document.createElement('div');header.className='math-header-block';
-  header.innerHTML=`<div class="math-kicker">Step-by-Step Solution</div><div class="math-main-title"></div>`;
-  header.querySelector('.math-main-title').textContent=firstLine.replace(/^#{1,3}\s*/,'').replace(/^(Solving:|Problem:)\s*/i,'');
-  container.appendChild(header);
-  let secName='Explanation',secBody=mkMathSec(container,secName);const state={list:null};
-  for(let idx=0;idx<lines.length;idx++){
-    const item=lines[idx];
-    if(item.type==='diagram'){state.list=null;if(item.el)secBody.appendChild(item.el);continue}
-    let line=item.txt;if(!line)continue;if(idx===0&&(line===firstLine||/^(Solving:|Problem:)/i.test(line)))continue;
-    const hm=/^#{1,3}\s+(.+)$/.exec(line)||/^([A-Za-z][A-Za-z\s]{1,30})\s*:\s*$/.exec(line);
-    if(hm){secName=normMathSec(hm[1]);secBody=mkMathSec(container,secName);state.list=null;continue}
-    const em=/^(problem|given|approach|steps?|derivation|verification|final answer|result|notes?)\s*:\s*(.+)$/i.exec(line);
-    if(em){const ts=normMathSec(em[1]);if(ts!==secName){secName=ts;secBody=mkMathSec(container,secName)}appendMath(secBody,em[2],state);continue}
-    appendMath(secBody,line,state);
-  }
-  return container;
-}
+function appendMath(target,line,state){if(!line){state.list=null;return}if(/^[-*•]\s+/.test(line)){if(!state.list){state.list=document.createElement('ul');state.list.className='math-list';target.appendChild(state.list)}const li=document.createElement('li');li.appendChild(fmtMathInline(line.replace(/^[-*•]\s+/,'')));state.list.appendChild(li);return}state.list=null;const sm=/^(?:step\s*)?(\d+)[\).:-]\s+(.+)/i.exec(line);if(sm){const row=document.createElement('div');row.className='math-step';row.innerHTML=`<span class="step-no">${sm[1]}</span>`;const t=document.createElement('div');t.className='step-txt';t.appendChild(fmtMathInline(sm[2]));row.appendChild(t);target.appendChild(row);return}if(/^(final answer|answer|result|therefore|hence)\s*[:\-–]/i.test(line)){const f=document.createElement('div');f.className='math-final';f.appendChild(fmtMathInline(line));target.appendChild(f);return}if(/^(note|tip|intuition)\s*[:\-–]/i.test(line)){const n=document.createElement('div');n.className='math-note';n.appendChild(fmtMathInline(line));target.appendChild(n);return}if(/[=+\-*/^∫∑√≈≠≤≥±∞]/.test(line)&&/[0-9a-zA-Zαβγδεθλπσφψω]/.test(line)&&line.length<120){const eq=document.createElement('div');eq.className='math-eq';eq.textContent=line;target.appendChild(eq);return}const p=document.createElement('div');p.className='math-p';p.appendChild(fmtMathInline(line));target.appendChild(p)}
+async function buildMathDOM(allParts){const container=document.createElement('div');container.className='math-wrap';const lines=[];for(const p of allParts){if(p.kind==='diagram')lines.push({type:'diagram',el:p.el});else p.txt.split('\n').forEach(l=>lines.push({type:'line',txt:l.trim()}))}const firstLine=lines.find(x=>x.type==='line'&&x.txt)?.txt||'Math Solution';const header=document.createElement('div');header.className='math-header-block';header.innerHTML=`<div class="math-kicker">Step-by-Step Solution</div><div class="math-main-title"></div>`;header.querySelector('.math-main-title').textContent=firstLine.replace(/^#{1,3}\s*/,'').replace(/^(Solving:|Problem:)\s*/i,'');container.appendChild(header);let secName='Explanation',secBody=mkMathSec(container,secName);const state={list:null};for(let idx=0;idx<lines.length;idx++){const item=lines[idx];if(item.type==='diagram'){state.list=null;if(item.el)secBody.appendChild(item.el);continue}let line=item.txt;if(!line)continue;if(idx===0&&(line===firstLine||/^(Solving:|Problem:)/i.test(line)))continue;const hm=/^#{1,3}\s+(.+)$/.exec(line)||/^([A-Za-z][A-Za-z\s]{1,30})\s*:\s*$/.exec(line);if(hm){secName=normMathSec(hm[1]);secBody=mkMathSec(container,secName);state.list=null;continue}const em=/^(problem|given|approach|steps?|derivation|verification|final answer|result|notes?)\s*:\s*(.+)$/i.exec(line);if(em){const ts=normMathSec(em[1]);if(ts!==secName){secName=ts;secBody=mkMathSec(container,secName)}appendMath(secBody,em[2],state);continue}appendMath(secBody,line,state)}return container}
 
-// ═══════════════════════════════════════════════════
-// MASTER RENDER
-// ═══════════════════════════════════════════════════
-async function renderOutput(content,isMath,isManuscript,fullData){
-  const parts=parseContent(content);
-  const diagParts=[];
-  let diagramsFound=0;
-
-  for(const part of parts){
-    if(part.kind!=='diagram')continue;
-    diagramsFound++;
-    if(isMath){
-      const dw=document.createElement('div');dw.className='inline-diag';
-      dw.innerHTML=`<div class="inline-diag-bar"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>${esc(part.title||part.dtype)}</div>`;
-      const dr=document.createElement('div');dr.className='inline-diag-render';
-      try{const uid='mg'+(++diagId)+'_'+Date.now();const{svg}=await mermaid.render(uid,part.code);dr.innerHTML=svg}catch(e){}
-      if(dr.innerHTML.trim()){dw.appendChild(dr);part.el=dw}else{part.el=null}
-    }else{
-      diagParts.push(part);
-    }
-  }
-
-  const pid='p'+Date.now();
-  const block=document.createElement('div');block.className='paper-block';
-
-  if(isMath){
-    const mathDOM=await buildMathDOM(parts);mathDOM.id=pid;block.appendChild(mathDOM);
-  }else if(isManuscript){
-    const msDOM=await buildManuscriptDOM(fullData);msDOM.id=pid;block.appendChild(msDOM);
-  }else{
-    const structure=parsePaper(content);
-    const paperDOM=await buildPaperDOM(structure,diagParts);paperDOM.id=pid;block.appendChild(paperDOM);
-  }
-
-  const wrap=document.createElement('div');
-  const dlRow=document.createElement('div');dlRow.className='dl-row';
-  const dlTxt=document.createElement('button');dlTxt.className='dl-btn';
-  dlTxt.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download .txt`;
-  dlTxt.onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([document.getElementById(pid)?.innerText||''],{type:'text/plain'}));a.download=`stremini-${isManuscript?'manuscript':'paper'}-${Date.now()}.txt`;a.click()};
-  const cpBtn=document.createElement('button');cpBtn.className='dl-btn';
-  cpBtn.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copy Text`;
+// ══ MASTER RENDER ══
+async function renderOutput(content,isMath,isManuscript,isDiscovery,fullData){
+  const parts=parseContent(content);const diagParts=[];let diagramsFound=0;
+  for(const part of parts){if(part.kind!=='diagram')continue;diagramsFound++;
+  if(isMath){const dw=document.createElement('div');dw.className='inline-diag';dw.innerHTML=`<div class="inline-diag-bar"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>${esc(part.title||part.dtype)}</div>`;const dr=document.createElement('div');dr.className='inline-diag-render';try{const uid='mg'+(++diagId)+'_'+Date.now();const{svg}=await mermaid.render(uid,part.code);dr.innerHTML=svg}catch(e){}if(dr.innerHTML.trim()){dw.appendChild(dr);part.el=dw}else{part.el=null}}else{diagParts.push(part)}}
+  const pid='p'+Date.now();const block=document.createElement('div');block.className='paper-block';
+  if(isMath){const mathDOM=await buildMathDOM(parts);mathDOM.id=pid;block.appendChild(mathDOM)}
+  else if(isDiscovery){const discDOM=await buildDiscoveryDOM(fullData);discDOM.id=pid;block.appendChild(discDOM)}
+  else if(isManuscript){const msDOM=await buildManuscriptDOM(fullData);msDOM.id=pid;block.appendChild(msDOM)}
+  else{const structure=parsePaper(content);const paperDOM=await buildPaperDOM(structure,diagParts);paperDOM.id=pid;block.appendChild(paperDOM)}
+  const wrap=document.createElement('div');const dlRow=document.createElement('div');dlRow.className='dl-row';
+  const dlTxt=document.createElement('button');dlTxt.className='dl-btn';dlTxt.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download .txt`;
+  dlTxt.onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([document.getElementById(pid)?.innerText||''],{type:'text/plain'}));a.download=`stremini-${isDiscovery?'discovery':isManuscript?'manuscript':'paper'}-${Date.now()}.txt`;a.click()};
+  const cpBtn=document.createElement('button');cpBtn.className='dl-btn';cpBtn.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copy Text`;
   cpBtn.onclick=()=>{navigator.clipboard.writeText(document.getElementById(pid)?.innerText||'').then(()=>{cpBtn.textContent='Copied!';setTimeout(()=>{cpBtn.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copy Text`},2000)}).catch(()=>{})};
-  dlRow.appendChild(dlTxt);dlRow.appendChild(cpBtn);
-  wrap.appendChild(block);wrap.appendChild(dlRow);
-  return{el:wrap,diagramsFound};
+  dlRow.appendChild(dlTxt);dlRow.appendChild(cpBtn);wrap.appendChild(block);wrap.appendChild(dlRow);return{el:wrap,diagramsFound};
 }
 
-// ═══════════════════════════════════════════════════
-// FILE HANDLING
-// ═══════════════════════════════════════════════════
+// ══ FILE HANDLING ══
 function getPdfLib(){return window.pdfjsLib||window['pdfjs-dist/build/pdf']||null}
 function clearFile(){pendingDocText=null;pendingDocName=null;document.getElementById('fileChipWrap').classList.remove('visible');document.getElementById('fileInput').value=''}
 async function handleFileSelect(e){
-  const file=e.target.files[0];if(!file)return;
-  const ext=file.name.split('.').pop().toLowerCase();
+  const file=e.target.files[0];if(!file)return;const ext=file.name.split('.').pop().toLowerCase();
   document.getElementById('fileChipWrap').classList.add('visible');document.getElementById('fileChipName').textContent='Extracting…';
-  try{
-    let text='';
-    if(ext==='pdf')text=await extractPDF(file);
-    else if(ext==='docx'||ext==='doc')text=await extractDOCX(file);
-    else{alert('Only PDF and DOCX supported.');clearFile();return}
-    if(!text.trim()){alert('Could not extract text from file.');clearFile();return}
-    pendingDocText=text;pendingDocName=file.name;document.getElementById('fileChipName').textContent=file.name;
-  }catch(err){alert('Error reading file: '+err.message);clearFile()}
+  try{let text='';if(ext==='pdf')text=await extractPDF(file);else if(ext==='docx'||ext==='doc')text=await extractDOCX(file);else{alert('Only PDF and DOCX supported.');clearFile();return}
+  if(!text.trim()){alert('Could not extract text from file.');clearFile();return}pendingDocText=text;pendingDocName=file.name;document.getElementById('fileChipName').textContent=file.name}
+  catch(err){alert('Error reading file: '+err.message);clearFile()}
 }
-async function extractPDF(file){
-  const ab=await file.arrayBuffer();let lib=getPdfLib();
-  if(!lib){await new Promise((res,rej)=>{let a=0;const chk=()=>{lib=getPdfLib();if(lib)res();else if(a++<30)setTimeout(chk,100);else rej(new Error('PDF.js not loaded'))};chk()})}
-  lib.GlobalWorkerOptions.workerSrc='https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
-  const pdf=await lib.getDocument({data:ab}).promise;let txt='';
-  for(let i=1;i<=pdf.numPages;i++){const page=await pdf.getPage(i);const content=await page.getTextContent();txt+=content.items.map(item=>item.str).join(' ')+'\n'}
-  return txt.trim();
-}
+async function extractPDF(file){const ab=await file.arrayBuffer();let lib=getPdfLib();if(!lib){await new Promise((res,rej)=>{let a=0;const chk=()=>{lib=getPdfLib();if(lib)res();else if(a++<30)setTimeout(chk,100);else rej(new Error('PDF.js not loaded'))};chk()})}lib.GlobalWorkerOptions.workerSrc='https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js';const pdf=await lib.getDocument({data:ab}).promise;let txt='';for(let i=1;i<=pdf.numPages;i++){const page=await pdf.getPage(i);const content=await page.getTextContent();txt+=content.items.map(item=>item.str).join(' ')+'\n'}return txt.trim()}
 async function extractDOCX(file){const ab=await file.arrayBuffer();const result=await mammoth.extractRawText({arrayBuffer:ab});return result.value.trim()}
 
-// ═══════════════════════════════════════════════════
-// MAIN SEND
-// ═══════════════════════════════════════════════════
+// ══ MAIN SEND ══
 async function handleSend(){
   const q=ta.value.trim();if(!q||running)return;
-  const isManuscript=mode==='manuscript';
-  const isMath=mode==='math';
-
+  const isManuscript=mode==='manuscript';const isMath=mode==='math';const isDiscovery=mode==='discovery';
   let finalQuery=q,displayQuery=q;
-  if(pendingDocText){
-    const trunc=pendingDocText.length>12000?pendingDocText.slice(0,12000)+'\n\n[Document truncated]':pendingDocText;
-    finalQuery=`The user has uploaded a document titled "${pendingDocName}". Extracted text:\n\n---\n${trunc}\n---\n\nUser query: ${q}`;
-    displayQuery=`📄 ${pendingDocName} — ${q}`;
-    clearFile();
-  }
-
-  addUserMsg(esc(displayQuery));
-  addRecent(displayQuery,mode);
-  history.push({role:'user',content:finalQuery});
-  ta.value='';ta.style.height='auto';
-  running=true;sendBtn.disabled=true;
-  setStatus('run',isManuscript?'Generating manuscript…':isMath?'Solving…':'Researching…');
-
-  const slot=addAgentMsg();
-  const steps=createStepsPanel(slot);
-  let content='',fullData=null;
-  const t0=Date.now();
+  if(pendingDocText){const trunc=pendingDocText.length>12000?pendingDocText.slice(0,12000)+'\n\n[Document truncated]':pendingDocText;finalQuery=`The user has uploaded a document titled "${pendingDocName}". Extracted text:\n\n---\n${trunc}\n---\n\nUser query: ${q}`;displayQuery=`📄 ${pendingDocName} — ${q}`;clearFile()}
+  addUserMsg(esc(displayQuery));addRecent(displayQuery,mode);history.push({role:'user',content:finalQuery});
+  ta.value='';ta.style.height='auto';running=true;sendBtn.disabled=true;
+  setStatus('run',isDiscovery?'Discovering…':isManuscript?'Generating manuscript…':isMath?'Solving…':'Researching…');
+  const slot=addAgentMsg();const steps=createStepsPanel(slot);
+  let content='',fullData=null;const t0=Date.now();
 
   try{
-    if(isMath){
+    if(isDiscovery){
+      // ── DISCOVERY PIPELINE ──
+      const TOTAL=4;const prog=createProgressBar(slot,TOTAL,true);
+      steps.setTitle('Initialising Scientific Discovery pipeline (4 agents)…');
+      steps.addStep('scan','Literature Scanner','Reading papers · extracting state of knowledge · mapping gaps');
+      steps.addStep('hyp','Hypothesis Generator','Generating novel, testable hypotheses from identified gaps');
+      steps.addStep('exp','Experiment Designer','Designing rigorous experiments for top hypotheses');
+      steps.addStep('rep','Discovery Writer','Synthesising into full scientific discovery report');
+
+      steps.startStep('scan');prog.update(1,'Literature Scanner reading papers and mapping knowledge gaps…');await sleep(500);
+      steps.doneStep('scan','Literature scan complete');
+      steps.startStep('hyp');prog.update(2,'Hypothesis Generator generating novel testable hypotheses…');await sleep(400);
+      steps.doneStep('hyp','Hypotheses generated');
+      steps.startStep('exp');prog.update(3,'Experiment Designer building experimental roadmap…');await sleep(400);
+
+      const res=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({query:finalQuery,mode:'discovery',phase:'DISCOVERY',history,searchResults:[]})});
+      const data=await res.json();fullData=data;
+      if(!res.ok||data.status==='ERROR')throw new Error(data.message||`Request failed ${res.status}`);
+
+      steps.doneStep('exp',`${(data.experiments||[]).length} experiments designed`);
+      steps.startStep('rep');prog.update(4,'Discovery Writer synthesising report…');await sleep(300);
+      steps.doneStep('rep',`${(data.hypotheses||[]).length} hypotheses · ${(data.experiments||[]).length} experiments · ${((Date.now()-t0)/1000).toFixed(1)}s`);
+      prog.done(`Discovery report ready · ${((Date.now()-t0)/1000).toFixed(1)}s`);
+      steps.setDone(`Scientific discovery complete in ${((Date.now()-t0)/1000).toFixed(1)}s`);
+
+      // Discovery metrics bar
+      const meta=data.metadata||{};
+      const dmBar=document.createElement('div');
+      dmBar.style.cssText='display:flex;gap:8px;flex-wrap:wrap;margin:6px 0;';
+      [{l:'Sources read',v:meta.sources_gathered||0,c:'fill-teal'},{l:'Hypotheses',v:meta.hypotheses_count||0,c:'fill-green'},{l:'Novel hypotheses',v:meta.novel_hypotheses||0,c:'fill-green'},{l:'Experiments designed',v:meta.experiments_designed||0,c:'fill-gold'}].forEach(m2=>{
+        const pill=document.createElement('div');pill.style.cssText='display:inline-flex;align-items:center;gap:6px;padding:4px 11px;background:#fff;border:1px solid rgba(26,107,122,.2);border-radius:20px;font-size:10.5px;font-weight:600;color:#0f7a6a;';
+        pill.innerHTML=`<span style="font-family:'Playfair Display',serif;font-size:14px">${m2.v}</span> ${m2.l}`;dmBar.appendChild(pill)});
+      slot.appendChild(dmBar);
+
+      // Sources
+      const sources=meta.sources;
+      if(sources&&sources.length>0){const srcRow=document.createElement('div');srcRow.className='sources-row';sources.slice(0,8).forEach(s=>{if(!s.url&&!s.title)return;const pill=document.createElement('a');pill.className='src-pill';pill.href=s.url||'#';pill.target='_blank';pill.rel='noopener';const domain=s.url?(()=>{try{return new URL(s.url).hostname.replace('www.','')}catch{return s.source||'source'}})():(s.source||'source');pill.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>${esc(domain)}`;srcRow.appendChild(pill)});if(srcRow.children.length)slot.appendChild(srcRow)}
+
+      content=data.content||'';discoveries++;setStatus('done','Discovery ready');
+      history.push({role:'assistant',content:'[Scientific discovery report generated]'});
+
+    }else if(isMath){
       steps.setTitle('Mathematics pipeline starting…');
       steps.addStep('p','Parsing problem','Identifying type and constraints');
       steps.addStep('s','Solving','Applying mathematical techniques step by step');
       steps.addStep('v','Verifying','Checking answer via substitution or alternative method');
       steps.startStep('p');await sleep(250);steps.doneStep('p','Problem analysed');steps.startStep('s');
-
       const res=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({query:finalQuery,mode:'math',phase:'FULL',history,searchResults:[]})});
-      const data=await res.json();
-      if(!res.ok||data.status==='ERROR')throw new Error(data.message||`Request failed ${res.status}`);
-
-      steps.doneStep('s',`Completed in ${((Date.now()-t0)/1000).toFixed(1)}s`);
-      steps.startStep('v');await sleep(180);steps.doneStep('v','Answer verified');steps.setDone('Solution ready');
+      const data=await res.json();if(!res.ok||data.status==='ERROR')throw new Error(data.message||`Request failed ${res.status}`);
+      steps.doneStep('s',`Completed in ${((Date.now()-t0)/1000).toFixed(1)}s`);steps.startStep('v');await sleep(180);steps.doneStep('v','Answer verified');steps.setDone('Solution ready');
       content=data.content||data.solution||'';if(!content)throw new Error('Empty response from API');
       mathSolved++;setStatus('done','Solved');
 
     }else if(isManuscript){
-      // ── MANUSCRIPT pipeline ──
-      const TOTAL_STEPS=11;
-      const prog=createProgressBar(slot,TOTAL_STEPS);
+      const TOTAL_STEPS=11;const prog=createProgressBar(slot,TOTAL_STEPS,false);
       steps.setTitle('Initialising full manuscript pipeline (9 agents)…');
       steps.addStep('cmd','Commander Agent','Building research plan & search queries');
       steps.addStep('ev','Evidence Gathering','arXiv · Semantic Scholar · Web search');
@@ -1575,165 +1172,58 @@ async function handleSend(){
       steps.addStep('ab','Abstract Agent','Generating structured abstract from section summaries');
       steps.addStep('pr','Peer Review Agent','Simulating journal peer review');
       steps.addStep('fa','References Agent','Formatting citations · stitching manuscript');
-
-      steps.startStep('cmd');prog.update(1,'Commander planning research scope…');await sleep(400);
-      steps.doneStep('cmd','Research plan created');
-      steps.startStep('ev');prog.update(2,'Gathering evidence from arXiv, Semantic Scholar & web…');await sleep(600);
-      steps.doneStep('ev','Evidence corpus assembled');
-      steps.startStep('re');prog.update(3,'Reasoner building skeleton draft with claims…');await sleep(500);
-      steps.doneStep('re','Skeleton draft + claim JSON extracted');
-      steps.startStep('cs');prog.update(4,'Scoring claims against source evidence…');await sleep(300);
-      steps.doneStep('cs','Contradiction analysis complete');
-      steps.startStep('nv');prog.update(5,'Detecting novel vs. redundant claims…');await sleep(200);
-      steps.doneStep('nv','Novelty analysis complete');
-      steps.startStep('kg');prog.update(6,'Building concept knowledge graph…');await sleep(200);
-      steps.doneStep('kg','Knowledge graph built');
+      steps.startStep('cmd');prog.update(1,'Commander planning research scope…');await sleep(400);steps.doneStep('cmd','Research plan created');
+      steps.startStep('ev');prog.update(2,'Gathering evidence from arXiv, Semantic Scholar & web…');await sleep(600);steps.doneStep('ev','Evidence corpus assembled');
+      steps.startStep('re');prog.update(3,'Reasoner building skeleton draft with claims…');await sleep(500);steps.doneStep('re','Skeleton draft + claim JSON extracted');
+      steps.startStep('cs');prog.update(4,'Scoring claims against source evidence…');await sleep(300);steps.doneStep('cs','Contradiction analysis complete');
+      steps.startStep('nv');prog.update(5,'Detecting novel vs. redundant claims…');await sleep(200);steps.doneStep('nv','Novelty analysis complete');
+      steps.startStep('kg');prog.update(6,'Building concept knowledge graph…');await sleep(200);steps.doneStep('kg','Knowledge graph built');
       steps.startStep('cr');prog.update(7,'Adversarial Critic reviewing for truth failures…');await sleep(400);
-
-      const msOptions={
-        citation_style:document.getElementById('msCitation').value||'APA7',
-        target_journal:document.getElementById('msJournal').value||'',
-        word_count:parseInt(document.getElementById('msWordCount').value)||6000,
-      };
-
-      const res=await fetch(API,{
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({query:finalQuery,mode:'manuscript',phase:'MANUSCRIPT',history,searchResults:[],manuscript_options:msOptions})
-      });
-      const data=await res.json();
-      fullData=data;
-      if(!res.ok||data.status==='ERROR')throw new Error(data.message||`Request failed ${res.status}`);
-
-      steps.doneStep('cr','Critic pass complete');
-      steps.startStep('sw');prog.update(8,'Section Writer composing 8 IMRAD sections…');await sleep(300);
-      steps.doneStep('sw',`${Object.keys(data.sections||{}).length} sections written`);
-      steps.startStep('ab');prog.update(9,'Abstract Agent summarising manuscript…');await sleep(200);
-      steps.doneStep('ab','Structured abstract generated');
-      steps.startStep('pr');prog.update(10,'Peer Review Agent evaluating manuscript…');await sleep(200);
-      steps.doneStep('pr',data.peer_review?.match(/VERDICT/i)?'Review complete with verdict':'Peer review complete');
-      steps.startStep('fa');prog.update(11,'Final Assembler stitching and polishing…');await sleep(200);
-      steps.doneStep('fa',`References formatted · manuscript stitched · ${((Date.now()-t0)/1000).toFixed(1)}s`);
-      prog.done(`Full manuscript ready · ${((Date.now()-t0)/1000).toFixed(1)}s`);
-      steps.setDone(`Manuscript complete in ${((Date.now()-t0)/1000).toFixed(1)}s`);
-
-      // Eval dashboard
-      const evalPanel=buildEvalDashboard(data.metadata);
-      if(evalPanel)slot.appendChild(evalPanel);
-
-      // Peer review panel
-      const prPanel=buildPeerReviewPanel(data.peer_review);
-      if(prPanel)slot.appendChild(prPanel);
-
-      // Sources
-      const sources=data.metadata?.sources;
-      if(sources&&sources.length>0){
-        const srcRow=document.createElement('div');srcRow.className='sources-row';
-        sources.slice(0,10).forEach(s=>{
-          if(!s.url&&!s.title)return;
-          const pill=document.createElement('a');pill.className='src-pill';pill.href=s.url||'#';pill.target='_blank';pill.rel='noopener';
-          const domain=s.url?(()=>{try{return new URL(s.url).hostname.replace('www.','')}catch{return s.source||'source'}})():(s.source||'source');
-          pill.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>${esc(domain)}`;
-          srcRow.appendChild(pill);
-        });
-        if(srcRow.children.length)slot.appendChild(srcRow);
-      }
-
-      content=data.content||'';
-      manuscripts++;setStatus('done','Manuscript ready');
-      history.push({role:'assistant',content:'[Full manuscript generated]'});
+      const msOptions={citation_style:document.getElementById('msCitation').value||'APA7',target_journal:document.getElementById('msJournal').value||'',word_count:parseInt(document.getElementById('msWordCount').value)||6000};
+      const res=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({query:finalQuery,mode:'manuscript',phase:'MANUSCRIPT',history,searchResults:[],manuscript_options:msOptions})});
+      const data=await res.json();fullData=data;if(!res.ok||data.status==='ERROR')throw new Error(data.message||`Request failed ${res.status}`);
+      steps.doneStep('cr','Critic pass complete');steps.startStep('sw');prog.update(8,'Section Writer composing 8 IMRAD sections…');await sleep(300);steps.doneStep('sw',`${Object.keys(data.sections||{}).length} sections written`);
+      steps.startStep('ab');prog.update(9,'Abstract Agent summarising manuscript…');await sleep(200);steps.doneStep('ab','Structured abstract generated');
+      steps.startStep('pr');prog.update(10,'Peer Review Agent evaluating manuscript…');await sleep(200);steps.doneStep('pr',data.peer_review?.match(/VERDICT/i)?'Review complete with verdict':'Peer review complete');
+      steps.startStep('fa');prog.update(11,'Final Assembler stitching and polishing…');await sleep(200);steps.doneStep('fa',`References formatted · manuscript stitched · ${((Date.now()-t0)/1000).toFixed(1)}s`);
+      prog.done(`Full manuscript ready · ${((Date.now()-t0)/1000).toFixed(1)}s`);steps.setDone(`Manuscript complete in ${((Date.now()-t0)/1000).toFixed(1)}s`);
+      const evalPanel=buildEvalDashboard(data.metadata);if(evalPanel)slot.appendChild(evalPanel);
+      const prPanel=buildPeerReviewPanel(data.peer_review);if(prPanel)slot.appendChild(prPanel);
+      const sources=data.metadata?.sources;if(sources&&sources.length>0){const srcRow=document.createElement('div');srcRow.className='sources-row';sources.slice(0,10).forEach(s=>{if(!s.url&&!s.title)return;const pill=document.createElement('a');pill.className='src-pill';pill.href=s.url||'#';pill.target='_blank';pill.rel='noopener';const domain=s.url?(()=>{try{return new URL(s.url).hostname.replace('www.','')}catch{return s.source||'source'}})():(s.source||'source');pill.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>${esc(domain)}`;srcRow.appendChild(pill)});if(srcRow.children.length)slot.appendChild(srcRow)}
+      content=data.content||'';manuscripts++;setStatus('done','Manuscript ready');history.push({role:'assistant',content:'[Full manuscript generated]'});
 
     }else{
-      // ── RESEARCH pipeline (legacy) ──
+      // ── RESEARCH ──
       steps.setTitle('Initialising multi-agent research pipeline…');
-      steps.addStep('plan','Commander Agent','Planning research scope and search strategy');
-      steps.startStep('plan');
-
+      steps.addStep('plan','Commander Agent','Planning research scope and search strategy');steps.startStep('plan');
       const planRes=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({query:finalQuery,mode:'research',phase:'PLAN',history,searchResults:[]})});
-      const planData=await planRes.json();
-      let planInfo=null;
-      if(planRes.ok&&planData.status!=='ERROR'){planInfo=planData.data;steps.doneStep('plan',planInfo?.title?`"${planInfo.title.slice(0,50)}"`:'Research plan created')}
-      else steps.doneStep('plan','Research plan created (defaults)');
-
-      steps.addStep('ev','Evidence Gathering','Querying arXiv, Semantic Scholar & web sources');
-      steps.addStep('re','Reasoner Agent','Building evidence-grounded arguments & draft');
-      steps.addStep('cr','Adversarial Critic','Identifying logical gaps, unsupported claims & bias');
-      steps.addStep('rf','Refiner Agent','Applying critique and strengthening argumentation');
-      steps.addStep('qa','QA Agent','Bias detection, structure review & coherence check');
-      steps.addStep('fw','Final Writer','Composing full publication-quality paper with diagrams');
-      steps.startStep('ev');steps.setTitle('Gathering evidence from arXiv, Semantic Scholar & web…');await sleep(700);
-      steps.doneStep('ev','Evidence corpus assembled');steps.startStep('re');steps.setTitle('Reasoner building evidence-grounded draft…');await sleep(500);
-      steps.doneStep('re','Initial draft complete');steps.startStep('cr');steps.setTitle('Adversarial Critic reviewing draft for gaps and errors…');await sleep(400);
-
+      const planData=await planRes.json();let planInfo=null;
+      if(planRes.ok&&planData.status!=='ERROR'){planInfo=planData.data;steps.doneStep('plan',planInfo?.title?`"${planInfo.title.slice(0,50)}"`:'Research plan created')}else steps.doneStep('plan','Research plan created (defaults)');
+      steps.addStep('ev','Evidence Gathering','Querying arXiv, Semantic Scholar & web sources');steps.addStep('re','Reasoner Agent','Building evidence-grounded arguments & draft');steps.addStep('cr','Adversarial Critic','Identifying logical gaps, unsupported claims & bias');steps.addStep('rf','Refiner Agent','Applying critique and strengthening argumentation');steps.addStep('qa','QA Agent','Bias detection, structure review & coherence check');steps.addStep('fw','Final Writer','Composing full publication-quality paper with diagrams');
+      steps.startStep('ev');steps.setTitle('Gathering evidence from arXiv, Semantic Scholar & web…');await sleep(700);steps.doneStep('ev','Evidence corpus assembled');steps.startStep('re');steps.setTitle('Reasoner building evidence-grounded draft…');await sleep(500);steps.doneStep('re','Initial draft complete');steps.startStep('cr');steps.setTitle('Adversarial Critic reviewing draft for gaps and errors…');await sleep(400);
       const fullRes=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({query:finalQuery,mode:'research',phase:'FULL',history,searchResults:[]})});
-      const fullData2=await fullRes.json();fullData=fullData2;
-      if(!fullRes.ok||fullData2.status==='ERROR')throw new Error(fullData2.message||`Request failed ${fullRes.status}`);
-
-      steps.doneStep('cr',`${fullData2.metadata?.iterations||1} iteration(s) completed`);
-      steps.startStep('rf');steps.setTitle('Refiner Agent strengthening the draft…');await sleep(350);steps.doneStep('rf','Draft refined and evidence-strengthened');
-      steps.startStep('qa');steps.setTitle('QA Agent checking bias and structure…');await sleep(280);steps.doneStep('qa','Quality review complete');
-      steps.startStep('fw');steps.setTitle('Final Writer composing polished paper…');await sleep(200);
-      steps.doneStep('fw',`Paper complete · ${fullData2.metadata?.sources_gathered||0} sources · ${((Date.now()-t0)/1000).toFixed(1)}s`);
-
-      // Confidence bar
-      if(fullData2.metadata?.confidence){
-        const pct=Math.round(fullData2.metadata.confidence*100);
-        const cb=document.createElement('div');cb.className='conf-bar';
-        cb.innerHTML=`<span class="conf-lbl">Evidence confidence</span><div class="conf-track"><div class="conf-fill" style="width:0%"></div></div><span class="conf-val">${pct}%</span>`;
-        slot.appendChild(cb);setTimeout(()=>{const fill=cb.querySelector('.conf-fill');if(fill)fill.style.width=pct+'%'},50);
-      }
-
-      // Eval dashboard
+      const fullData2=await fullRes.json();fullData=fullData2;if(!fullRes.ok||fullData2.status==='ERROR')throw new Error(fullData2.message||`Request failed ${fullRes.status}`);
+      steps.doneStep('cr',`${fullData2.metadata?.iterations||1} iteration(s) completed`);steps.startStep('rf');steps.setTitle('Refiner Agent strengthening the draft…');await sleep(350);steps.doneStep('rf','Draft refined and evidence-strengthened');steps.startStep('qa');steps.setTitle('QA Agent checking bias and structure…');await sleep(280);steps.doneStep('qa','Quality review complete');steps.startStep('fw');steps.setTitle('Final Writer composing polished paper…');await sleep(200);steps.doneStep('fw',`Paper complete · ${fullData2.metadata?.sources_gathered||0} sources · ${((Date.now()-t0)/1000).toFixed(1)}s`);
+      if(fullData2.metadata?.confidence){const pct=Math.round(fullData2.metadata.confidence*100);const cb=document.createElement('div');cb.className='conf-bar';cb.innerHTML=`<span class="conf-lbl">Evidence confidence</span><div class="conf-track"><div class="conf-fill" style="width:0%"></div></div><span class="conf-val">${pct}%</span>`;slot.appendChild(cb);setTimeout(()=>{const fill=cb.querySelector('.conf-fill');if(fill)fill.style.width=pct+'%'},50)}
       const evalPanel=buildEvalDashboard(fullData2.metadata);if(evalPanel)slot.appendChild(evalPanel);
-
-      // Sources
-      const sources=fullData2.metadata?.sources;
-      if(sources&&sources.length>0){
-        const srcRow=document.createElement('div');srcRow.className='sources-row';
-        sources.slice(0,8).forEach(s=>{
-          if(!s.url&&!s.title)return;
-          const pill=document.createElement('a');pill.className='src-pill';pill.href=s.url||'#';pill.target='_blank';pill.rel='noopener';
-          const domain=s.url?(()=>{try{return new URL(s.url).hostname.replace('www.','')}catch{return s.source||'source'}})():(s.source||'source');
-          pill.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>${esc(domain)}`;
-          srcRow.appendChild(pill);
-        });
-        if(srcRow.children.length)slot.appendChild(srcRow);
-      }
+      const sources=fullData2.metadata?.sources;if(sources&&sources.length>0){const srcRow=document.createElement('div');srcRow.className='sources-row';sources.slice(0,8).forEach(s=>{if(!s.url&&!s.title)return;const pill=document.createElement('a');pill.className='src-pill';pill.href=s.url||'#';pill.target='_blank';pill.rel='noopener';const domain=s.url?(()=>{try{return new URL(s.url).hostname.replace('www.','')}catch{return s.source||'source'}})():(s.source||'source');pill.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>${esc(domain)}`;srcRow.appendChild(pill)});if(srcRow.children.length)slot.appendChild(srcRow)}
       steps.setDone(`Research complete in ${((Date.now()-t0)/1000).toFixed(1)}s`);
-
-      let rawContent=fullData2.content||fullData2.solution||fullData2.paper||fullData2.text||'';
-      const paperTagMatch=rawContent.match(/<paper>([\s\S]*?)(?:<\/paper>|$)/i);
-      content=paperTagMatch?paperTagMatch[1].trim():rawContent.trim();
-      if(!content)throw new Error('Agent returned empty content.');
-      papers++;setStatus('done','Paper ready');
-      history.push({role:'assistant',content});
+      let rawContent=fullData2.content||fullData2.solution||fullData2.paper||fullData2.text||'';const paperTagMatch=rawContent.match(/<paper>([\s\S]*?)(?:<\/paper>|$)/i);content=paperTagMatch?paperTagMatch[1].trim():rawContent.trim();
+      if(!content)throw new Error('Agent returned empty content.');papers++;setStatus('done','Paper ready');history.push({role:'assistant',content});
     }
 
-    // Collapse steps panel
-    const body=slot.querySelector('.steps-body');const chev=slot.querySelector('.steps-chevron');
-    if(body&&chev){body.classList.add('collapsed');chev.classList.remove('open')}
-
-    const{el,diagramsFound}=await renderOutput(content,isMath,isManuscript,fullData);
-    slot.appendChild(el);
-    if(!isMath)diagramsTotal+=diagramsFound;
-    updateStats();scrollBot();
+    const body=slot.querySelector('.steps-body');const chev=slot.querySelector('.steps-chevron');if(body&&chev){body.classList.add('collapsed');chev.classList.remove('open')}
+    const{el}=await renderOutput(content,isMath,isManuscript,isDiscovery,fullData);
+    slot.appendChild(el);updateStats();scrollBot();
 
   }catch(err){
     steps.setTitle('Pipeline encountered an error');
     slot.querySelectorAll('.step-ico.ico-run').forEach(ico=>{ico.className='step-ico ico-err';ico.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`});
-    const errDiv=document.createElement('div');
-    errDiv.style.cssText='margin-top:8px;padding:12px 15px;background:rgba(220,50,50,.05);border:1px solid rgba(220,50,50,.15);border-radius:9px;font-size:13px;color:#991b1b;line-height:1.65';
-    errDiv.textContent=err.message||'An unexpected error occurred.';
-    slot.appendChild(errDiv);setStatus('err','Error');
+    const errDiv=document.createElement('div');errDiv.style.cssText='margin-top:8px;padding:12px 15px;background:rgba(220,50,50,.05);border:1px solid rgba(220,50,50,.15);border-radius:9px;font-size:13px;color:#991b1b;line-height:1.65';errDiv.textContent=err.message||'An unexpected error occurred.';slot.appendChild(errDiv);setStatus('err','Error');
   }finally{running=false;sendBtn.disabled=false}
 }
 
-function clearChat(){
-  msgs.innerHTML='';msgs.appendChild(welcome);welcome.style.display='';
-  history=[];papers=0;manuscripts=0;mathSolved=0;diagramsTotal=0;updateStats();
-  document.getElementById('recentItems').innerHTML='<div class="ri-empty">No queries yet</div>';
-  setStatus('idle','Ready');running=false;sendBtn.disabled=false;
-}
+function clearChat(){msgs.innerHTML='';msgs.appendChild(welcome);welcome.style.display='';history=[];papers=0;manuscripts=0;mathSolved=0;discoveries=0;updateStats();document.getElementById('recentItems').innerHTML='<div class="ri-empty">No queries yet</div>';setStatus('idle','Ready');running=false;sendBtn.disabled=false}
 </script>
 </body>
 </html>
